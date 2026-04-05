@@ -25,6 +25,8 @@ begin
 end;
 $$ language plpgsql security definer;
 
+-- Drop and recreate trigger to avoid "already exists" error
+drop trigger if exists enforce_free_tier_limit on public.leads;
 create trigger enforce_free_tier_limit
   before insert on public.leads
   for each row execute function public.check_free_tier_limit();
