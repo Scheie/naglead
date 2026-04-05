@@ -40,7 +40,7 @@ export function PhoneMockup() {
                 Waiting 2 hrs
               </span>
             </div>
-            <h4 className="font-bold text-white mb-1">Steve (Leaky Sink)</h4>
+            <h4 className="font-bold text-white mb-1">Pat (Leaky Sink)</h4>
             <p className="text-sm text-zinc-400 mb-3">123 Maple St.</p>
             <button className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-2 rounded-md text-sm transition-colors border border-zinc-700">
               Call Now & Log
@@ -80,7 +80,7 @@ export function PhoneMockup() {
               Sarah - Kitchen Remodel
             </h4>
             <p className="text-sm text-red-300 font-medium mb-3 relative z-10">
-              It&apos;s been 24 HOURS. She is absolutely calling someone else
+              It&apos;s been 24 HOURS. They&apos;re absolutely calling someone else
               right now.
             </p>
             <button className="w-full bg-red-600 text-white font-bold py-3 rounded-md text-sm hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.5)] relative z-10">

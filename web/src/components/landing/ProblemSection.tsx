@@ -43,7 +43,7 @@ export function ProblemSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="font-loud text-6xl md:text-7xl headline mb-6">
-            YOU ARE A TRADESMAN,{" "}
+            YOU RUN A TRADE,{" "}
             <br />
             <span className="text-red-600">NOT AN ADMIN ASSISTANT.</span>
           </h2>

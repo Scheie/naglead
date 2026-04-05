@@ -57,7 +57,7 @@ export function HowItWorks() {
             </h3>
             <p className="text-zinc-400 font-medium px-4">
               Speed is everything. By calling back fastest, you win the quote
-              before the other guy even checks his voicemail.
+              before the competition even checks their voicemail.
             </p>
           </div>
         </div>

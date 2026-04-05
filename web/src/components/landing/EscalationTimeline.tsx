@@ -12,7 +12,7 @@ const nodes = [
     time: "2 Hours Later",
     title: "The Friendly Nudge",
     message:
-      '"Hey boss, reminder to follow up with John. Quote request came in a little while ago."',
+      '"Hey boss, reminder to follow up with Jordan. Quote request came in a little while ago."',
     badgeBg: "bg-nag-yellow",
     badgeText: "text-black",
     dotBorder: "border-nag-yellow",
@@ -27,7 +27,7 @@ const nodes = [
     time: "6 Hours Later",
     title: "Firm Direction",
     message:
-      '"John is still waiting. Other guys are finishing their work days and might call him. Do it now."',
+      '"Jordan is still waiting. Your competitors are wrapping up their day and might call first. Do it now."',
     badgeBg: "bg-orange-500",
     badgeText: "text-black",
     dotBorder: "border-orange-400",
@@ -42,7 +42,7 @@ const nodes = [
     time: "24 Hours Later",
     title: "Warning Status",
     message:
-      '"WARNING: If John had a leak, his house is flooded. If he wanted a quote, he got three already. CALL HIM."',
+      '"WARNING: If Jordan had a leak, their house is flooded. If they wanted a quote, they got three already. CALL THEM."',
     badgeBg: "bg-nag-orange",
     badgeText: "text-black",
     dotBorder: "border-black",
@@ -58,7 +58,7 @@ const nodes = [
     time: "48 Hours Later",
     title: "YOU ARE BURNING CASH",
     message:
-      '"WAKE UP! You paid for marketing to get this lead and now you are ignoring it. Tap this notification and call John immediately."',
+      '"WAKE UP! You paid for marketing to get this lead and now you are ignoring it. Tap this notification and call Jordan immediately."',
     badgeBg: "bg-red-600",
     badgeText: "text-white",
     dotBorder: "border-black",
@@ -143,7 +143,7 @@ export function EscalationTimeline() {
                   </p>
                   {node.final && (
                     <button className="w-full bg-red-600 text-white font-bold uppercase py-2 rounded shadow-brutal-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
-                      I surrender, call John
+                      I surrender, call Jordan
                     </button>
                   )}
                 </div>

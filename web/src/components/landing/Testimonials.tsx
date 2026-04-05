@@ -15,8 +15,8 @@ const testimonials = [
   },
   {
     quote:
-      "I'm dyslexic and terrible with tech. CRMs make my brain hurt. With NagLead, I literally just type 'Dave Sink' and his number, and it yells at me until Dave gets serviced. So simple.",
-    name: "Pete V.",
+      "CRMs make my brain hurt. With NagLead, I just type a name and what they need, and it yells at me until the job is done. So simple even I can use it.",
+    name: "Sam R.",
     trade: "Plumbing Contractor",
     cardBg: "bg-white text-black ring-4 ring-black",
     cardShape: "rounded-tr-3xl rounded-bl-3xl",
@@ -25,9 +25,9 @@ const testimonials = [
   },
   {
     quote:
-      "My wife used to nag me about calling customers back. Now she doesn't have to. The app does it. Marriage saved, business booming.",
-    name: "Chris M.",
-    trade: "Custom Carpentry",
+      "I used to lose 2-3 leads a week because I was too busy on site to follow up. Now my phone nags me and I actually call people back. Revenue is up 30%.",
+    name: "Alex K.",
+    trade: "Residential Cleaning",
     cardBg: "bg-black text-white",
     cardShape: "rounded-tl-3xl rounded-br-3xl",
     starColor: "text-nag-yellow",
@@ -44,7 +44,7 @@ export function Testimonials() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <h2 className="font-loud text-5xl md:text-6xl headline text-black text-center mb-16">
-          WHAT THE GUYS SAY
+          WHAT PEOPLE SAY
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
