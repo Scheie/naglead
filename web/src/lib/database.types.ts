@@ -22,6 +22,7 @@ export interface User {
   nag_quiet_start: string;
   nag_quiet_end: string;
   push_token: string | null;
+  intake_alias: string | null;
   country: string;
   created_at: string;
   subscription_status: "free" | "pro" | "pro_annual";

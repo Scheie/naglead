@@ -55,7 +55,9 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const [copiedIntake, setCopiedIntake] = useState(false);
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
 
-  const intakeEmail = `${profile.id}@leads.naglead.com`;
+  const intakeEmail = profile.intake_alias
+    ? `${profile.intake_alias}@leads.naglead.com`
+    : `${profile.id}@leads.naglead.com`;
   const router = useRouter();
   const supabase = createClient();
 

@@ -3,7 +3,7 @@
 // creates a lead in "reply_now" state.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { resolveUserId } from "../_shared/resolve-user.ts";
+import { resolveRecipient } from "../_shared/resolve-user.ts";
 
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-haiku-4-5-20251001";
@@ -116,8 +116,8 @@ Deno.serve(async (req) => {
   const strippedText = String(formData.get("stripped-text") ?? bodyPlain);
 
   // Resolve which user this email is for
-  const userId = resolveUserId(recipient);
-  if (!userId) {
+  const resolved = resolveRecipient(recipient);
+  if (!resolved) {
     console.error("Could not resolve user from recipient:", recipient);
     return new Response(JSON.stringify({ error: "Unknown recipient" }), {
       status: 400,
@@ -125,12 +125,18 @@ Deno.serve(async (req) => {
     });
   }
 
-  // Verify user exists and has Pro subscription
-  const { data: user, error: userError } = await supabase
+  // Look up user by UUID or alias
+  const userQuery = supabase
     .from("users")
-    .select("id, subscription_status")
-    .eq("id", userId)
-    .single();
+    .select("id, subscription_status");
+
+  if (resolved.type === "uuid") {
+    userQuery.eq("id", resolved.identifier);
+  } else {
+    userQuery.eq("intake_alias", resolved.identifier);
+  }
+
+  const { data: user, error: userError } = await userQuery.single();
 
   if (userError || !user) {
     return new Response(JSON.stringify({ error: "User not found" }), {
