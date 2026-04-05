@@ -12,6 +12,10 @@ import {
   SignOut,
   Trash,
   DownloadSimple,
+  EnvelopeSimple,
+  Copy,
+  CaretDown,
+  CaretUp,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import type { User as UserProfile } from "@/lib/database.types";
@@ -48,6 +52,10 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const [saved, setSaved] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [copiedIntake, setCopiedIntake] = useState(false);
+  const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
+
+  const intakeEmail = `${profile.id}@leads.naglead.com`;
   const router = useRouter();
   const supabase = createClient();
 
@@ -284,6 +292,139 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                 : "Pro plan coming soon — unlimited leads"}
             </p>
           )}
+        </section>
+
+        {/* Email Intake */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-2 text-zinc-400 mb-4">
+            <EnvelopeSimple weight="bold" />
+            <h2 className="font-loud text-xl headline uppercase">
+              Auto-Add Leads via Email
+            </h2>
+          </div>
+          <p className="text-sm text-zinc-500 -mt-2">
+            Forward lead emails to this address and they&apos;ll automatically appear in your inbox.
+          </p>
+
+          <div className="flex items-center gap-2 bg-black border-2 border-zinc-700 rounded px-4 py-3">
+            <code className="flex-1 text-nag-orange text-sm font-medium break-all">
+              {intakeEmail}
+            </code>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(intakeEmail);
+                setCopiedIntake(true);
+                setTimeout(() => setCopiedIntake(false), 2000);
+              }}
+              className="shrink-0 text-zinc-400 hover:text-white transition-colors"
+              title="Copy"
+            >
+              {copiedIntake ? (
+                <span className="text-green-400 text-xs font-bold">Copied!</span>
+              ) : (
+                <Copy weight="bold" />
+              )}
+            </button>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+            <p className="text-sm text-zinc-400 font-semibold px-4 pt-4 pb-2">
+              Setup guides
+            </p>
+
+            {[
+              {
+                id: "gmail",
+                name: "Gmail",
+                steps: [
+                  "Open Gmail Settings (gear icon) → See all settings",
+                  "Go to the \"Forwarding and POP/IMAP\" tab",
+                  "Click \"Add a forwarding address\"",
+                  `Paste: ${intakeEmail}`,
+                  "Gmail will send a confirmation — check your NagLead inbox for the verification code",
+                  "Once verified, create a filter: From contains your lead sources (e.g. your website form, Yelp, etc.)",
+                  "Set the filter action to \"Forward it to\" your NagLead address",
+                ],
+              },
+              {
+                id: "outlook",
+                name: "Outlook / Microsoft 365",
+                steps: [
+                  "Go to Settings → Mail → Rules",
+                  "Click \"Add new rule\"",
+                  "Name it \"Forward leads to NagLead\"",
+                  "Set condition: e.g. \"From contains\" your lead source domains",
+                  `Set action: \"Forward to\" → paste ${intakeEmail}`,
+                  "Save the rule",
+                ],
+              },
+              {
+                id: "iphone",
+                name: "iPhone / iOS Mail",
+                steps: [
+                  "iOS Mail doesn't support auto-forwarding rules",
+                  "When you get a lead email, tap the Share/Forward button",
+                  `Forward it to: ${intakeEmail}`,
+                  "For automatic forwarding, set up a rule in your email provider (Gmail, Outlook, etc.) instead",
+                ],
+              },
+              {
+                id: "yahoo",
+                name: "Yahoo Mail",
+                steps: [
+                  "Go to Settings → More Settings → Mailboxes",
+                  "Select your email address",
+                  `Under \"Forwarding\", enter: ${intakeEmail}`,
+                  "Click Verify and follow the confirmation steps",
+                  "Optionally create a filter to only forward lead emails",
+                ],
+              },
+              {
+                id: "manual",
+                name: "Any email (manual forward)",
+                steps: [
+                  "Open any email that contains a lead",
+                  "Tap Forward",
+                  `Send to: ${intakeEmail}`,
+                  "NagLead will automatically extract the name, phone, email, and what they need",
+                  "The lead appears in your inbox within seconds",
+                ],
+              },
+            ].map((guide) => (
+              <div key={guide.id} className="border-t border-zinc-800">
+                <button
+                  onClick={() =>
+                    setExpandedGuide(expandedGuide === guide.id ? null : guide.id)
+                  }
+                  className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-zinc-800/50 transition-colors"
+                >
+                  <span className="text-sm text-white font-medium">
+                    {guide.name}
+                  </span>
+                  {expandedGuide === guide.id ? (
+                    <CaretUp weight="bold" className="text-zinc-500" />
+                  ) : (
+                    <CaretDown weight="bold" className="text-zinc-500" />
+                  )}
+                </button>
+                {expandedGuide === guide.id && (
+                  <ol className="px-4 pb-4 space-y-2">
+                    {guide.steps.map((step, i) => (
+                      <li
+                        key={i}
+                        className="text-sm text-zinc-400 flex gap-2"
+                      >
+                        <span className="text-zinc-600 font-bold shrink-0">
+                          {i + 1}.
+                        </span>
+                        {step}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Save */}
