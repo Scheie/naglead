@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+:root {
+  --nag-orange: #FF4500;
+  --nag-orange-dark: #cc3700;
+  --nag-yellow: #FFCC00;
+  --nag-dark: #09090b;
+  --nag-zinc: #18181b;
+  --nag-concrete: #F4F4F5;
+}
+
+@theme inline {
+  --color-nag-orange: var(--nag-orange);
+  --color-nag-orange-dark: var(--nag-orange-dark);
+  --color-nag-yellow: var(--nag-yellow);
+  --color-nag-dark: var(--nag-dark);
+  --color-nag-zinc: var(--nag-zinc);
+  --color-nag-concrete: var(--nag-concrete);
+
+  --font-loud: var(--font-teko);
+  --font-body: var(--font-work-sans);
+
+  --shadow-brutal: 6px 6px 0px 0px rgba(0,0,0,1);
+  --shadow-brutal-orange: 6px 6px 0px 0px rgba(255,69,0,1);
+  --shadow-brutal-white: 6px 6px 0px 0px rgba(255,255,255,1);
+  --shadow-brutal-sm: 3px 3px 0px 0px rgba(0,0,0,1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: var(--nag-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--nag-orange);
+  border: 3px solid var(--nag-dark);
+}
+
+/* Typography */
+.headline {
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* Phone Notification Float Animation */
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.notify-1 { animation: float-up 0.5s ease-out 0.5s both; }
+.notify-2 { animation: float-up 0.5s ease-out 1.2s both; }
+.notify-3 { animation: float-up 0.5s ease-out 1.9s both; }
+
+/* Pulse for urgent notification */
+@keyframes urgent-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+}
+.animate-urgent {
+  animation: urgent-pulse 2s infinite;
+}
+
+/* Torn edge effect */
+.torn-edge {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 98% 99%, 96% 100%, 94% 98%, 92% 100%, 90% 99%, 88% 100%, 86% 98%, 84% 100%, 82% 99%, 80% 100%, 78% 98%, 76% 100%, 74% 99%, 72% 100%, 70% 98%, 68% 100%, 66% 99%, 64% 100%, 62% 98%, 60% 100%, 58% 99%, 56% 100%, 54% 98%, 52% 100%, 50% 99%, 48% 100%, 46% 98%, 44% 100%, 42% 99%, 40% 100%, 38% 98%, 36% 100%, 34% 99%, 32% 100%, 30% 98%, 28% 100%, 26% 99%, 24% 100%, 22% 98%, 20% 100%, 18% 99%, 16% 100%, 14% 98%, 12% 100%, 10% 99%, 8% 100%, 6% 98%, 4% 100%, 2% 99%, 0 100%);
+}
+
+/* Background patterns */
+.bg-hazard {
+  background: repeating-linear-gradient(45deg, #FFCC00, #FFCC00 10px, #000000 10px, #000000 20px);
+}
+.bg-hazard-subtle {
+  background: repeating-linear-gradient(45deg, rgba(255,204,0,0.1), rgba(255,204,0,0.1) 10px, transparent 10px, transparent 20px);
+}
+.bg-dot-grid {
+  background-image: radial-gradient(#000 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+body {
+  background: var(--nag-dark);
+  color: #ffffff;
+  font-family: var(--font-body), sans-serif;
+}

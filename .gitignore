@@ -1,0 +1,13 @@
+.aidesigner/*
+!.aidesigner/.gitkeep
+
+# Supabase local
+supabase/.branches/
+supabase/.temp/
+
+# IDE
+*.iml
+.mcp.json
+
+# OS
+.DS_Store
