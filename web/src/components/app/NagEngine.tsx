@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import type { Lead } from "@/lib/database.types";
-import { initNotifications, sendNotification, getPermissionState } from "@/lib/notifications";
+import { initNotifications, sendNotification, getPermissionState, subscribeToWebPush } from "@/lib/notifications";
 import { createClient } from "@/lib/supabase/client";
 
 const CHECK_INTERVAL = 60_000; // Check every 60 seconds
@@ -62,10 +62,11 @@ function getNagLevel(schedule: NagScheduleEntry[], ageMs: number): number {
 
 interface NagEngineProps {
   leads: Lead[];
+  userId: string;
   onLeadsUpdated?: () => void;
 }
 
-export function NagEngine({ leads, onLeadsUpdated }: NagEngineProps) {
+export function NagEngine({ leads, userId, onLeadsUpdated }: NagEngineProps) {
   const supabase = createClient();
   const leadsRef = useRef(leads);
   leadsRef.current = leads;
@@ -137,12 +138,18 @@ export function NagEngine({ leads, onLeadsUpdated }: NagEngineProps) {
   }, [supabase, onLeadsUpdated]);
 
   useEffect(() => {
-    initNotifications();
-    // Run immediately on mount
-    checkAndNag();
+    async function init() {
+      await initNotifications();
+      // Subscribe to Web Push if permission granted
+      if (getPermissionState() === "granted") {
+        subscribeToWebPush(userId);
+      }
+      checkAndNag();
+    }
+    init();
     const interval = setInterval(checkAndNag, CHECK_INTERVAL);
     return () => clearInterval(interval);
-  }, [checkAndNag]);
+  }, [checkAndNag, userId]);
 
   return null; // Invisible component
 }

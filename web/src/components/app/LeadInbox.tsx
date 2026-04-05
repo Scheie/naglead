@@ -265,7 +265,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
         onAddLead={() => { atFreeLimit ? setShowUpgrade(true) : setShowAddLead(true); }}
       />
 
-      <NagEngine leads={leads} onLeadsUpdated={refreshLeads} />
+      <NagEngine leads={leads} userId={userId} onLeadsUpdated={refreshLeads} />
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-6 space-y-8">
         <NotificationPrompt />

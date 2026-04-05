@@ -7,6 +7,32 @@ self.addEventListener("activate", (e) => {
   e.waitUntil(self.clients.claim());
 });
 
+// Handle Web Push events (works even when tab is closed)
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    payload = { title: "NagLead", body: event.data.text() };
+  }
+
+  const { title, body, data } = payload;
+
+  event.waitUntil(
+    self.registration.showNotification(title ?? "NagLead", {
+      body: body ?? "",
+      icon: "/nag-icon.svg",
+      badge: "/nag-icon.svg",
+      tag: data?.leadId ?? "nag",
+      renotify: true,
+      requireInteraction: true,
+      data,
+    })
+  );
+});
+
 // Listen for messages from the app to show notifications
 self.addEventListener("message", (event) => {
   if (event.data?.type === "SHOW_NOTIFICATION") {

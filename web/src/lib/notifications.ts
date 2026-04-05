@@ -45,3 +45,65 @@ export async function sendNotification(title: string, body: string, data?: Recor
   // Fallback to basic Notification API
   new Notification(title, { body, icon: "/nag-icon.svg" });
 }
+
+// --- Web Push subscription ---
+
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; i++) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+export async function subscribeToWebPush(userId: string): Promise<boolean> {
+  const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  if (!vapidPublicKey || !swRegistration) return false;
+
+  try {
+    // Check for existing subscription
+    let subscription = await swRegistration.pushManager.getSubscription();
+
+    if (!subscription) {
+      const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey);
+      subscription = await swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: applicationServerKey.buffer as ArrayBuffer,
+      });
+    }
+
+    const subJson = subscription.toJSON();
+    if (!subJson.endpoint || !subJson.keys?.p256dh || !subJson.keys?.auth) {
+      return false;
+    }
+
+    // Store in Supabase
+    const { createClient } = await import("@/lib/supabase/client");
+    const supabase = createClient();
+
+    const { error } = await supabase
+      .from("web_push_subscriptions")
+      .upsert(
+        {
+          user_id: userId,
+          endpoint: subJson.endpoint,
+          p256dh: subJson.keys.p256dh,
+          auth: subJson.keys.auth,
+        },
+        { onConflict: "user_id,endpoint" }
+      );
+
+    if (error) {
+      console.error("Failed to save Web Push subscription:", error);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error("Web Push subscribe error:", err);
+    return false;
+  }
+}
