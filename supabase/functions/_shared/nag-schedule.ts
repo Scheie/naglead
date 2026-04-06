@@ -34,19 +34,29 @@ export const REPLY_NOW_SCHEDULE: NagScheduleEntry[] = [
 
 export const WAITING_SCHEDULE: NagScheduleEntry[] = [
   {
-    minAge: 3 * 24 * 60 * 60 * 1000,
-    title: "Time to follow up",
-    body: (name, desc) => `🔄 Time to follow up with ${name} about ${desc}`,
+    minAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    title: "Quick check-in?",
+    body: (name, desc) => `🔄 Quick check-in with ${name} about ${desc}?`,
   },
   {
-    minAge: 7 * 24 * 60 * 60 * 1000,
+    minAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+    title: "Still waiting",
+    body: (name, desc) => `⏰ Still waiting on ${name} about ${desc}. Time to follow up`,
+  },
+  {
+    minAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     title: "1 week silent",
-    body: (name) => `⏰ ${name} hasn't replied in a week. Send a check-in?`,
+    body: (name) => `⚠️ ${name} hasn't replied in a week. Send a check-in?`,
   },
   {
-    minAge: 14 * 24 * 60 * 60 * 1000,
+    minAge: 14 * 24 * 60 * 60 * 1000, // 2 weeks
     title: "2 weeks silent",
-    body: (name) => `⚠️ ${name} — 2 weeks silent. Follow up or mark as lost?`,
+    body: (name) => `🔴 ${name} — 2 weeks silent. Follow up or mark as lost?`,
+  },
+  {
+    minAge: 21 * 24 * 60 * 60 * 1000, // 3 weeks
+    title: "Time to close this out",
+    body: (name) => `❌ ${name} — 3 weeks with no reply. Mark as won or lost?`,
   },
 ];
 

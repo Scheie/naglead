@@ -87,19 +87,29 @@ Deno.test("getNagMessage: returns null when nagCount exceeds all levels", () => 
   assertEquals(result, null);
 });
 
-Deno.test("getNagMessage: uses waiting schedule for waiting state", () => {
-  const result = getNagMessage("waiting", 3 * DAY, 0, "Joe", "plumbing");
-  assertEquals(result!.title, "Time to follow up");
+Deno.test("getNagMessage: waiting schedule starts at 1 day", () => {
+  const result = getNagMessage("waiting", 1 * DAY, 0, "Joe", "plumbing");
+  assertEquals(result!.title, "Quick check-in?");
+});
+
+Deno.test("getNagMessage: waiting schedule escalates to 3 days", () => {
+  const result = getNagMessage("waiting", 3 * DAY, 1, "Joe", "plumbing");
+  assertEquals(result!.title, "Still waiting");
 });
 
 Deno.test("getNagMessage: waiting schedule escalates to 1 week", () => {
-  const result = getNagMessage("waiting", 7 * DAY, 1, "Joe", "plumbing");
+  const result = getNagMessage("waiting", 7 * DAY, 2, "Joe", "plumbing");
   assertEquals(result!.title, "1 week silent");
 });
 
 Deno.test("getNagMessage: waiting schedule escalates to 2 weeks", () => {
-  const result = getNagMessage("waiting", 14 * DAY, 2, "Joe", "plumbing");
+  const result = getNagMessage("waiting", 14 * DAY, 3, "Joe", "plumbing");
   assertEquals(result!.title, "2 weeks silent");
+});
+
+Deno.test("getNagMessage: waiting schedule escalates to 3 weeks", () => {
+  const result = getNagMessage("waiting", 21 * DAY, 4, "Joe", "plumbing");
+  assertEquals(result!.title, "Time to close this out");
 });
 
 Deno.test("getNagMessage: includes lead name in body", () => {
