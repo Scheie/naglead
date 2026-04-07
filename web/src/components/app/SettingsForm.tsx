@@ -295,6 +295,18 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                 : "Pro plan coming soon — unlimited leads"}
             </p>
           )}
+          {profile.subscription_status !== "free" && (
+            <button
+              onClick={async () => {
+                const res = await fetch("/api/stripe/portal", { method: "POST" });
+                const data = await res.json();
+                if (data.url) window.location.href = data.url;
+              }}
+              className="mt-3 text-sm text-zinc-400 hover:text-white underline transition-colors"
+            >
+              Manage subscription, billing, or cancel
+            </button>
+          )}
         </section>
 
         {/* Email Intake */}

@@ -1,7 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import { X, Lightning } from "@phosphor-icons/react";
-import Link from "next/link";
 
 interface UpgradePromptProps {
   activeCount: number;
@@ -10,6 +10,27 @@ interface UpgradePromptProps {
 }
 
 export function UpgradePrompt({ activeCount, limit, onClose }: UpgradePromptProps) {
+  const [loading, setLoading] = useState<string | null>(null);
+
+  async function handleUpgrade(plan: "pro" | "pro_annual") {
+    setLoading(plan);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setLoading(null);
+      }
+    } catch {
+      setLoading(null);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
@@ -41,11 +62,19 @@ export function UpgradePrompt({ activeCount, limit, onClose }: UpgradePromptProp
 
         {process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true" ? (
           <div className="space-y-3">
-            <button className="w-full bg-nag-orange text-black font-loud text-2xl headline py-4 rounded-sm shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
-              UPGRADE TO PRO — $10/MO
+            <button
+              onClick={() => handleUpgrade("pro")}
+              disabled={loading !== null}
+              className="w-full bg-nag-orange text-black font-loud text-2xl headline py-4 rounded-sm shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50"
+            >
+              {loading === "pro" ? "REDIRECTING..." : "UPGRADE TO PRO — $10/MO"}
             </button>
-            <button className="w-full bg-zinc-800 text-zinc-300 font-semibold py-3 rounded-lg hover:bg-zinc-700 transition-colors text-sm">
-              Go Annual — $89/yr (save $31)
+            <button
+              onClick={() => handleUpgrade("pro_annual")}
+              disabled={loading !== null}
+              className="w-full bg-zinc-800 text-zinc-300 font-semibold py-3 rounded-lg hover:bg-zinc-700 transition-colors text-sm disabled:opacity-50"
+            >
+              {loading === "pro_annual" ? "Redirecting..." : "Go Annual — $89/yr (save $31)"}
             </button>
           </div>
         ) : (
