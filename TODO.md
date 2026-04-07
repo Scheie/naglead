@@ -43,10 +43,11 @@
 
 ## To Do — Payments
 
-- [ ] Stripe integration: checkout flow + webhook for subscription status
+- [x] Stripe integration: checkout flow + webhook for subscription status
 - [x] Paywall enforcement (5-lead limit on free tier)
 - [x] Upgrade prompt in-app when hitting free limit
-- [ ] Pro/Annual plan management (cancel, switch)
+- [x] Pro/Annual plan management (cancel, switch via Stripe Customer Portal)
+- [x] Stripe sync fallback Edge Function (every 6h)
 
 ## To Do — Web App Polish
 
