@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { guessCountryFromTimezone } from "@/lib/country-codes";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Megaphone, ArrowRight } from "@phosphor-icons/react";
@@ -41,11 +42,15 @@ export default function SignupPage() {
       return;
     }
 
+    let timezone = "America/New_York";
+    try { timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
+    const country = guessCountryFromTimezone();
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name, trade },
+        data: { name, trade, timezone, country },
       },
     });
 

@@ -16,6 +16,35 @@ import { colors } from "../lib/theme";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { AuthStackParamList } from "../navigation";
 
+// Timezone → country mapping for auto-detection
+const tzToCountry: Record<string, string> = {
+  "America/New_York": "US", "America/Chicago": "US", "America/Denver": "US",
+  "America/Los_Angeles": "US", "America/Anchorage": "US", "Pacific/Honolulu": "US",
+  "America/Toronto": "CA", "America/Vancouver": "CA",
+  "Europe/London": "GB", "Europe/Dublin": "IE",
+  "Australia/Sydney": "AU", "Australia/Perth": "AU", "Australia/Melbourne": "AU",
+  "Pacific/Auckland": "NZ",
+  "Europe/Berlin": "DE", "Europe/Paris": "FR", "Europe/Madrid": "ES",
+  "Europe/Rome": "IT", "Europe/Amsterdam": "NL", "Europe/Stockholm": "SE",
+  "Europe/Oslo": "NO", "Europe/Copenhagen": "DK", "Europe/Helsinki": "FI",
+  "Europe/Zurich": "CH", "Europe/Vienna": "AT", "Europe/Brussels": "BE",
+  "Europe/Lisbon": "PT",
+  "Asia/Kolkata": "IN", "Asia/Manila": "PH", "Asia/Singapore": "SG",
+  "Asia/Kuala_Lumpur": "MY", "Asia/Tokyo": "JP", "Asia/Seoul": "KR",
+  "Africa/Johannesburg": "ZA", "America/Mexico_City": "MX",
+  "America/Sao_Paulo": "BR", "Asia/Dubai": "AE", "Asia/Jerusalem": "IL",
+};
+
+function detectLocale(): { timezone: string; country: string } {
+  try {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const country = tzToCountry[timezone] ?? "US";
+    return { timezone, country };
+  } catch {
+    return { timezone: "America/New_York", country: "US" };
+  }
+}
+
 type Props = NativeStackScreenProps<AuthStackParamList, "Signup">;
 
 export function SignupScreen({ navigation }: Props) {
@@ -36,6 +65,8 @@ export function SignupScreen({ navigation }: Props) {
       return;
     }
 
+    const { timezone, country } = detectLocale();
+
     const { error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
@@ -43,6 +74,8 @@ export function SignupScreen({ navigation }: Props) {
         data: {
           name: name.trim(),
           trade: trade.trim() || null,
+          timezone,
+          country,
         },
       },
     });
