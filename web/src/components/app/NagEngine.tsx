@@ -13,26 +13,32 @@ interface NagScheduleEntry {
   body: (name: string, desc: string) => string;
 }
 
+// Must match supabase/functions/_shared/nag-schedule.ts REPLY_NOW_SCHEDULE
 const REPLY_NOW_SCHEDULE: NagScheduleEntry[] = [
   {
-    minAgeMs: 2 * 60 * 60 * 1000,
+    minAgeMs: 2 * 60 * 60 * 1000, // 2 hours
     title: "New lead waiting",
     body: (name, desc) => `📱 ${name} needs ${desc} — send a quick reply`,
   },
   {
-    minAgeMs: 6 * 60 * 60 * 1000,
+    minAgeMs: 6 * 60 * 60 * 1000, // 6 hours
     title: "Lead going cold",
-    body: (name, desc) => `⏰ ${name} has been waiting 6 hours for ${desc}`,
+    body: (name, desc) => `⏰ ${name} has been waiting 6 hours for a reply about ${desc}`,
   },
   {
-    minAgeMs: 24 * 60 * 60 * 1000,
+    minAgeMs: 24 * 60 * 60 * 1000, // 24 hours
     title: "1 day with no reply",
-    body: (name) => `⚠️ ${name} — 1 day no reply. Going cold!`,
+    body: (name) => `⚠️ ${name} — 1 day with no reply. This lead is going cold`,
   },
   {
-    minAgeMs: 48 * 60 * 60 * 1000,
+    minAgeMs: 48 * 60 * 60 * 1000, // 48 hours
     title: "You're losing this job",
-    body: (name) => `🔴 ${name} waited 2 DAYS. Call now or lose it!`,
+    body: (name, desc) => `🔴 ${name} has waited 2 days for ${desc}. Call now or lose it`,
+  },
+  {
+    minAgeMs: 72 * 60 * 60 * 1000, // 72 hours
+    title: "Last chance",
+    body: (name) => `❌ ${name} — 3 days, no reply. Mark as lost or call right now`,
   },
 ];
 
@@ -97,10 +103,12 @@ export function NagEngine({ leads, userId, onLeadsUpdated }: NagEngineProps) {
     );
 
     for (const lead of snoozedToResurface) {
-      await supabase
+      const { error } = await supabase
         .from("leads")
         .update({ snoozed_until: null })
         .eq("id", lead.id);
+
+      if (error) continue;
 
       await sendNotification(
         "Snoozed lead is back!",

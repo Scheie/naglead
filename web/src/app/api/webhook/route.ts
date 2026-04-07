@@ -67,8 +67,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const name = sanitize(extractName(payload), 255);
-  const description = sanitize(extractDescription(payload), 1000);
+  const name = sanitize(extractName(payload), 255) || "Unknown Lead";
+  const description = sanitize(extractDescription(payload), 1000) || "Web form submission";
   const { phone, email } = extractContact(payload);
 
   const { data: lead, error: insertError } = await supabase

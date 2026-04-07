@@ -34,10 +34,34 @@ const timezones = [
   "America/Los_Angeles",
   "America/Anchorage",
   "Pacific/Honolulu",
+  "America/Toronto",
+  "America/Sao_Paulo",
+  "America/Mexico_City",
   "Europe/London",
   "Europe/Berlin",
+  "Europe/Paris",
+  "Europe/Oslo",
+  "Europe/Stockholm",
+  "Europe/Helsinki",
+  "Europe/Amsterdam",
+  "Europe/Madrid",
+  "Europe/Rome",
+  "Europe/Warsaw",
+  "Europe/Istanbul",
+  "Europe/Moscow",
+  "Africa/Johannesburg",
+  "Africa/Cairo",
+  "Asia/Dubai",
+  "Asia/Kolkata",
+  "Asia/Bangkok",
+  "Asia/Singapore",
+  "Asia/Tokyo",
+  "Asia/Seoul",
+  "Asia/Shanghai",
   "Australia/Sydney",
   "Australia/Perth",
+  "Australia/Brisbane",
+  "Pacific/Auckland",
 ];
 
 export function SettingsForm({ profile }: SettingsFormProps) {
@@ -184,6 +208,9 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               </p>
             </div>
             <button
+              role="switch"
+              aria-checked={nagEnabled}
+              aria-label="Toggle nag notifications"
               onClick={() => setNagEnabled(!nagEnabled)}
               className={`w-14 h-8 rounded-full transition-colors relative ${
                 nagEnabled ? "bg-nag-orange" : "bg-zinc-700"
