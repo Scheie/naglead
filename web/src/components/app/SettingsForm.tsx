@@ -70,6 +70,9 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const [trade, setTrade] = useState(profile.trade ?? "");
   const [timezone, setTimezone] = useState(profile.timezone);
   const [nagEnabled, setNagEnabled] = useState(profile.nag_enabled);
+  const [quietHoursEnabled, setQuietHoursEnabled] = useState(
+    profile.nag_quiet_start !== profile.nag_quiet_end
+  );
   const [quietStart, setQuietStart] = useState(profile.nag_quiet_start);
   const [quietEnd, setQuietEnd] = useState(profile.nag_quiet_end);
   const [userCountry, setUserCountry] = useState(profile.country ?? "US");
@@ -99,8 +102,8 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         trade: trade || null,
         timezone,
         nag_enabled: nagEnabled,
-        nag_quiet_start: quietStart,
-        nag_quiet_end: quietEnd,
+        nag_quiet_start: quietHoursEnabled ? quietStart : "00:00",
+        nag_quiet_end: quietHoursEnabled ? quietEnd : "00:00",
         country: userCountry,
       })
       .eq("id", profile.id);
@@ -234,34 +237,59 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               Quiet Hours
             </h2>
           </div>
-          <p className="text-sm text-zinc-500 -mt-2">
-            No nag notifications during these hours.
-          </p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl p-4">
             <div>
-              <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
-                Start (no nags after)
-              </label>
-              <input
-                type="time"
-                value={quietStart}
-                onChange={(e) => setQuietStart(e.target.value)}
-                className="w-full bg-zinc-900 border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
-              />
+              <p className="font-semibold text-white">Quiet Hours</p>
+              <p className="text-sm text-zinc-500">
+                {quietHoursEnabled
+                  ? "Pause nags during set hours"
+                  : "Nag me anytime, 24/7"}
+              </p>
             </div>
-            <div>
-              <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
-                End (nags resume)
-              </label>
-              <input
-                type="time"
-                value={quietEnd}
-                onChange={(e) => setQuietEnd(e.target.value)}
-                className="w-full bg-zinc-900 border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
+            <button
+              role="switch"
+              aria-checked={quietHoursEnabled}
+              aria-label="Toggle quiet hours"
+              onClick={() => setQuietHoursEnabled(!quietHoursEnabled)}
+              className={`w-14 h-8 rounded-full transition-colors relative ${
+                quietHoursEnabled ? "bg-nag-orange" : "bg-zinc-700"
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${
+                  quietHoursEnabled ? "translate-x-7" : "translate-x-1"
+                }`}
               />
-            </div>
+            </button>
           </div>
+
+          {quietHoursEnabled && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
+                  Start (no nags after)
+                </label>
+                <input
+                  type="time"
+                  value={quietStart}
+                  onChange={(e) => setQuietStart(e.target.value)}
+                  className="w-full bg-zinc-900 border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
+                  End (nags resume)
+                </label>
+                <input
+                  type="time"
+                  value={quietEnd}
+                  onChange={(e) => setQuietEnd(e.target.value)}
+                  className="w-full bg-zinc-900 border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Region & Timezone */}
