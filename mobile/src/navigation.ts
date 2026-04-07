@@ -7,4 +7,5 @@ export type AppStackParamList = {
   Inbox: undefined;
   AddLead: undefined;
   Settings: undefined;
+  UpgradeSuccess: undefined;
 };

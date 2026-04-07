@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { StatusBar, TouchableOpacity, Text as RNText } from "react-native";
+import { StatusBar, TouchableOpacity, Text as RNText, View } from "react-native";
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Teko_700Bold } from "@expo-google-fonts/teko";
@@ -18,6 +18,7 @@ import { SignupScreen } from "./src/screens/SignupScreen";
 import { InboxScreen } from "./src/screens/InboxScreen";
 import { AddLeadScreen } from "./src/screens/AddLeadScreen";
 import { SettingsScreen } from "./src/screens/SettingsScreen";
+import { UpgradeSuccessScreen } from "./src/screens/UpgradeSuccessScreen";
 import {
   registerForPushNotifications,
   savePushToken,
@@ -35,6 +36,7 @@ const linking = {
     screens: {
       Inbox: "",
       AddLead: "add",
+      UpgradeSuccess: "upgrade-success",
     },
   },
 };
@@ -105,7 +107,6 @@ function AppNavigator() {
         options={{
           headerTitle: "NEW LEAD",
           headerBackTitle: "Back",
-          
         }}
       />
       <AppStack.Screen
@@ -123,6 +124,11 @@ function AppNavigator() {
           },
           headerBackTitle: "Back",
         }}
+      />
+      <AppStack.Screen
+        name="UpgradeSuccess"
+        component={UpgradeSuccessScreen}
+        options={{ headerShown: false }}
       />
     </AppStack.Navigator>
   );
@@ -164,7 +170,9 @@ export default function App() {
   }, [session]);
 
   if (loading || !fontsLoaded) {
-    return null;
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.black }} />
+    );
   }
 
   return (

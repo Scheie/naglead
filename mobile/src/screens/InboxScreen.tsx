@@ -33,17 +33,15 @@ export function InboxScreen({ navigation }: Props) {
     if (data) setLeads(data);
   }, []);
 
-  useEffect(() => {
-    fetchLeads().then(() => setLoading(false));
-  }, [fetchLeads]);
-
-  // Refetch when screen regains focus (e.g. after adding a lead)
+  // Fetch on mount and refetch when screen regains focus (e.g. after adding a lead)
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      fetchLeads();
+      fetchLeads().then(() => {
+        if (loading) setLoading(false);
+      });
     });
     return unsubscribe;
-  }, [navigation, fetchLeads]);
+  }, [navigation, fetchLeads, loading]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

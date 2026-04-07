@@ -1,5 +1,6 @@
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
+import Constants from "expo-constants";
 import { supabase } from "./supabase";
 
 // Configure how notifications appear when app is in foreground
@@ -8,11 +9,12 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
 export async function registerForPushNotifications(): Promise<string | null> {
-  // Check permissions
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
 
@@ -25,7 +27,6 @@ export async function registerForPushNotifications(): Promise<string | null> {
     return null;
   }
 
-  // Android needs a notification channel
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("nags", {
       name: "Lead Reminders",
@@ -35,11 +36,13 @@ export async function registerForPushNotifications(): Promise<string | null> {
     });
   }
 
-  // Get Expo Push Token
-  const tokenData = await Notifications.getExpoPushTokenAsync({
-    projectId: "", // Set via app.json extra.eas.projectId
-  });
+  const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+  if (!projectId) {
+    console.warn("Missing EAS projectId in app.json — push tokens will not work");
+    return null;
+  }
 
+  const tokenData = await Notifications.getExpoPushTokenAsync({ projectId });
   return tokenData.data;
 }
 
@@ -54,12 +57,10 @@ export async function savePushToken(token: string): Promise<void> {
 }
 
 export function addNotificationResponseListener(
-  callback: (leadId: string) => void
+  callback: (leadId?: string) => void
 ) {
   return Notifications.addNotificationResponseReceivedListener((response) => {
     const leadId = response.notification.request.content.data?.leadId;
-    if (leadId && typeof leadId === "string") {
-      callback(leadId);
-    }
+    callback(typeof leadId === "string" ? leadId : undefined);
   });
 }

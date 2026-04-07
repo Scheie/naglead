@@ -295,7 +295,7 @@ export function SettingsScreen() {
       Alert.alert("Error", "Failed to save settings");
     } else {
       setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
+      setTimeout(() => setSaved(false), 3000);
     }
   }
 
@@ -318,6 +318,10 @@ export function SettingsScreen() {
           body: JSON.stringify({ plan }),
         }
       );
+      if (!res.ok) {
+        Alert.alert("Error", "Failed to start checkout");
+        return;
+      }
       const data = await res.json();
       if (data.url) {
         Linking.openURL(data.url);
