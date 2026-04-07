@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, TouchableOpacity, Text as RNText } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Teko_700Bold } from "@expo-google-fonts/teko";
@@ -17,6 +17,7 @@ import { LoginScreen } from "./src/screens/LoginScreen";
 import { SignupScreen } from "./src/screens/SignupScreen";
 import { InboxScreen } from "./src/screens/InboxScreen";
 import { AddLeadScreen } from "./src/screens/AddLeadScreen";
+import { SettingsScreen } from "./src/screens/SettingsScreen";
 import {
   registerForPushNotifications,
   savePushToken,
@@ -71,7 +72,7 @@ function AppNavigator() {
       <AppStack.Screen
         name="Inbox"
         component={InboxScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: "NAGLEAD",
           headerTitleStyle: {
             fontFamily: "Teko-Bold",
@@ -81,7 +82,22 @@ function AppNavigator() {
           headerStyle: {
             backgroundColor: colors.black,
           },
-        }}
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Settings")}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: colors.zinc[900],
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <RNText style={{ fontSize: 18 }}>⚙</RNText>
+            </TouchableOpacity>
+          ),
+        })}
       />
       <AppStack.Screen
         name="AddLead"
@@ -90,6 +106,22 @@ function AppNavigator() {
           headerTitle: "NEW LEAD",
           headerBackTitle: "Back",
           
+        }}
+      />
+      <AppStack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          headerTitle: "SETTINGS",
+          headerTitleStyle: {
+            fontFamily: "Teko-Bold",
+            fontSize: 24,
+            color: colors.white,
+          },
+          headerStyle: {
+            backgroundColor: colors.black,
+          },
+          headerBackTitle: "Back",
         }}
       />
     </AppStack.Navigator>

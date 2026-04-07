@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useEffect, useRef } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import { colors } from "../lib/theme";
 import type { Lead } from "../lib/types";
 
@@ -45,6 +46,23 @@ export function LeadCard({
   const borderColor =
     lead.state === "reply_now" ? urgencyColor(lead.created_at) : colors.zinc[800];
 
+  const isCritical = lead.state === "reply_now" && borderColor === colors.red[600];
+  const isHigh = lead.state === "reply_now" && borderColor === colors.orange;
+
+  // Pulse animation for critical leads
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (!isCritical) return;
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 0.6, duration: 800, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [isCritical, pulseAnim]);
+
   if (compact) {
     return (
       <View style={[styles.compactCard, { borderColor: colors.zinc[800] }]}>
@@ -66,10 +84,20 @@ export function LeadCard({
   }
 
   return (
-    <View style={[styles.card, { borderColor }]}>
+    <Animated.View
+      style={[
+        styles.card,
+        { borderColor },
+        isCritical && { borderWidth: 2, opacity: pulseAnim },
+      ]}
+    >
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{lead.name}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <Text style={styles.name}>{lead.name}</Text>
+            {isCritical && <Text style={{ fontSize: 14 }}>🔴</Text>}
+            {isHigh && <Text style={{ fontSize: 14 }}>🟠</Text>}
+          </View>
           <Text style={styles.description}>{lead.description}</Text>
         </View>
         <Text style={[styles.age, { color: borderColor === colors.zinc[800] ? colors.zinc[500] : borderColor }]}>
@@ -103,7 +131,7 @@ export function LeadCard({
           <Text style={[styles.actionText, { color: colors.zinc[500] }]}>Lost</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
