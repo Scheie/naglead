@@ -37,6 +37,8 @@ Run these in the Supabase SQL Editor (all are idempotent, safe to re-run):
 - [ ] `20260405120000_add_intake_alias.sql` — intake email aliases
 - [ ] `20260407120000_stripe_customer_fields.sql` — Stripe columns
 - [ ] `20260407120001_pg_cron_stripe_sync.sql` — uncomment + set project ref
+- [ ] `20260407120002_add_webhook_token.sql` — cryptographic webhook tokens
+- [ ] `20260407120003_stripe_webhook_events.sql` — Stripe event idempotency
 
 ---
 
@@ -66,6 +68,9 @@ supabase secrets set VAPID_SUBJECT=mailto:hello@naglead.com
 supabase secrets set STRIPE_SECRET_KEY=sk_live_...
 supabase secrets set STRIPE_PRICE_ID_PRO_MONTHLY=price_...
 supabase secrets set STRIPE_PRICE_ID_PRO_ANNUAL=price_...
+
+# Mailgun (for email intake signature verification)
+supabase secrets set MAILGUN_SIGNING_KEY=...
 ```
 
 ---
@@ -98,10 +103,43 @@ supabase secrets set STRIPE_PRICE_ID_PRO_ANNUAL=price_...
   - Note the webhook signing secret (`whsec_...`)
 - [ ] Enable Stripe Customer Portal in Dashboard → Settings → Billing → Customer portal
 - [ ] Configure portal to allow: cancellation, plan switching, payment method updates
+- [ ] Test in test mode first (`sk_test_...`, `whsec_test_...`) before going live
 
 ---
 
-## 8. Vercel — Environment Variables
+## 8. Upstash Redis (Rate Limiting)
+
+- [ ] Create free account at upstash.com
+- [ ] Create a Redis database (choose closest region)
+- [ ] Copy REST URL and REST Token
+- [ ] Add to Vercel env vars (see step 9)
+
+Rate limits in place:
+- Webhook intake: 20 requests/hour per token
+- Stripe checkout: 5 requests/minute per user
+- Account deletion: 1 request/hour per user
+- Gracefully allows all requests if Redis is not configured
+
+---
+
+## 9. Mailgun (Email Intake)
+
+- [ ] Create Mailgun account (free tier: 100 emails/day)
+- [ ] Add and verify `leads.naglead.com` subdomain in Mailgun
+- [ ] Set DNS records for `leads.naglead.com`:
+  - MX records (Mailgun provides these)
+  - TXT record for SPF
+  - CNAME for DKIM
+- [ ] Create inbound route in Mailgun:
+  - Match: `.*@leads.naglead.com`
+  - Action: forward to `https://<SUPABASE_PROJECT_REF>.supabase.co/functions/v1/email-intake`
+- [ ] Copy signing key from Mailgun → Settings → API Security
+- [ ] Set `MAILGUN_SIGNING_KEY` as Supabase secret
+- [ ] Set `ANTHROPIC_API_KEY` as Supabase secret (for Claude email parsing)
+
+---
+
+## 10. Vercel — Environment Variables
 
 Set all of these in Vercel project settings → Environment Variables:
 
@@ -120,28 +158,17 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PRICE_ID_PRO_MONTHLY=price_...
 STRIPE_PRICE_ID_PRO_ANNUAL=price_...
 
+# Upstash Redis (rate limiting — optional but recommended)
+UPSTASH_REDIS_REST_URL=https://...upstash.io
+UPSTASH_REDIS_REST_TOKEN=...
+
 # Feature flag — flip to "true" when ready to accept payments
 NEXT_PUBLIC_PAYMENTS_LIVE=false
 ```
 
 ---
 
-## 9. Mailgun (Email Intake)
-
-- [ ] Create Mailgun account (free tier: 100 emails/day)
-- [ ] Add and verify `leads.naglead.com` subdomain in Mailgun
-- [ ] Set DNS records for `leads.naglead.com`:
-  - MX records (Mailgun provides these)
-  - TXT record for SPF
-  - CNAME for DKIM
-- [ ] Create inbound route in Mailgun:
-  - Match: `.*@leads.naglead.com`
-  - Action: forward to `https://<SUPABASE_PROJECT_REF>.supabase.co/functions/v1/email-intake`
-- [ ] Set `ANTHROPIC_API_KEY` as Supabase secret (for Claude email parsing)
-
----
-
-## 10. Vercel — Deployment Settings
+## 11. Vercel — Deployment Settings
 
 - [ ] Verify root directory is set to `web/` in Vercel project settings
 - [ ] Verify build command is `next build`
@@ -150,7 +177,7 @@ NEXT_PUBLIC_PAYMENTS_LIVE=false
 
 ---
 
-## 11. Go Live Sequence
+## 12. Go Live Sequence
 
 Do these in order:
 
@@ -158,26 +185,30 @@ Do these in order:
 2. [ ] Wait for DNS propagation + SSL (up to 24h, usually minutes)
 3. [ ] Verify the site loads at `naglead.com`
 4. [ ] Test signup flow end-to-end (create account, add lead, get nagged)
-5. [ ] Test Stripe in test mode first (`sk_test_...`, `whsec_test_...`)
-6. [ ] Switch to Stripe live keys
-7. [ ] Set `NEXT_PUBLIC_PAYMENTS_LIVE=true` in Vercel
-8. [ ] Redeploy
-9. [ ] Test a real $10 payment (refund yourself after)
-10. [ ] Start posting on Reddit
+5. [ ] Test Web Push notifications (allow notifications, wait for nag)
+6. [ ] Test email intake (forward an email to your intake address)
+7. [ ] Test Stripe in test mode first (`sk_test_...`, `whsec_test_...`)
+8. [ ] Switch to Stripe live keys
+9. [ ] Set `NEXT_PUBLIC_PAYMENTS_LIVE=true` in Vercel
+10. [ ] Redeploy
+11. [ ] Test a real $10 payment (refund yourself after)
+12. [ ] Verify webhook receives the event and updates subscription status
+13. [ ] Start posting on Reddit
 
 ---
 
-## 12. Post-Launch Monitoring
+## 13. Post-Launch Monitoring
 
 - [ ] Set up PostHog for product analytics (track signups, lead creation, upgrades)
 - [ ] Set up Sentry for error tracking
 - [ ] Monitor Stripe Dashboard for failed payments
+- [ ] Monitor Upstash Dashboard for rate limit hits
 - [ ] Check Supabase logs for Edge Function errors
 - [ ] Watch Vercel function logs for webhook/API issues
 
 ---
 
-## 13. Future Integrations (Post-MVP)
+## 14. Future Integrations (Post-MVP)
 
 These are built but not wired, or planned but not built:
 
@@ -200,7 +231,26 @@ These are built but not wired, or planned but not built:
 | Stripe | Free (2.9% + $0.30 per txn) | Payments |
 | Supabase | Free tier | Database, auth, edge functions |
 | Vercel | Free tier (upgrade to Pro $20/mo when taking payments) | Web hosting |
+| Upstash Redis | Free tier (10k commands/day) | Rate limiting |
 | Mailgun | Free tier (100 emails/day) | Email intake |
 | Anthropic API | Pay-per-use (~$0.001/email) | Email parsing |
 | Apple Developer | $99/yr | iOS app (when ready) |
 | Google Play Developer | $25 one-time | Android app (when ready) |
+
+---
+
+## Security Checklist
+
+Verify before launch:
+
+- [ ] Webhook uses cryptographic token (not user ID)
+- [ ] Stripe webhook signature verification is active
+- [ ] Mailgun webhook signature verification is active (set `MAILGUN_SIGNING_KEY`)
+- [ ] Origin validation on Stripe checkout/portal redirects
+- [ ] Rate limiting enabled (Upstash Redis configured)
+- [ ] Stripe webhook idempotency enabled (`stripe_webhook_events` table exists)
+- [ ] Service role key is server-only (not in any `NEXT_PUBLIC_` var)
+- [ ] `.env.local` is in `.gitignore` and never committed
+- [ ] RLS enabled on all tables (users, leads, lead_events, web_push_subscriptions)
+- [ ] Account deletion cancels Stripe subscription
+- [ ] Input sanitization on webhook payloads (HTML chars stripped, lengths capped)
