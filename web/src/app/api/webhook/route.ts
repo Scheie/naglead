@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { extractName, extractDescription, extractContact } from "@/lib/webhook-parser";
 import type { WebhookPayload } from "@/lib/webhook-parser";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 function getSupabase() {
   return createClient(
@@ -22,6 +23,15 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Missing or invalid webhook token" },
       { status: 400 }
+    );
+  }
+
+  // Rate limit by token before DB lookup
+  const { allowed } = await checkRateLimit("webhook", token);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Max 20 leads per hour." },
+      { status: 429 }
     );
   }
 

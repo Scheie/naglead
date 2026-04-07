@@ -77,6 +77,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const [saved, setSaved] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [copiedIntake, setCopiedIntake] = useState(false);
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
 
@@ -514,21 +515,27 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             <h2 className="font-loud text-xl headline uppercase">Your Data</h2>
           </div>
           <button
+            disabled={exporting}
             onClick={async () => {
-              const { data: leads } = await supabase
-                .from("leads")
-                .select("*")
-                .order("created_at", { ascending: false });
-              if (leads && leads.length > 0) {
-                const csv = leadsToCSV(leads);
-                const date = new Date().toISOString().split("T")[0];
-                downloadCSV(csv, `naglead-export-${date}.csv`);
+              setExporting(true);
+              try {
+                const { data: leads } = await supabase
+                  .from("leads")
+                  .select("*")
+                  .order("created_at", { ascending: false });
+                if (leads && leads.length > 0) {
+                  const csv = leadsToCSV(leads);
+                  const date = new Date().toISOString().split("T")[0];
+                  downloadCSV(csv, `naglead-export-${date}.csv`);
+                }
+              } finally {
+                setExporting(false);
               }
             }}
-            className="w-full flex items-center justify-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold py-3 rounded-lg hover:text-white hover:border-zinc-600 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold py-3 rounded-lg hover:text-white hover:border-zinc-600 transition-colors disabled:opacity-50"
           >
             <DownloadSimple weight="bold" />
-            Export All Leads (CSV)
+            {exporting ? "Exporting..." : "Export All Leads (CSV)"}
           </button>
           <p className="text-zinc-600 text-xs">
             Download all your leads as a CSV file. Your data belongs to you.

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST() {
   const supabase = await createServerClient();
@@ -11,6 +12,14 @@ export async function POST() {
 
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const { allowed } = await checkRateLimit("delete", user.id);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Please wait before trying again." },
+      { status: 429 }
+    );
   }
 
   const adminClient = createClient(

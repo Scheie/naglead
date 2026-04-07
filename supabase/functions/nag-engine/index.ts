@@ -103,6 +103,9 @@ Deno.serve(async (req) => {
     }
   }
 
+  const nagUpdates: Array<{ id: string; nag_count: number }> = [];
+  const nagEvents: Array<{ lead_id: string; user_id: string; event_type: string; metadata: Record<string, unknown> }> = [];
+
   for (const lead of leads ?? []) {
     const user = lead.users as {
       id: string;
@@ -172,27 +175,29 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Update lead nag tracking
-    await supabase
-      .from("leads")
-      .update({
-        last_nagged_at: now.toISOString(),
-        nag_count: lead.nag_count + 1,
-      })
-      .eq("id", lead.id);
-
-    // Log event
-    await supabase.from("lead_events").insert({
+    // Collect for batch update
+    nagUpdates.push({ id: lead.id, nag_count: lead.nag_count + 1 });
+    nagEvents.push({
       lead_id: lead.id,
       user_id: lead.user_id,
       event_type: "nagged",
-      metadata: {
-        nag_count: lead.nag_count + 1,
-        message: message.body,
-      },
+      metadata: { nag_count: lead.nag_count + 1, message: message.body },
     });
 
     nagged++;
+  }
+
+  // Batch update nag tracking
+  for (const update of nagUpdates) {
+    await supabase
+      .from("leads")
+      .update({ last_nagged_at: now.toISOString(), nag_count: update.nag_count })
+      .eq("id", update.id);
+  }
+
+  // Batch insert nag events
+  if (nagEvents.length > 0) {
+    await supabase.from("lead_events").insert(nagEvents);
   }
 
   return new Response(

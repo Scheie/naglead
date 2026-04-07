@@ -65,6 +65,22 @@ export async function POST(request: Request) {
 
   const admin = getAdminClient();
 
+  // Idempotency: skip already-processed events
+  const { data: existing } = await admin
+    .from("stripe_webhook_events")
+    .select("event_id")
+    .eq("event_id", event.id)
+    .single();
+
+  if (existing) {
+    return NextResponse.json({ received: true, duplicate: true });
+  }
+
+  // Record this event before processing
+  await admin
+    .from("stripe_webhook_events")
+    .insert({ event_id: event.id });
+
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
