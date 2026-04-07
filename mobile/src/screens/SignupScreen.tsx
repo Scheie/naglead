@@ -9,6 +9,7 @@ import {
   Platform,
   Alert,
   ScrollView,
+  Linking,
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import { colors } from "../lib/theme";
@@ -105,6 +106,18 @@ export function SignupScreen({ navigation }: Props) {
           textContentType="newPassword"
         />
 
+        <Text style={styles.legal}>
+          By signing up, you agree to our{" "}
+          <Text style={styles.legalLink} onPress={() => Linking.openURL("https://naglead.com/terms")}>
+            Terms of Service
+          </Text>{" "}
+          and{" "}
+          <Text style={styles.legalLink} onPress={() => Linking.openURL("https://naglead.com/privacy")}>
+            Privacy Policy
+          </Text>
+          .
+        </Text>
+
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
           onPress={handleSignup}
@@ -184,5 +197,17 @@ const styles = StyleSheet.create({
   },
   linkOrange: {
     color: colors.orange,
+  },
+  legal: {
+    textAlign: "center",
+    color: colors.zinc[500],
+    fontSize: 12,
+    fontFamily: "WorkSans-Regular",
+    marginTop: 12,
+    lineHeight: 18,
+  },
+  legalLink: {
+    color: colors.zinc[300],
+    textDecorationLine: "underline",
   },
 });

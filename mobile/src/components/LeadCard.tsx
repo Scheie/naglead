@@ -1,5 +1,13 @@
-import { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  TextInput,
+  Alert,
+} from "react-native";
 import { colors } from "../lib/theme";
 import type { Lead } from "../lib/types";
 
@@ -21,11 +29,14 @@ function urgencyColor(createdAt: string): string {
   return colors.red[600];
 }
 
+const LOST_REASONS = ["Competitor", "No budget", "No response", "Other"] as const;
+
 interface LeadCardProps {
   lead: Lead;
   compact?: boolean;
-  onMarkDone: () => void;
-  onMarkLost: () => void;
+  onMarkDone: (valueCents?: number) => void;
+  onMarkLost: (reason?: string) => void;
+  onSnooze?: (until: Date) => void;
   onCall?: () => void;
   onText?: () => void;
 }
@@ -35,9 +46,13 @@ export function LeadCard({
   compact,
   onMarkDone,
   onMarkLost,
+  onSnooze,
   onCall,
   onText,
 }: LeadCardProps) {
+  const [showValueInput, setShowValueInput] = useState(false);
+  const [valueInput, setValueInput] = useState("");
+  const [showLostReasons, setShowLostReasons] = useState(false);
   const age = timeAgo(
     lead.state === "waiting" && lead.replied_at
       ? lead.replied_at
@@ -63,22 +78,102 @@ export function LeadCard({
     return () => animation.stop();
   }, [isCritical, pulseAnim]);
 
+  function handleSnooze() {
+    const now = new Date();
+    const tomorrow8am = new Date(now);
+    tomorrow8am.setDate(tomorrow8am.getDate() + 1);
+    tomorrow8am.setHours(8, 0, 0, 0);
+
+    const in3days = new Date(now);
+    in3days.setDate(in3days.getDate() + 3);
+    in3days.setHours(9, 0, 0, 0);
+
+    const in1week = new Date(now);
+    in1week.setDate(in1week.getDate() + 7);
+    in1week.setHours(9, 0, 0, 0);
+
+    Alert.alert(`Snooze "${lead.name}"`, "Pause nags until:", [
+      { text: "1 hour", onPress: () => onSnooze?.(new Date(now.getTime() + 3600000)) },
+      { text: "Tomorrow 8am", onPress: () => onSnooze?.(tomorrow8am) },
+      { text: "3 days", onPress: () => onSnooze?.(in3days) },
+      { text: "1 week", onPress: () => onSnooze?.(in1week) },
+      { text: "Cancel", style: "cancel" },
+    ]);
+  }
+
+  function handleWon() {
+    if (showValueInput) {
+      const parsed = parseFloat(valueInput);
+      const valueCents = !isNaN(parsed) && parsed > 0 ? Math.round(parsed * 100) : undefined;
+      onMarkDone(valueCents);
+      setShowValueInput(false);
+      setValueInput("");
+    } else {
+      setShowValueInput(true);
+      setShowLostReasons(false);
+    }
+  }
+
+  function handleLostReason(reason: string) {
+    onMarkLost(reason);
+    setShowLostReasons(false);
+  }
+
+  // "Done" on reply_now cards means mark replied (no value needed)
+  function markReplied() {
+    onMarkDone();
+  }
+
   if (compact) {
     return (
       <View style={[styles.compactCard, { borderColor: colors.zinc[800] }]}>
         <View style={styles.compactContent}>
           <Text style={styles.name} numberOfLines={1}>{lead.name}</Text>
           <Text style={styles.description} numberOfLines={1}>{lead.description}</Text>
+          {showValueInput && (
+            <View style={styles.valueRow}>
+              <Text style={styles.currencySymbol}>$</Text>
+              <TextInput
+                style={styles.valueInput}
+                value={valueInput}
+                onChangeText={setValueInput}
+                placeholder="Value"
+                placeholderTextColor={colors.zinc[600]}
+                keyboardType="decimal-pad"
+                autoFocus
+                onSubmitEditing={handleWon}
+              />
+              <TouchableOpacity style={styles.valueSubmit} onPress={handleWon}>
+                <Text style={styles.valueSubmitText}>✓</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { onMarkDone(); setShowValueInput(false); }}>
+                <Text style={styles.skipText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {showLostReasons && (
+            <View style={styles.reasonRow}>
+              {LOST_REASONS.map((r) => (
+                <TouchableOpacity key={r} style={styles.reasonBtn} onPress={() => handleLostReason(r)}>
+                  <Text style={styles.reasonBtnText}>{r}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
-        <Text style={styles.age}>{age}</Text>
-        <View style={styles.compactActions}>
-          <TouchableOpacity style={styles.wonBtn} onPress={onMarkDone}>
-            <Text style={styles.wonBtnText}>WON</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.lostBtn} onPress={onMarkLost}>
-            <Text style={styles.lostBtnText}>LOST</Text>
-          </TouchableOpacity>
-        </View>
+        {!showValueInput && !showLostReasons && (
+          <>
+            <Text style={styles.age}>{age}</Text>
+            <View style={styles.compactActions}>
+              <TouchableOpacity style={styles.wonBtn} onPress={handleWon}>
+                <Text style={styles.wonBtnText}>WON</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.lostBtn} onPress={() => { setShowLostReasons(true); setShowValueInput(false); }}>
+                <Text style={styles.lostBtnText}>LOST</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     );
   }
@@ -124,13 +219,28 @@ export function LeadCard({
             <Text style={styles.actionText}>Text</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.doneBtn} onPress={onMarkDone}>
+        <TouchableOpacity style={styles.doneBtn} onPress={() => markReplied()}>
           <Text style={styles.doneBtnText}>Done</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionBtn} onPress={onMarkLost}>
+        {onSnooze && (
+          <TouchableOpacity style={styles.actionBtn} onPress={handleSnooze}>
+            <Text style={styles.actionText}>Snooze</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity style={styles.actionBtn} onPress={() => { setShowLostReasons(!showLostReasons); setShowValueInput(false); }}>
           <Text style={[styles.actionText, { color: colors.zinc[500] }]}>Lost</Text>
         </TouchableOpacity>
       </View>
+
+      {showLostReasons && (
+        <View style={styles.reasonRow}>
+          {LOST_REASONS.map((r) => (
+            <TouchableOpacity key={r} style={styles.reasonBtn} onPress={() => handleLostReason(r)}>
+              <Text style={styles.reasonBtnText}>{r}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
     </Animated.View>
   );
 }
@@ -151,6 +261,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     flexDirection: "row",
     alignItems: "center",
+    flexWrap: "wrap",
     gap: 8,
   },
   compactContent: {
@@ -238,6 +349,64 @@ const styles = StyleSheet.create({
   lostBtnText: {
     color: colors.zinc[400],
     fontFamily: "WorkSans-Bold",
+    fontSize: 12,
+  },
+  valueRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 8,
+  },
+  currencySymbol: {
+    color: colors.zinc[400],
+    fontFamily: "WorkSans-Bold",
+    fontSize: 16,
+  },
+  valueInput: {
+    flex: 1,
+    backgroundColor: colors.zinc[800],
+    borderWidth: 1,
+    borderColor: colors.zinc[700],
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    color: colors.white,
+    fontFamily: "WorkSans-Medium",
+    fontSize: 14,
+  },
+  valueSubmit: {
+    backgroundColor: colors.green[800],
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  valueSubmitText: {
+    color: colors.green[400],
+    fontFamily: "WorkSans-Bold",
+    fontSize: 14,
+  },
+  skipText: {
+    color: colors.zinc[500],
+    fontFamily: "WorkSans-Medium",
+    fontSize: 12,
+  },
+  reasonRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+    marginTop: 8,
+  },
+  reasonBtn: {
+    backgroundColor: colors.zinc[800],
+    borderWidth: 1,
+    borderColor: colors.zinc[700],
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  reasonBtnText: {
+    color: colors.zinc[400],
+    fontFamily: "WorkSans-SemiBold",
     fontSize: 12,
   },
 });

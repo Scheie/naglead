@@ -13,6 +13,7 @@ import { supabase } from "../lib/supabase";
 import { colors } from "../lib/theme";
 import type { Lead } from "../lib/types";
 import { LeadCard } from "../components/LeadCard";
+import { MonthlyScorecard } from "../components/MonthlyScorecard";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { AppStackParamList } from "../navigation";
 
@@ -22,6 +23,7 @@ export function InboxScreen({ navigation }: Props) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showScorecard, setShowScorecard] = useState(false);
 
   const fetchLeads = useCallback(async () => {
     const { data } = await supabase
@@ -88,23 +90,43 @@ export function InboxScreen({ navigation }: Props) {
     fetchLeads();
   }
 
-  async function markWon(leadId: string) {
+  async function markWon(leadId: string, valueCents?: number) {
     const now = new Date().toISOString();
     await supabase
       .from("leads")
-      .update({ state: "won", closed_at: now, updated_at: now })
+      .update({
+        state: "won",
+        closed_at: now,
+        updated_at: now,
+        value_cents: valueCents ?? null,
+      })
       .eq("id", leadId);
-    logEvent(leadId, "won");
+    logEvent(leadId, "won", valueCents ? { value_cents: valueCents } : undefined);
     fetchLeads();
   }
 
-  async function markLost(leadId: string) {
+  async function markLost(leadId: string, reason?: string) {
     const now = new Date().toISOString();
     await supabase
       .from("leads")
-      .update({ state: "lost", closed_at: now, updated_at: now })
+      .update({
+        state: "lost",
+        closed_at: now,
+        updated_at: now,
+        lost_reason: reason ?? null,
+      })
       .eq("id", leadId);
-    logEvent(leadId, "lost");
+    logEvent(leadId, "lost", reason ? { reason } : undefined);
+    fetchLeads();
+  }
+
+  async function snoozeLead(leadId: string, until: Date) {
+    const now = new Date().toISOString();
+    await supabase
+      .from("leads")
+      .update({ snoozed_until: until.toISOString(), updated_at: now })
+      .eq("id", leadId);
+    logEvent(leadId, "snoozed", { until: until.toISOString() });
     fetchLeads();
   }
 
@@ -132,8 +154,12 @@ export function InboxScreen({ navigation }: Props) {
     );
   }, [leads]);
 
+  const wonRevenue = useMemo(() => {
+    return wonThisMonth.reduce((sum, l) => sum + (l.value_cents ?? 0), 0);
+  }, [wonThisMonth]);
+
   const renderFooter = () => (
-    <View style={styles.statsRow}>
+    <TouchableOpacity style={styles.statsRow} onPress={() => setShowScorecard(true)}>
       <View style={styles.statCard}>
         <View style={styles.statHeader}>
           <View style={[styles.statDot, { backgroundColor: colors.green[500] }]} />
@@ -142,6 +168,11 @@ export function InboxScreen({ navigation }: Props) {
         <Text style={[styles.statValue, { color: colors.white }]}>
           {wonThisMonth.length}
         </Text>
+        {wonRevenue > 0 && (
+          <Text style={styles.revenueText}>
+            ${Math.round(wonRevenue / 100).toLocaleString()}
+          </Text>
+        )}
       </View>
       <View style={styles.statCard}>
         <View style={styles.statHeader}>
@@ -152,7 +183,8 @@ export function InboxScreen({ navigation }: Props) {
           {lostThisMonth.length}
         </Text>
       </View>
-    </View>
+      <Text style={styles.tapHint}>Tap for scorecard</Text>
+    </TouchableOpacity>
   );
 
   const renderHeader = () => (
@@ -238,10 +270,17 @@ export function InboxScreen({ navigation }: Props) {
             <LeadCard
               lead={lead}
               compact={lead.section === "waiting"}
-              onMarkDone={() =>
-                lead.section === "waiting" ? markWon(lead.id) : markReplied(lead.id)
+              onMarkDone={(valueCents?: number) =>
+                lead.section === "waiting"
+                  ? markWon(lead.id, valueCents)
+                  : markReplied(lead.id)
               }
-              onMarkLost={() => markLost(lead.id)}
+              onMarkLost={(reason?: string) => markLost(lead.id, reason)}
+              onSnooze={
+                lead.section === "reply_now"
+                  ? (until: Date) => snoozeLead(lead.id, until)
+                  : undefined
+              }
               onCall={lead.phone ? () => callLead(lead.phone!) : undefined}
               onText={lead.phone ? () => textLead(lead.phone!) : undefined}
             />
@@ -256,6 +295,12 @@ export function InboxScreen({ navigation }: Props) {
       >
         <Text style={styles.fabText}>+ ADD LEAD</Text>
       </TouchableOpacity>
+
+      <MonthlyScorecard
+        leads={leads}
+        visible={showScorecard}
+        onClose={() => setShowScorecard(false)}
+      />
     </View>
   );
 }
@@ -351,6 +396,20 @@ const styles = StyleSheet.create({
   statValue: {
     fontFamily: "Teko-Bold",
     fontSize: 32,
+  },
+  revenueText: {
+    fontFamily: "WorkSans-SemiBold",
+    fontSize: 12,
+    color: colors.green[400],
+    marginTop: 2,
+  },
+  tapHint: {
+    position: "absolute",
+    bottom: -18,
+    alignSelf: "center",
+    fontFamily: "WorkSans-Medium",
+    fontSize: 11,
+    color: colors.zinc[600],
   },
   fab: {
     position: "absolute",
