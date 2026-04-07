@@ -62,7 +62,9 @@ export function LeadCard({
   const urgency =
     lead.state === "reply_now" ? urgencyLevel(lead.created_at) : "low";
   const age = timeAgo(
-    lead.state === "waiting" ? lead.updated_at : lead.created_at
+    lead.state === "waiting" && lead.replied_at
+      ? lead.replied_at
+      : lead.created_at
   );
 
   if (compact) {
