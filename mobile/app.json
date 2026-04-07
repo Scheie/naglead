@@ -37,9 +37,7 @@
           "color": "#FF4500"
         }
       ],
-      "expo-secure-store",
-      "expo-linking",
-      "expo-font"
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {
