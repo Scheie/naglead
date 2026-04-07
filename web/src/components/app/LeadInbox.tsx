@@ -43,6 +43,15 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
   ).length;
   const atFreeLimit = isFree && activeLeadCount >= FREE_LEAD_LIMIT;
 
+  async function logEvent(leadId: string, eventType: string, metadata?: Record<string, unknown>) {
+    await supabase.from("lead_events").insert({
+      lead_id: leadId,
+      user_id: userId,
+      event_type: eventType,
+      metadata: metadata ?? null,
+    });
+  }
+
   const refreshLeads = useCallback(async () => {
     const { data } = await supabase
       .from("leads")
@@ -153,6 +162,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       return;
     }
     if (data) {
+      logEvent(data.id, "created", { source: "manual" });
       setLeads((prev) => [data, ...prev]);
       setShowAddLead(false);
       setDuplicateWarning(null);
@@ -168,6 +178,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       .eq("id", leadId);
 
     if (error) { toast("Failed to update lead", "error"); return; }
+    logEvent(leadId, "replied");
     const lead = leads.find((l) => l.id === leadId);
     setLeads((prev) =>
       prev.map((l) =>
@@ -192,6 +203,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       .eq("id", leadId);
 
     if (error) { toast("Failed to update lead", "error"); return; }
+    logEvent(leadId, "won", valueCents ? { value_cents: valueCents } : undefined);
     const lead = leads.find((l) => l.id === leadId);
     setLeads((prev) =>
       prev.map((l) =>
@@ -223,6 +235,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       .eq("id", leadId);
 
     if (error) { toast("Failed to update lead", "error"); return; }
+    logEvent(leadId, "lost", reason ? { reason } : undefined);
     const lead = leads.find((l) => l.id === leadId);
     setLeads((prev) =>
       prev.map((l) =>
@@ -247,6 +260,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       .eq("id", leadId);
 
     if (error) { toast("Failed to snooze lead", "error"); return; }
+    logEvent(leadId, "snoozed", { until: until.toISOString() });
     setLeads((prev) =>
       prev.map((l) =>
         l.id === leadId
