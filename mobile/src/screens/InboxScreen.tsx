@@ -116,6 +116,45 @@ export function InboxScreen({ navigation }: Props) {
     Linking.openURL(`sms:${phone}`);
   }
 
+  const wonThisMonth = useMemo(() => {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    return leads.filter(
+      (l) => l.state === "won" && l.closed_at && new Date(l.closed_at) >= monthStart
+    );
+  }, [leads]);
+
+  const lostThisMonth = useMemo(() => {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    return leads.filter(
+      (l) => l.state === "lost" && l.closed_at && new Date(l.closed_at) >= monthStart
+    );
+  }, [leads]);
+
+  const renderFooter = () => (
+    <View style={styles.statsRow}>
+      <View style={styles.statCard}>
+        <View style={styles.statHeader}>
+          <View style={[styles.statDot, { backgroundColor: colors.green[500] }]} />
+          <Text style={styles.statLabel}>Won</Text>
+        </View>
+        <Text style={[styles.statValue, { color: colors.white }]}>
+          {wonThisMonth.length}
+        </Text>
+      </View>
+      <View style={styles.statCard}>
+        <View style={styles.statHeader}>
+          <View style={[styles.statDot, { backgroundColor: colors.zinc[600] }]} />
+          <Text style={styles.statLabel}>Lost</Text>
+        </View>
+        <Text style={[styles.statValue, { color: colors.zinc[400] }]}>
+          {lostThisMonth.length}
+        </Text>
+      </View>
+    </View>
+  );
+
   const renderHeader = () => (
     <View>
       {/* Reply Now */}
@@ -181,6 +220,7 @@ export function InboxScreen({ navigation }: Props) {
           />
         }
         ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
         renderItem={({ item }) => {
           if (item.section === "waiting_header") {
             return (
@@ -276,6 +316,41 @@ const styles = StyleSheet.create({
     color: colors.zinc[500],
     fontFamily: "WorkSans-Medium",
     fontSize: 14,
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 24,
+    marginBottom: 16,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.zinc[900],
+    borderWidth: 1,
+    borderColor: colors.zinc[800],
+    borderRadius: 12,
+    padding: 16,
+  },
+  statHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 4,
+  },
+  statDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  statLabel: {
+    fontFamily: "WorkSans-Bold",
+    fontSize: 11,
+    color: colors.zinc[500],
+    textTransform: "uppercase",
+  },
+  statValue: {
+    fontFamily: "Teko-Bold",
+    fontSize: 32,
   },
   fab: {
     position: "absolute",

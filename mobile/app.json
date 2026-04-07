@@ -17,7 +17,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.naglead.app",
       "infoPlist": {
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -27,7 +29,9 @@
         "backgroundColor": "#FF4500"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": ["NOTIFICATIONS"]
+      "permissions": [
+        "NOTIFICATIONS"
+      ]
     },
     "plugins": [
       [
@@ -37,7 +41,8 @@
           "color": "#FF4500"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font"
     ],
     "extra": {
       "eas": {

@@ -87,8 +87,9 @@ function AppNavigator() {
         name="AddLead"
         component={AddLeadScreen}
         options={{
-          headerTitle: "",
-          presentation: "modal",
+          headerTitle: "NEW LEAD",
+          headerBackTitle: "Back",
+          
         }}
       />
     </AppStack.Navigator>
