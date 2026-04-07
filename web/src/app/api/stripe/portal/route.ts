@@ -7,25 +7,37 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!);
 }
 
-export async function POST(request: Request) {
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-
-  const admin = createClient(
+function getAdminClient() {
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+}
+
+export async function POST(request: Request) {
+  const admin = getAdminClient();
+
+  // Support both cookie auth (web) and Bearer token auth (mobile)
+  let userId: string | null = null;
+  const authHeader = request.headers.get("authorization");
+
+  if (authHeader?.startsWith("Bearer ")) {
+    const { data: { user } } = await admin.auth.getUser(authHeader.slice(7));
+    userId = user?.id ?? null;
+  } else {
+    const supabase = await createServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    userId = user?.id ?? null;
+  }
+
+  if (!userId) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
 
   const { data: profile } = await admin
     .from("users")
     .select("stripe_customer_id")
-    .eq("id", user.id)
+    .eq("id", userId)
     .single();
 
   if (!profile?.stripe_customer_id) {

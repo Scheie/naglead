@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   Switch,
+  Linking,
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import { colors } from "../lib/theme";
@@ -40,6 +41,59 @@ export function SettingsScreen() {
       .from("users")
       .update({ nag_enabled: enabled })
       .eq("id", profile.id);
+  }
+
+  async function handleUpgrade(plan: "pro" | "pro_annual") {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      Alert.alert("Error", "Not logged in");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://naglead.com/api/mobile/checkout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ plan }),
+        }
+      );
+      const data = await res.json();
+      if (data.url) {
+        Linking.openURL(data.url);
+      } else {
+        Alert.alert("Error", data.error ?? "Failed to start checkout");
+      }
+    } catch {
+      Alert.alert("Error", "Could not connect to server");
+    }
+  }
+
+  async function handleManageSubscription() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    try {
+      const res = await fetch(
+        `https://naglead.com/api/stripe/portal`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.url) {
+        Linking.openURL(data.url);
+      }
+    } catch {
+      Alert.alert("Error", "Could not connect to server");
+    }
   }
 
   async function handleSignOut() {
@@ -122,12 +176,35 @@ export function SettingsScreen() {
             ? "Pro Annual"
             : profile?.subscription_status === "pro"
               ? "Pro"
-              : "Free"}
+              : "Free (5 active leads)"}
         </Text>
+
         {profile?.subscription_status === "free" && (
-          <Text style={styles.proHint}>
-            Pro plans coming soon — unlimited leads
-          </Text>
+          <View style={{ marginTop: 12, gap: 8 }}>
+            <TouchableOpacity
+              style={styles.upgradeBtn}
+              onPress={() => handleUpgrade("pro")}
+            >
+              <Text style={styles.upgradeBtnText}>UPGRADE TO PRO — $10/MO</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.upgradeAnnualBtn}
+              onPress={() => handleUpgrade("pro_annual")}
+            >
+              <Text style={styles.upgradeAnnualText}>Go Annual — $89/yr (save $31)</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {profile?.subscription_status !== "free" && (
+          <TouchableOpacity
+            style={{ marginTop: 12 }}
+            onPress={handleManageSubscription}
+          >
+            <Text style={styles.proHint}>
+              Manage subscription, billing, or cancel
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
 
@@ -234,6 +311,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+  },
+  upgradeBtn: {
+    backgroundColor: colors.orange,
+    paddingVertical: 14,
+    borderRadius: 4,
+    shadowColor: colors.black,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 6,
+  },
+  upgradeBtnText: {
+    fontFamily: "Teko-Bold",
+    fontSize: 22,
+    color: colors.black,
+    textAlign: "center",
+  },
+  upgradeAnnualBtn: {
+    backgroundColor: colors.zinc[800],
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  upgradeAnnualText: {
+    fontFamily: "WorkSans-SemiBold",
+    fontSize: 14,
+    color: colors.zinc[300],
+    textAlign: "center",
   },
   signOutBtn: {
     backgroundColor: colors.zinc[900],
