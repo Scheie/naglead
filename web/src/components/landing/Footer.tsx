@@ -26,12 +26,23 @@ export function Footer() {
               Built for people who work with their hands, not keyboards. Go win
               some bids.
             </p>
+            <div className="mt-4 text-zinc-600 text-xs space-y-1 text-center md:text-left">
+              <p>
+                <a
+                  href="mailto:hello@naglead.com"
+                  className="text-zinc-500 hover:text-nag-orange transition-colors"
+                >
+                  hello@naglead.com
+                </a>
+              </p>
+              <p>NagLead Systems — Norway</p>
+            </div>
           </div>
 
           {/* Links */}
           <div className="flex gap-12 font-loud text-xl headline text-zinc-400">
             <div className="flex flex-col gap-2 text-center md:text-left">
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="/login" className="hover:text-white transition-colors">
                 LOGIN
               </Link>
               <Link href="#how" className="hover:text-white transition-colors">
@@ -45,14 +56,17 @@ export function Footer() {
               </Link>
             </div>
             <div className="flex flex-col gap-2 text-center md:text-left">
-              <Link href="#" className="hover:text-white transition-colors">
+              <a href="mailto:hello@naglead.com" className="hover:text-white transition-colors">
                 CONTACT US
-              </Link>
+              </a>
               <Link href="/privacy" className="hover:text-white transition-colors">
                 PRIVACY POLICY
               </Link>
               <Link href="/terms" className="hover:text-white transition-colors">
                 TERMS OF SERVICE
+              </Link>
+              <Link href="/refunds" className="hover:text-white transition-colors">
+                REFUNDS
               </Link>
             </div>
           </div>
