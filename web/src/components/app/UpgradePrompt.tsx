@@ -60,8 +60,8 @@ export function UpgradePrompt({ activeCount, limit, onClose }: UpgradePromptProp
         </p>
 
         <p className="text-zinc-500 text-sm mb-8">
-          Upgrade to Pro for unlimited leads, auto-add leads via email and
-          web forms, and full monthly scorecards.
+          Upgrade to Pro for unlimited leads, auto-add leads via email
+          and phone, and more.
         </p>
 
         {process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true" ? (
