@@ -34,6 +34,13 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
 
+    const emailDomain = email.split("@")[1]?.toLowerCase();
+    if (emailDomain === "naglead.com" || emailDomain === "leads.naglead.com") {
+      setError("You cannot register with a naglead.com email address.");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,

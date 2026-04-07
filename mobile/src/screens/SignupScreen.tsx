@@ -28,6 +28,13 @@ export function SignupScreen({ navigation }: Props) {
     if (!name.trim() || !email.trim() || !password) return;
     setLoading(true);
 
+    const emailDomain = email.trim().split("@")[1]?.toLowerCase();
+    if (emailDomain === "naglead.com" || emailDomain === "leads.naglead.com") {
+      Alert.alert("Invalid email", "You cannot register with a naglead.com email address.");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
