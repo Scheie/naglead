@@ -80,7 +80,7 @@
 - [x] Done/Won/Lost actions on lead cards
 - [x] Auth screens (login + signup)
 - [x] Deep linking (naglead:// scheme for payment redirect)
-- [ ] Download fonts (Teko-Bold, WorkSans-*) to assets/fonts/
+- [x] Fonts via @expo-google-fonts packages
 - [ ] Set EAS project ID in app.json
 - [ ] Snooze action on leads
 - [ ] Actionable notifications (Call directly from notification)

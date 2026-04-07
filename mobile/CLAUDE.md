@@ -35,12 +35,8 @@ mobile/
 ```
 
 ## Fonts
-Download and place in `assets/fonts/`:
-- Teko-Bold.ttf (from Google Fonts)
-- WorkSans-Regular.ttf
-- WorkSans-Medium.ttf
-- WorkSans-SemiBold.ttf
-- WorkSans-Bold.ttf
+Loaded via `@expo-google-fonts/teko` and `@expo-google-fonts/work-sans` packages.
+No manual font downloads needed — they're bundled at build time.
 
 ## Running
 ```bash

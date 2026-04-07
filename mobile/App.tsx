@@ -2,6 +2,13 @@ import { useEffect } from "react";
 import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Teko_700Bold } from "@expo-google-fonts/teko";
+import {
+  WorkSans_400Regular,
+  WorkSans_500Medium,
+  WorkSans_600SemiBold,
+  WorkSans_700Bold,
+} from "@expo-google-fonts/work-sans";
 import { useFonts } from "expo-font";
 import * as Linking from "expo-linking";
 
@@ -92,11 +99,11 @@ export default function App() {
   const { session, loading } = useAuth();
 
   const [fontsLoaded] = useFonts({
-    "Teko-Bold": require("./assets/fonts/Teko-Bold.ttf"),
-    "WorkSans-Regular": require("./assets/fonts/WorkSans-Regular.ttf"),
-    "WorkSans-Medium": require("./assets/fonts/WorkSans-Medium.ttf"),
-    "WorkSans-SemiBold": require("./assets/fonts/WorkSans-SemiBold.ttf"),
-    "WorkSans-Bold": require("./assets/fonts/WorkSans-Bold.ttf"),
+    "Teko-Bold": Teko_700Bold,
+    "WorkSans-Regular": WorkSans_400Regular,
+    "WorkSans-Medium": WorkSans_500Medium,
+    "WorkSans-SemiBold": WorkSans_600SemiBold,
+    "WorkSans-Bold": WorkSans_700Bold,
   });
 
   // Register for push notifications when logged in
