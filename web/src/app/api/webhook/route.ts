@@ -10,25 +10,28 @@ function getSupabase() {
   );
 }
 
+function sanitize(input: string, maxLen: number): string {
+  return input.replace(/[<>]/g, "").trim().slice(0, maxLen);
+}
+
 export async function POST(request: Request) {
-  // Extract user token from URL path or query parameter
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
 
-  if (!token) {
+  if (!token || token.length < 16) {
     return NextResponse.json(
-      { error: "Missing user token. URL format: /api/webhook?token=YOUR_TOKEN" },
+      { error: "Missing or invalid webhook token" },
       { status: 400 }
     );
   }
 
-  // Look up user by token (token = user ID for simplicity in v1)
   const supabase = getSupabase();
 
+  // Look up user by cryptographic webhook token (not user ID)
   const { data: user, error: userError } = await supabase
     .from("users")
     .select("id, subscription_status")
-    .eq("id", token)
+    .eq("webhook_token", token)
     .single();
 
   if (userError || !user) {
@@ -38,7 +41,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Pro feature check
   if (user.subscription_status === "free") {
     return NextResponse.json(
       { error: "Webhook intake requires a Pro subscription" },
@@ -46,7 +48,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Parse body
   let payload: WebhookPayload;
   const contentType = request.headers.get("content-type") ?? "";
 
@@ -57,7 +58,6 @@ export async function POST(request: Request) {
       const formData = await request.formData();
       payload = Object.fromEntries(formData.entries()) as WebhookPayload;
     } else {
-      // Try JSON anyway
       payload = await request.json();
     }
   } catch {
@@ -67,20 +67,18 @@ export async function POST(request: Request) {
     );
   }
 
-  // Extract and validate lead fields
-  const name = extractName(payload).slice(0, 255);
-  const description = extractDescription(payload).slice(0, 1000);
+  const name = sanitize(extractName(payload), 255);
+  const description = sanitize(extractDescription(payload), 1000);
   const { phone, email } = extractContact(payload);
 
-  // Create the lead
   const { data: lead, error: insertError } = await supabase
     .from("leads")
     .insert({
       user_id: user.id,
       name,
       description,
-      phone,
-      email,
+      phone: phone?.slice(0, 30) ?? null,
+      email: email?.slice(0, 255) ?? null,
       state: "reply_now",
       source: "webhook",
     })
@@ -95,28 +93,23 @@ export async function POST(request: Request) {
     );
   }
 
-  // Log the event
   await supabase.from("lead_events").insert({
     lead_id: lead.id,
     user_id: user.id,
     event_type: "created",
-    metadata: { source: "webhook", parsed: { name, description, phone, email } },
+    metadata: { source: "webhook" },
   });
 
   return NextResponse.json(
-    {
-      ok: true,
-      lead_id: lead.id,
-      parsed: { name, description, phone, email },
-    },
+    { ok: true, lead_id: lead.id },
     { status: 201 }
   );
 }
 
-// Health check
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    usage: "POST /api/webhook?token=YOUR_USER_ID with JSON body: { name, phone, email, message }",
+    usage: "POST /api/webhook?token=YOUR_WEBHOOK_TOKEN with JSON body: { name, phone, email, message }",
+    note: "Find your webhook token in Settings",
   });
 }

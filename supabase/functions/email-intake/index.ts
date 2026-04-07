@@ -108,6 +108,50 @@ Deno.serve(async (req) => {
     });
   }
 
+  // Verify Mailgun webhook signature if signing key is configured
+  const mailgunSigningKey = Deno.env.get("MAILGUN_SIGNING_KEY");
+  if (mailgunSigningKey) {
+    const timestamp = String(formData.get("timestamp") ?? "");
+    const token = String(formData.get("token") ?? "");
+    const signature = String(formData.get("signature") ?? "");
+
+    if (!timestamp || !token || !signature) {
+      return new Response(JSON.stringify({ error: "Missing Mailgun signature" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Reject old timestamps (> 5 minutes) to prevent replay attacks
+    const age = Math.abs(Date.now() / 1000 - Number(timestamp));
+    if (age > 300) {
+      return new Response(JSON.stringify({ error: "Stale webhook timestamp" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(mailgunSigningKey),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const data = encoder.encode(timestamp + token);
+    const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, data));
+    const expectedSig = Array.from(sig).map(b => b.toString(16).padStart(2, "0")).join("");
+
+    if (expectedSig !== signature) {
+      console.error("Mailgun signature verification failed");
+      return new Response(JSON.stringify({ error: "Invalid signature" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
   const recipient = String(formData.get("recipient") ?? "");
   const sender = String(formData.get("sender") ?? "");
   const from = String(formData.get("from") ?? sender);

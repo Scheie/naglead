@@ -35,7 +35,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const origin = request.headers.get("origin") ?? "https://naglead.com";
+  const allowedOrigins = [
+    "https://naglead.com",
+    "https://www.naglead.com",
+    ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
+  ];
+  const requestOrigin = request.headers.get("origin");
+  const origin = requestOrigin && allowedOrigins.includes(requestOrigin)
+    ? requestOrigin
+    : "https://naglead.com";
 
   const stripe = getStripe();
   const session = await stripe.billingPortal.sessions.create({

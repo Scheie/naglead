@@ -23,6 +23,7 @@ export interface User {
   nag_quiet_end: string;
   push_token: string | null;
   intake_alias: string | null;
+  webhook_token: string | null;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   country: string;

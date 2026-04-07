@@ -75,8 +75,16 @@ export async function POST(request: Request) {
       .eq("id", user.id);
   }
 
-  // Create checkout session
-  const origin = request.headers.get("origin") ?? "https://naglead.com";
+  // Create checkout session — validate origin to prevent redirect attacks
+  const allowedOrigins = [
+    "https://naglead.com",
+    "https://www.naglead.com",
+    ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
+  ];
+  const requestOrigin = request.headers.get("origin");
+  const origin = requestOrigin && allowedOrigins.includes(requestOrigin)
+    ? requestOrigin
+    : "https://naglead.com";
 
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
