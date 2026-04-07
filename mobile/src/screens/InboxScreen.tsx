@@ -37,6 +37,14 @@ export function InboxScreen({ navigation }: Props) {
     fetchLeads().then(() => setLoading(false));
   }, [fetchLeads]);
 
+  // Refetch when screen regains focus (e.g. after adding a lead)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchLeads();
+    });
+    return unsubscribe;
+  }, [navigation, fetchLeads]);
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchLeads();
@@ -136,6 +144,10 @@ export function InboxScreen({ navigation }: Props) {
 
   function textLead(phone: string) {
     Linking.openURL(`sms:${phone}`);
+  }
+
+  function emailLead(email: string) {
+    Linking.openURL(`mailto:${email}`);
   }
 
   const wonThisMonth = useMemo(() => {
@@ -283,6 +295,7 @@ export function InboxScreen({ navigation }: Props) {
               }
               onCall={lead.phone ? () => callLead(lead.phone!) : undefined}
               onText={lead.phone ? () => textLead(lead.phone!) : undefined}
+              onEmail={lead.email ? () => emailLead(lead.email!) : undefined}
             />
           );
         }}

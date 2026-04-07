@@ -39,6 +39,7 @@ interface LeadCardProps {
   onSnooze?: (until: Date) => void;
   onCall?: () => void;
   onText?: () => void;
+  onEmail?: () => void;
 }
 
 export function LeadCard({
@@ -49,6 +50,7 @@ export function LeadCard({
   onSnooze,
   onCall,
   onText,
+  onEmail,
 }: LeadCardProps) {
   const [showValueInput, setShowValueInput] = useState(false);
   const [valueInput, setValueInput] = useState("");
@@ -166,10 +168,10 @@ export function LeadCard({
             <Text style={styles.age}>{age}</Text>
             <View style={styles.compactActions}>
               <TouchableOpacity style={styles.wonBtn} onPress={handleWon}>
-                <Text style={styles.wonBtnText}>WON</Text>
+                <Text style={styles.wonBtnText}>🏆 WON</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.lostBtn} onPress={() => { setShowLostReasons(true); setShowValueInput(false); }}>
-                <Text style={styles.lostBtnText}>LOST</Text>
+                <Text style={styles.lostBtnText}>✕ LOST</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -211,24 +213,29 @@ export function LeadCard({
       <View style={styles.actions}>
         {onCall && (
           <TouchableOpacity style={styles.actionBtn} onPress={onCall}>
-            <Text style={styles.actionText}>Call</Text>
+            <Text style={styles.actionText}>📞 Call</Text>
           </TouchableOpacity>
         )}
         {onText && (
           <TouchableOpacity style={styles.actionBtn} onPress={onText}>
-            <Text style={styles.actionText}>Text</Text>
+            <Text style={styles.actionText}>💬 Text</Text>
+          </TouchableOpacity>
+        )}
+        {onEmail && (
+          <TouchableOpacity style={styles.actionBtn} onPress={onEmail}>
+            <Text style={styles.actionText}>📧 Email</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity style={styles.doneBtn} onPress={() => markReplied()}>
-          <Text style={styles.doneBtnText}>Done</Text>
+          <Text style={styles.doneBtnText}>✅ Replied</Text>
         </TouchableOpacity>
         {onSnooze && (
           <TouchableOpacity style={styles.actionBtn} onPress={handleSnooze}>
-            <Text style={styles.actionText}>Snooze</Text>
+            <Text style={styles.actionText}>😴 Snooze</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity style={styles.actionBtn} onPress={() => { setShowLostReasons(!showLostReasons); setShowValueInput(false); }}>
-          <Text style={[styles.actionText, { color: colors.zinc[500] }]}>Lost</Text>
+          <Text style={[styles.actionText, { color: colors.zinc[500] }]}>✕ Lost</Text>
         </TouchableOpacity>
       </View>
 
