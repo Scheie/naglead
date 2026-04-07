@@ -9,5 +9,11 @@ supabase/.temp/
 *.iml
 .mcp.json
 
+# Mobile
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/.env
+
 # OS
 .DS_Store

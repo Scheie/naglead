@@ -73,11 +73,16 @@
 
 ## To Do — Mobile App (Expo)
 
-- [ ] Expo project scaffold
-- [ ] Push notification setup (Expo Push → FCM/APNs)
-- [ ] Lead inbox screen (mirror web app)
-- [ ] Add lead flow
-- [ ] Snooze/Done/Lost actions
+- [x] Expo project scaffold (TypeScript, React Navigation, Supabase)
+- [x] Push notification setup (Expo Push → FCM/APNs)
+- [x] Lead inbox screen (Reply Now / Waiting + pull to refresh)
+- [x] Add lead flow (name + need + optional phone/email)
+- [x] Done/Won/Lost actions on lead cards
+- [x] Auth screens (login + signup)
+- [x] Deep linking (naglead:// scheme for payment redirect)
+- [ ] Download fonts (Teko-Bold, WorkSans-*) to assets/fonts/
+- [ ] Set EAS project ID in app.json
+- [ ] Snooze action on leads
 - [ ] Actionable notifications (Call directly from notification)
 - [ ] App Store / Play Store submission
 
