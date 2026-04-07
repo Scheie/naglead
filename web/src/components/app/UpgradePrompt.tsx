@@ -20,6 +20,10 @@ export function UpgradePrompt({ activeCount, limit, onClose }: UpgradePromptProp
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
       });
+      if (!res.ok) {
+        setLoading(null);
+        return;
+      }
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;

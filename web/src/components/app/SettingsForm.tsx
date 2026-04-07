@@ -355,6 +355,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             <button
               onClick={async () => {
                 const res = await fetch("/api/stripe/portal", { method: "POST" });
+                if (!res.ok) return;
                 const data = await res.json();
                 if (data.url) window.location.href = data.url;
               }}
