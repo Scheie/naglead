@@ -6,6 +6,7 @@ import {
   FacebookLogo,
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import { AppStoreButtons } from "./AppStoreButtons";
 
 export function Footer() {
   return (
@@ -37,6 +38,7 @@ export function Footer() {
               </p>
               <p>NagLead Systems — Norway</p>
             </div>
+            <AppStoreButtons className="mt-4" />
           </div>
 
           {/* Links */}

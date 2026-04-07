@@ -3,6 +3,7 @@
 import { ArrowRight, PlayCircle } from "@phosphor-icons/react";
 import Link from "next/link";
 import { PhoneMockup } from "./PhoneMockup";
+import { AppStoreButtons } from "./AppStoreButtons";
 
 export function Hero() {
   return (
@@ -54,7 +55,9 @@ export function Hero() {
               </a>
             </div>
 
-            <div className="flex items-center gap-4 mt-6 text-sm text-zinc-500 font-semibold">
+            <AppStoreButtons className="mt-2" />
+
+            <div className="flex items-center gap-4 mt-2 text-sm text-zinc-500 font-semibold">
               <p>Built for tradespeople who are too busy to use a CRM.</p>
             </div>
           </div>
