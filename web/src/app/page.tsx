@@ -6,7 +6,8 @@ import {
   HowItWorks,
   EscalationTimeline,
   Pricing,
-  Testimonials,
+  // TODO: Re-enable Testimonials once we have real user quotes
+  // Testimonials,
   Footer,
 } from "@/components/landing";
 
@@ -20,7 +21,7 @@ export default function Home() {
       <HowItWorks />
       <EscalationTimeline />
       <Pricing />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Footer />
     </>
   );
