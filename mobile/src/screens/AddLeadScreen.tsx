@@ -35,12 +35,45 @@ export function AddLeadScreen({ navigation }: Props) {
       return;
     }
 
+    // Check for duplicate active leads by name or email
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    let dupeQuery = supabase
+      .from("leads")
+      .select("name")
+      .eq("user_id", user.id)
+      .in("state", ["reply_now", "waiting"]);
+
+    if (trimmedEmail) {
+      dupeQuery = dupeQuery.or(`name.ilike.${trimmedName},email.ilike.${trimmedEmail}`);
+    } else {
+      dupeQuery = dupeQuery.ilike("name", trimmedName);
+    }
+
+    const { data: dupes } = await dupeQuery;
+    if (dupes && dupes.length > 0) {
+      const proceed = await new Promise<boolean>((resolve) => {
+        Alert.alert(
+          "Possible duplicate",
+          `You already have an active lead named "${dupes[0].name}". Add anyway?`,
+          [
+            { text: "Cancel", style: "cancel", onPress: () => resolve(false) },
+            { text: "Add Anyway", onPress: () => resolve(true) },
+          ]
+        );
+      });
+      if (!proceed) {
+        setSaving(false);
+        return;
+      }
+    }
+
     const { error } = await supabase.from("leads").insert({
       user_id: user.id,
-      name: name.trim(),
+      name: trimmedName,
       description: description.trim(),
       phone: phone.trim() || null,
-      email: email.trim() || null,
+      email: trimmedEmail || null,
       state: "reply_now",
       source: "manual",
     });

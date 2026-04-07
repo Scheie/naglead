@@ -105,7 +105,8 @@ export function LeadCard({
 
   function handleWon() {
     if (showValueInput) {
-      const parsed = parseFloat(valueInput);
+      const cleaned = valueInput.replace(/[^0-9.]/g, "");
+      const parsed = parseFloat(cleaned);
       const valueCents = !isNaN(parsed) && parsed > 0 ? Math.round(parsed * 100) : undefined;
       onMarkDone(valueCents);
       setShowValueInput(false);

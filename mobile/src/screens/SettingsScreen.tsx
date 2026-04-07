@@ -11,6 +11,7 @@ import {
   TextInput,
   Platform,
 } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { supabase } from "../lib/supabase";
 import { colors } from "../lib/theme";
 import { PickerModal } from "../components/PickerModal";
@@ -99,6 +100,109 @@ const ALL_HOURS = Array.from({ length: 24 }, (_, i) => {
   return `${hh}:00`;
 });
 
+const SETUP_GUIDES: { provider: string; steps: string[] }[] = [
+  {
+    provider: "Gmail",
+    steps: [
+      'Open Gmail Settings (gear icon) → "See all settings"',
+      'Go to the "Forwarding and POP/IMAP" tab',
+      'Click "Add a forwarding address" and paste your NagLead address',
+      "Gmail will send a confirmation — check your inbox for the code",
+      'Create a filter for your lead sources, set action to "Forward to" your NagLead address',
+    ],
+  },
+  {
+    provider: "Outlook / Microsoft 365",
+    steps: [
+      "Go to Settings → Mail → Rules",
+      'Click "Add new rule", name it "Forward leads to NagLead"',
+      'Set condition: "From contains" your lead source domains',
+      'Set action: "Forward to" → paste your NagLead address',
+      "Save the rule",
+    ],
+  },
+  {
+    provider: "iPhone / iOS Mail",
+    steps: [
+      "iOS Mail doesn't support auto-forwarding rules",
+      "When you get a lead email, tap the Forward button",
+      "Forward it to your NagLead address",
+      "For automatic forwarding, set up a rule in your email provider instead",
+    ],
+  },
+  {
+    provider: "Yahoo Mail",
+    steps: [
+      "Go to Settings → More Settings → Mailboxes",
+      "Select your email address",
+      'Under "Forwarding", enter your NagLead address',
+      "Click Verify and follow the confirmation steps",
+    ],
+  },
+  {
+    provider: "Any Email (Manual)",
+    steps: [
+      "Open any email that contains a lead",
+      "Tap Forward",
+      "Send to your NagLead address",
+      "We'll extract the name, phone, email, and what they need automatically",
+    ],
+  },
+];
+
+function EmailIntakeSection({ alias }: { alias: string }) {
+  const [copied, setCopied] = useState(false);
+  const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
+  const intakeEmail = `${alias}@leads.naglead.com`;
+
+  async function copyEmail() {
+    await Clipboard.setStringAsync(intakeEmail);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <>
+      <Text style={styles.sectionTitle}>EMAIL INTAKE</Text>
+      <View style={styles.card}>
+        <Text style={styles.valueSubtle}>Forward lead emails to:</Text>
+        <TouchableOpacity onPress={copyEmail} style={styles.copyRow}>
+          <Text style={[styles.value, { color: colors.orange, flex: 1 }]} numberOfLines={1}>
+            {intakeEmail}
+          </Text>
+          <Text style={styles.copyBtn}>{copied ? "COPIED" : "COPY"}</Text>
+        </TouchableOpacity>
+
+        <Text style={[styles.label, { marginTop: 16, marginBottom: 8 }]}>SETUP GUIDES</Text>
+        {SETUP_GUIDES.map((guide) => {
+          const isOpen = expandedGuide === guide.provider;
+          return (
+            <View key={guide.provider}>
+              <TouchableOpacity
+                style={styles.guideHeader}
+                onPress={() => setExpandedGuide(isOpen ? null : guide.provider)}
+              >
+                <Text style={styles.guideProvider}>{guide.provider}</Text>
+                <Text style={styles.pickerChevron}>{isOpen ? "⌄" : "›"}</Text>
+              </TouchableOpacity>
+              {isOpen && (
+                <View style={styles.guideSteps}>
+                  {guide.steps.map((step, i) => (
+                    <View key={i} style={styles.guideStep}>
+                      <Text style={styles.guideStepNum}>{i + 1}.</Text>
+                      <Text style={styles.guideStepText}>{step}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          );
+        })}
+      </View>
+    </>
+  );
+}
+
 export function SettingsScreen() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -110,6 +214,7 @@ export function SettingsScreen() {
   const [businessName, setBusinessName] = useState("");
   const [trade, setTrade] = useState("");
   const [nagEnabled, setNagEnabled] = useState(true);
+  const [quietHoursEnabled, setQuietHoursEnabled] = useState(true);
   const [quietStart, setQuietStart] = useState("21:00");
   const [quietEnd, setQuietEnd] = useState("07:00");
   const [timezone, setTimezone] = useState("America/New_York");
@@ -151,8 +256,12 @@ export function SettingsScreen() {
         setBusinessName(data.business_name ?? "");
         setTrade(data.trade ?? "");
         setNagEnabled(data.nag_enabled ?? true);
-        setQuietStart(data.nag_quiet_start ?? "21:00");
-        setQuietEnd(data.nag_quiet_end ?? "07:00");
+        const qs = data.nag_quiet_start ?? "21:00";
+        const qe = data.nag_quiet_end ?? "07:00";
+        setQuietStart(qs);
+        setQuietEnd(qe);
+        // If start equals end, quiet hours are effectively disabled
+        setQuietHoursEnabled(qs !== qe);
         setTimezone(data.timezone ?? "America/New_York");
         setCountry(data.country ?? "US");
       }
@@ -174,8 +283,8 @@ export function SettingsScreen() {
         business_name: businessName.trim() || null,
         trade: trade.trim() || null,
         nag_enabled: nagEnabled,
-        nag_quiet_start: quietStart,
-        nag_quiet_end: quietEnd,
+        nag_quiet_start: quietHoursEnabled ? quietStart : "00:00",
+        nag_quiet_end: quietHoursEnabled ? quietEnd : "00:00",
         timezone,
         country,
       })
@@ -222,7 +331,10 @@ export function SettingsScreen() {
 
   async function handleManageSubscription() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
+    if (!session) {
+      Alert.alert("Error", "Not logged in");
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -234,9 +346,15 @@ export function SettingsScreen() {
           },
         }
       );
+      if (!res.ok) {
+        Alert.alert("Error", "Could not load subscription portal");
+        return;
+      }
       const data = await res.json();
       if (data.url) {
         Linking.openURL(data.url);
+      } else {
+        Alert.alert("Error", "Could not load subscription portal");
       }
     } catch {
       Alert.alert("Error", "Could not connect to server");
@@ -384,29 +502,47 @@ export function SettingsScreen() {
 
         {nagEnabled && (
           <>
-            <View style={styles.quietRow}>
+            <View style={[styles.toggleRow, { marginTop: 14 }]}>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.label, { marginTop: 14 }]}>Quiet After</Text>
-                <TouchableOpacity
-                  style={styles.pickerBtn}
-                  onPress={() => setShowQuietStartPicker(true)}
-                >
-                  <Text style={styles.pickerBtnText}>{formatTime(quietStart)}</Text>
-                  <Text style={styles.pickerChevron}>›</Text>
-                </TouchableOpacity>
+                <Text style={styles.value}>Quiet Hours</Text>
+                <Text style={styles.valueSubtle}>
+                  {quietHoursEnabled
+                    ? "Pause nags during set hours"
+                    : "Nag me anytime, 24/7"}
+                </Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.label, { marginTop: 14 }]}>Resume At</Text>
-                <TouchableOpacity
-                  style={styles.pickerBtn}
-                  onPress={() => setShowQuietEndPicker(true)}
-                >
-                  <Text style={styles.pickerBtnText}>{formatTime(quietEnd)}</Text>
-                  <Text style={styles.pickerChevron}>›</Text>
-                </TouchableOpacity>
-              </View>
+              <Switch
+                value={quietHoursEnabled}
+                onValueChange={setQuietHoursEnabled}
+                trackColor={{ false: colors.zinc[700], true: colors.orange }}
+                thumbColor={colors.white}
+              />
             </View>
-            <Text style={styles.quietHint}>No nags during quiet hours</Text>
+
+            {quietHoursEnabled && (
+              <View style={styles.quietRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.label, { marginTop: 14 }]}>Quiet After</Text>
+                  <TouchableOpacity
+                    style={styles.pickerBtn}
+                    onPress={() => setShowQuietStartPicker(true)}
+                  >
+                    <Text style={styles.pickerBtnText}>{formatTime(quietStart)}</Text>
+                    <Text style={styles.pickerChevron}>›</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.label, { marginTop: 14 }]}>Resume At</Text>
+                  <TouchableOpacity
+                    style={styles.pickerBtn}
+                    onPress={() => setShowQuietEndPicker(true)}
+                  >
+                    <Text style={styles.pickerBtnText}>{formatTime(quietEnd)}</Text>
+                    <Text style={styles.pickerChevron}>›</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           </>
         )}
       </View>
@@ -464,15 +600,7 @@ export function SettingsScreen() {
 
       {/* Intake Email */}
       {profile?.intake_alias && (
-        <>
-          <Text style={styles.sectionTitle}>EMAIL INTAKE</Text>
-          <View style={styles.card}>
-            <Text style={styles.valueSubtle}>Forward lead emails to:</Text>
-            <Text style={[styles.value, { color: colors.orange, marginTop: 4 }]}>
-              {profile.intake_alias}@leads.naglead.com
-            </Text>
-          </View>
-        </>
+        <EmailIntakeSection alias={profile.intake_alias} />
       )}
 
       {/* Phone — coming soon */}
@@ -719,6 +847,59 @@ const styles = StyleSheet.create({
     fontFamily: "WorkSans-SemiBold",
     fontSize: 15,
     color: colors.red[400],
+  },
+  copyRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    gap: 8,
+  },
+  copyBtn: {
+    fontFamily: "WorkSans-Bold",
+    fontSize: 11,
+    color: colors.orange,
+    backgroundColor: "rgba(255, 69, 0, 0.1)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    overflow: "hidden",
+  },
+  guideHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.zinc[800],
+  },
+  guideProvider: {
+    fontFamily: "WorkSans-SemiBold",
+    fontSize: 14,
+    color: colors.zinc[300],
+  },
+  guideSteps: {
+    paddingVertical: 8,
+    paddingLeft: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.zinc[800],
+  },
+  guideStep: {
+    flexDirection: "row",
+    gap: 6,
+    marginBottom: 6,
+  },
+  guideStepNum: {
+    fontFamily: "WorkSans-Bold",
+    fontSize: 12,
+    color: colors.zinc[500],
+    width: 16,
+  },
+  guideStepText: {
+    fontFamily: "WorkSans-Regular",
+    fontSize: 13,
+    color: colors.zinc[400],
+    flex: 1,
+    lineHeight: 18,
   },
   comingSoonBadge: {
     alignSelf: "flex-start",

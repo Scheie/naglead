@@ -90,17 +90,18 @@ export function InboxScreen({ navigation }: Props) {
 
   async function markReplied(leadId: string) {
     const now = new Date().toISOString();
-    await supabase
+    const { error } = await supabase
       .from("leads")
       .update({ state: "waiting", replied_at: now, updated_at: now })
       .eq("id", leadId);
+    if (error) { Alert.alert("Error", "Failed to update lead. Check your connection."); return; }
     logEvent(leadId, "replied");
     fetchLeads();
   }
 
   async function markWon(leadId: string, valueCents?: number) {
     const now = new Date().toISOString();
-    await supabase
+    const { error } = await supabase
       .from("leads")
       .update({
         state: "won",
@@ -109,13 +110,14 @@ export function InboxScreen({ navigation }: Props) {
         value_cents: valueCents ?? null,
       })
       .eq("id", leadId);
+    if (error) { Alert.alert("Error", "Failed to update lead. Check your connection."); return; }
     logEvent(leadId, "won", valueCents ? { value_cents: valueCents } : undefined);
     fetchLeads();
   }
 
   async function markLost(leadId: string, reason?: string) {
     const now = new Date().toISOString();
-    await supabase
+    const { error } = await supabase
       .from("leads")
       .update({
         state: "lost",
@@ -124,16 +126,18 @@ export function InboxScreen({ navigation }: Props) {
         lost_reason: reason ?? null,
       })
       .eq("id", leadId);
+    if (error) { Alert.alert("Error", "Failed to update lead. Check your connection."); return; }
     logEvent(leadId, "lost", reason ? { reason } : undefined);
     fetchLeads();
   }
 
   async function snoozeLead(leadId: string, until: Date) {
     const now = new Date().toISOString();
-    await supabase
+    const { error } = await supabase
       .from("leads")
       .update({ snoozed_until: until.toISOString(), updated_at: now })
       .eq("id", leadId);
+    if (error) { Alert.alert("Error", "Failed to snooze lead. Check your connection."); return; }
     logEvent(leadId, "snoozed", { until: until.toISOString() });
     fetchLeads();
   }

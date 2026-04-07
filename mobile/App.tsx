@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { StatusBar, TouchableOpacity, Text as RNText } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Teko_700Bold } from "@expo-google-fonts/teko";
 import {
@@ -130,6 +130,7 @@ function AppNavigator() {
 
 export default function App() {
   const { session, loading } = useAuth();
+  const navigationRef = useRef<NavigationContainerRef<AppStackParamList>>(null);
 
   const [fontsLoaded] = useFonts({
     "Teko-Bold": Teko_700Bold,
@@ -152,8 +153,11 @@ export default function App() {
 
     setupPush();
 
-    const sub = addNotificationResponseListener((leadId) => {
-      console.log("Notification tapped for lead:", leadId);
+    const sub = addNotificationResponseListener(() => {
+      // Navigate to inbox so it refetches leads on focus
+      if (navigationRef.current?.isReady()) {
+        navigationRef.current.navigate("Inbox");
+      }
     });
 
     return () => sub.remove();
@@ -164,7 +168,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer linking={session ? linking : undefined}>
+    <NavigationContainer ref={navigationRef} linking={session ? linking : undefined}>
       <StatusBar barStyle="light-content" backgroundColor={colors.black} />
       {session ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
