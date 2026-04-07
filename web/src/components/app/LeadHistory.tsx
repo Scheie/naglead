@@ -39,9 +39,10 @@ function formatEventTime(iso: string): string {
 
 interface LeadHistoryProps {
   leadId: string;
+  createdAt: string;
 }
 
-export function LeadHistory({ leadId }: LeadHistoryProps) {
+export function LeadHistory({ leadId, createdAt }: LeadHistoryProps) {
   const [events, setEvents] = useState<LeadEvent[] | null>(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,7 +61,19 @@ export function LeadHistory({ leadId }: LeadHistoryProps) {
         .select("*")
         .eq("lead_id", leadId)
         .order("created_at", { ascending: false });
-      setEvents(data ?? []);
+      const events = data ?? [];
+      // Always show at least a "created" entry
+      if (events.length === 0) {
+        events.push({
+          id: "fallback-created",
+          lead_id: leadId,
+          user_id: "",
+          event_type: "created",
+          metadata: null,
+          created_at: createdAt,
+        });
+      }
+      setEvents(events);
       setLoading(false);
     }
 
@@ -103,9 +116,7 @@ export function LeadHistory({ leadId }: LeadHistoryProps) {
                 </div>
               );
             })
-          ) : (
-            <p className="text-xs text-zinc-600 py-1">No history yet.</p>
-          )}
+          ) : null}
         </div>
       )}
     </div>

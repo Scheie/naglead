@@ -245,7 +245,7 @@ export function LeadCard({
         )}
       </div>
 
-      <LeadHistory leadId={lead.id} />
+      <LeadHistory leadId={lead.id} createdAt={lead.created_at} />
     </div>
   );
 }
