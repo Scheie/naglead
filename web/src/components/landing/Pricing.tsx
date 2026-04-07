@@ -15,7 +15,7 @@ const tiers = [
     features: [
       { text: "Up to 5 Active Leads", included: true },
       { text: "Standard Nagging", included: true },
-      { text: "No Email Forwarding", included: false },
+      { text: "No Auto-Add Leads", included: false },
     ],
     cta: "START FREE",
     highlighted: false,
