@@ -28,6 +28,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
   const [showAddLead, setShowAddLead] = useState(false);
   const [snoozeTarget, setSnoozeTarget] = useState<Lead | null>(null);
+  const [showSnoozed, setShowSnoozed] = useState(false);
   const [showScorecard, setShowScorecard] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [duplicateWarning, setDuplicateWarning] = useState<{
@@ -71,6 +72,22 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
         .sort(
           (a, b) =>
             new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        ),
+    [leads]
+  );
+
+  const snoozed = useMemo(
+    () =>
+      leads
+        .filter(
+          (l) =>
+            l.state === "reply_now" &&
+            l.snoozed_until &&
+            new Date(l.snoozed_until) > new Date()
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.snoozed_until!).getTime() - new Date(b.snoozed_until!).getTime()
         ),
     [leads]
   );
@@ -272,6 +289,31 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
     toast(`Snoozed — we'll remind you later`);
   }
 
+  async function unsnoozeLead(leadId: string) {
+    const { error } = await supabase
+      .from("leads")
+      .update({ snoozed_until: null })
+      .eq("id", leadId);
+
+    if (error) { toast("Failed to unsnooze lead", "error"); return; }
+    setLeads((prev) =>
+      prev.map((l) =>
+        l.id === leadId ? { ...l, snoozed_until: null } : l
+      )
+    );
+    toast("Lead moved back to Reply Now");
+  }
+
+  function snoozedUntilLabel(until: string): string {
+    const diff = new Date(until).getTime() - Date.now();
+    if (diff <= 0) return "expiring...";
+    const hours = Math.floor(diff / 3600000);
+    if (hours < 1) return `${Math.ceil(diff / 60000)}m left`;
+    if (hours < 24) return `${hours}h left`;
+    const days = Math.floor(hours / 24);
+    return `${days}d left`;
+  }
+
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       <AppHeader
@@ -357,6 +399,42 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
                 </div>
               )}
             </section>
+
+            {/* Snoozed Section */}
+            {snoozed.length > 0 && (
+              <section>
+                <button
+                  onClick={() => setShowSnoozed(!showSnoozed)}
+                  className="w-full flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 hover:border-zinc-700 transition-colors"
+                >
+                  <span className="text-sm font-semibold text-zinc-500">
+                    😴 {snoozed.length} snoozed
+                  </span>
+                  <span className="text-zinc-500">{showSnoozed ? "⌄" : "›"}</span>
+                </button>
+                {showSnoozed && (
+                  <div className="mt-2 space-y-2">
+                    {snoozed.map((lead) => (
+                      <div
+                        key={lead.id}
+                        className="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3"
+                      >
+                        <div>
+                          <p className="text-sm font-semibold text-zinc-400">{lead.name}</p>
+                          <p className="text-xs text-zinc-600">{snoozedUntilLabel(lead.snoozed_until!)}</p>
+                        </div>
+                        <button
+                          onClick={() => unsnoozeLead(lead.id)}
+                          className="text-xs font-semibold text-zinc-300 bg-zinc-800 border border-zinc-700 px-3 py-1.5 rounded-md hover:bg-zinc-700 transition-colors"
+                        >
+                          Wake up
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* Waiting Section */}
             <section>

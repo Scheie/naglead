@@ -17,6 +17,16 @@ import { MonthlyScorecard } from "../components/MonthlyScorecard";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { AppStackParamList } from "../navigation";
 
+function snoozedUntilLabel(until: string): string {
+  const diff = new Date(until).getTime() - Date.now();
+  if (diff <= 0) return "expiring...";
+  const hours = Math.floor(diff / 3600000);
+  if (hours < 1) return `${Math.ceil(diff / 60000)}m left`;
+  if (hours < 24) return `${hours}h left`;
+  const days = Math.floor(hours / 24);
+  return `${days}d left`;
+}
+
 type Props = NativeStackScreenProps<AppStackParamList, "Inbox">;
 
 export function InboxScreen({ navigation }: Props) {
@@ -24,6 +34,7 @@ export function InboxScreen({ navigation }: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showScorecard, setShowScorecard] = useState(false);
+  const [showSnoozed, setShowSnoozed] = useState(false);
 
   const fetchLeads = useCallback(async () => {
     const { data } = await supabase
@@ -60,6 +71,22 @@ export function InboxScreen({ navigation }: Props) {
         .sort(
           (a, b) =>
             new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        ),
+    [leads]
+  );
+
+  const snoozed = useMemo(
+    () =>
+      leads
+        .filter(
+          (l) =>
+            l.state === "reply_now" &&
+            l.snoozed_until &&
+            new Date(l.snoozed_until) > new Date()
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.snoozed_until!).getTime() - new Date(b.snoozed_until!).getTime()
         ),
     [leads]
   );
@@ -137,6 +164,16 @@ export function InboxScreen({ navigation }: Props) {
       .eq("id", leadId);
     if (error) { Alert.alert("Error", "Failed to snooze lead. Check your connection."); return; }
     logEvent(leadId, "snoozed", { until: until.toISOString() });
+    fetchLeads();
+  }
+
+  async function unsnoozeLead(leadId: string) {
+    const now = new Date().toISOString();
+    const { error } = await supabase
+      .from("leads")
+      .update({ snoozed_until: null, updated_at: now })
+      .eq("id", leadId);
+    if (error) { Alert.alert("Error", "Failed to unsnooze lead."); return; }
     fetchLeads();
   }
 
@@ -223,6 +260,8 @@ export function InboxScreen({ navigation }: Props) {
 
   const data = [
     ...replyNow.map((l) => ({ ...l, section: "reply_now" as const })),
+    ...(snoozed.length > 0 ? [{ id: "__snoozed_header__", section: "snoozed_header" as const }] : []),
+    ...(showSnoozed ? snoozed.map((l) => ({ ...l, section: "snoozed" as const })) : []),
     { id: "__waiting_header__", section: "waiting_header" as const },
     ...waiting.map((l) => ({ ...l, section: "waiting" as const })),
   ];
@@ -268,6 +307,40 @@ export function InboxScreen({ navigation }: Props) {
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}
         renderItem={({ item }) => {
+          if (item.section === "snoozed_header") {
+            return (
+              <TouchableOpacity
+                style={styles.snoozedToggle}
+                onPress={() => setShowSnoozed(!showSnoozed)}
+              >
+                <Text style={styles.snoozedToggleText}>
+                  😴 {snoozed.length} snoozed
+                </Text>
+                <Text style={styles.snoozedChevron}>{showSnoozed ? "⌄" : "›"}</Text>
+              </TouchableOpacity>
+            );
+          }
+
+          if (item.section === "snoozed") {
+            const lead = item as Lead & { section: string };
+            return (
+              <View style={styles.snoozedCard}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.snoozedName} numberOfLines={1}>{lead.name}</Text>
+                  <Text style={styles.snoozedMeta}>
+                    {snoozedUntilLabel(lead.snoozed_until!)}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.unsnoozeBtn}
+                  onPress={() => unsnoozeLead(lead.id)}
+                >
+                  <Text style={styles.unsnoozeBtnText}>Wake up</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }
+
           if (item.section === "waiting_header") {
             return (
               <View style={[styles.sectionHeader, { marginTop: 24 }]}>
@@ -411,6 +484,62 @@ const styles = StyleSheet.create({
   statValue: {
     fontFamily: "Teko-Bold",
     fontSize: 32,
+  },
+  snoozedToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: colors.zinc[900],
+    borderWidth: 1,
+    borderColor: colors.zinc[800],
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  snoozedToggleText: {
+    fontFamily: "WorkSans-SemiBold",
+    fontSize: 13,
+    color: colors.zinc[500],
+  },
+  snoozedChevron: {
+    color: colors.zinc[500],
+    fontSize: 16,
+  },
+  snoozedCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.zinc[900],
+    borderWidth: 1,
+    borderColor: colors.zinc[800],
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 4,
+    gap: 8,
+  },
+  snoozedName: {
+    fontFamily: "WorkSans-SemiBold",
+    fontSize: 14,
+    color: colors.zinc[400],
+  },
+  snoozedMeta: {
+    fontFamily: "WorkSans-Regular",
+    fontSize: 12,
+    color: colors.zinc[600],
+    marginTop: 2,
+  },
+  unsnoozeBtn: {
+    backgroundColor: colors.zinc[800],
+    borderWidth: 1,
+    borderColor: colors.zinc[700],
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  unsnoozeBtnText: {
+    fontFamily: "WorkSans-SemiBold",
+    fontSize: 12,
+    color: colors.zinc[300],
   },
   revenueText: {
     fontFamily: "WorkSans-SemiBold",

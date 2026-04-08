@@ -34,7 +34,7 @@ export function Hero() {
 
             <p className="text-xl sm:text-2xl text-zinc-400 font-medium max-w-2xl leading-relaxed">
               You track leads on torn receipts and the back of your hand. We
-              know. NagLead is a {process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true" ? "$10/month" : "free"} brute-force alert system that
+              know. NagLead is a {process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true" ? "$10/month " : "free, "}brute-force alert system that
               won&apos;t stop bothering you until you call that customer back.
             </p>
 
