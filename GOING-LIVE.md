@@ -70,8 +70,8 @@ supabase secrets set STRIPE_SECRET_KEY=sk_live_...
 supabase secrets set STRIPE_PRICE_ID_PRO_MONTHLY=price_...
 supabase secrets set STRIPE_PRICE_ID_PRO_ANNUAL=price_...
 
-# Mailgun (for email intake signature verification)
-supabase secrets set MAILGUN_SIGNING_KEY=...
+# Email intake (shared secret with Cloudflare Email Worker)
+supabase secrets set EMAIL_INTAKE_SECRET=...
 ```
 
 ---
@@ -123,20 +123,27 @@ Rate limits in place:
 
 ---
 
-## 9. Mailgun (Email Intake)
+## 9. Cloudflare Email Routing (Email Intake)
 
-- [ ] Create Mailgun account (free tier: 100 emails/day)
-- [ ] Add and verify `leads.naglead.com` subdomain in Mailgun
-- [ ] Set DNS records for `leads.naglead.com`:
-  - MX records (Mailgun provides these)
-  - TXT record for SPF
-  - CNAME for DKIM
-- [ ] Create inbound route in Mailgun:
-  - Match: `.*@leads.naglead.com`
-  - Action: forward to `https://<SUPABASE_PROJECT_REF>.supabase.co/functions/v1/email-intake`
-- [ ] Copy signing key from Mailgun → Settings → API Security
-- [ ] Set `MAILGUN_SIGNING_KEY` as Supabase secret
+- [ ] In Cloudflare dashboard → `naglead.com` → Email → Email Routing → Enable
+- [ ] Add `leads.naglead.com` subdomain for email routing (Cloudflare auto-creates MX/SPF records)
+- [ ] Deploy the Cloudflare Email Worker:
+  ```bash
+  cd cloudflare/email-worker
+  npm install
+  wrangler secret put EMAIL_INTAKE_SECRET        # generate a random secret
+  wrangler secret put SUPABASE_EDGE_FUNCTION_URL  # https://<project-ref>.supabase.co/functions/v1/email-intake
+  wrangler deploy
+  ```
+- [ ] In Email Routing → Routes → Create rule:
+  - Match: `*@leads.naglead.com` (catch-all)
+  - Action: Send to Worker → `naglead-email-intake`
+- [ ] Set the same `EMAIL_INTAKE_SECRET` as a Supabase edge function secret:
+  ```bash
+  supabase secrets set EMAIL_INTAKE_SECRET=<same-secret-as-above>
+  ```
 - [ ] Set `ANTHROPIC_API_KEY` as Supabase secret (for Claude email parsing)
+- [ ] Test by sending an email to your intake alias
 
 ---
 
@@ -251,7 +258,7 @@ These are built but not wired, or planned but not built:
 
 | Integration | Status | What's needed |
 |---|---|---|
-| **Mailgun email intake** | Edge Function built, needs Mailgun config | See step 9 |
+| **Cloudflare email intake** | Worker + Edge Function built, needs deployment | See step 9 |
 | **Twilio phone/SMS** | Planned, UI teaser in settings | Twilio account, phone number, Edge Function |
 | **PostHog analytics** | Planned | PostHog account, add tracking script |
 | **Sentry error tracking** | SDK installed in web, needs credentials | See step 13 |
@@ -269,7 +276,7 @@ These are built but not wired, or planned but not built:
 | Supabase | Free tier | Database, auth, edge functions |
 | Vercel | Free tier (upgrade to Pro $20/mo when taking payments) | Web hosting |
 | Upstash Redis | Free tier (10k commands/day) | Rate limiting |
-| Mailgun | Free tier (100 emails/day) | Email intake |
+| Cloudflare Email Routing | Free (included with domain) | Email intake |
 | Anthropic API | Pay-per-use (~$0.001/email) | Email parsing |
 | Sentry | Free tier (5k errors/mo) | Error tracking |
 | Apple Developer | $99/yr | iOS app (when ready) |
@@ -283,7 +290,7 @@ Verify before launch:
 
 - [ ] Webhook uses cryptographic token (not user ID)
 - [ ] Stripe webhook signature verification is active
-- [ ] Mailgun webhook signature verification is active (set `MAILGUN_SIGNING_KEY`)
+- [ ] Email intake shared secret set (`EMAIL_INTAKE_SECRET` in both Cloudflare Worker and Supabase)
 - [ ] Origin validation on Stripe checkout/portal redirects
 - [ ] Rate limiting enabled (Upstash Redis configured)
 - [ ] Stripe webhook idempotency enabled (`stripe_webhook_events` table exists)

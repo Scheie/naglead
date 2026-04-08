@@ -1,6 +1,6 @@
 // NagLead Email Intake — Supabase Edge Function
-// Receives inbound email from Mailgun webhook, parses with Claude API (Haiku),
-// creates a lead in "reply_now" state.
+// Receives inbound email from Cloudflare Email Worker as JSON,
+// parses with Claude API (Haiku), creates a lead in "reply_now" state.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { resolveRecipient } from "../_shared/resolve-user.ts";
@@ -22,6 +22,15 @@ interface ParsedLead {
   phone: string | null;
   email: string | null;
   description: string | null;
+}
+
+interface EmailPayload {
+  recipient: string;
+  sender: string;
+  from: string;
+  from_name: string;
+  subject: string;
+  body: string;
 }
 
 async function parseEmailWithClaude(
@@ -97,67 +106,37 @@ Deno.serve(async (req) => {
     });
   }
 
-  // Mailgun sends multipart/form-data or application/x-www-form-urlencoded
-  let formData: FormData;
+  // Verify shared secret from Cloudflare Email Worker
+  const intakeSecret = Deno.env.get("EMAIL_INTAKE_SECRET");
+  if (intakeSecret) {
+    const provided = req.headers.get("X-Email-Intake-Secret");
+    if (provided !== intakeSecret) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
+  // Parse JSON payload from Cloudflare Email Worker
+  let payload: EmailPayload;
   try {
-    formData = await req.formData();
+    payload = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: "Expected form data from Mailgun" }), {
+    return new Response(JSON.stringify({ error: "Expected JSON body" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  // Verify Mailgun webhook signature if signing key is configured
-  const mailgunSigningKey = Deno.env.get("MAILGUN_SIGNING_KEY");
-  if (mailgunSigningKey) {
-    const timestamp = String(formData.get("timestamp") ?? "");
-    const token = String(formData.get("token") ?? "");
-    const signature = String(formData.get("signature") ?? "");
+  const { recipient, sender, from: fromAddress, from_name, subject, body: emailBody } = payload;
 
-    if (!timestamp || !token || !signature) {
-      return new Response(JSON.stringify({ error: "Missing Mailgun signature" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    // Reject old timestamps (> 5 minutes) to prevent replay attacks
-    const age = Math.abs(Date.now() / 1000 - Number(timestamp));
-    if (age > 300) {
-      return new Response(JSON.stringify({ error: "Stale webhook timestamp" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const encoder = new TextEncoder();
-    const key = await crypto.subtle.importKey(
-      "raw",
-      encoder.encode(mailgunSigningKey),
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"]
-    );
-    const data = encoder.encode(timestamp + token);
-    const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, data));
-    const expectedSig = Array.from(sig).map(b => b.toString(16).padStart(2, "0")).join("");
-
-    if (expectedSig !== signature) {
-      console.error("Mailgun signature verification failed");
-      return new Response(JSON.stringify({ error: "Invalid signature" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+  if (!recipient || !sender) {
+    return new Response(JSON.stringify({ error: "Missing recipient or sender" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
-
-  const recipient = String(formData.get("recipient") ?? "");
-  const sender = String(formData.get("sender") ?? "");
-  const from = String(formData.get("from") ?? sender);
-  const subject = String(formData.get("subject") ?? "");
-  const bodyPlain = String(formData.get("body-plain") ?? "");
-  const strippedText = String(formData.get("stripped-text") ?? bodyPlain);
 
   // Resolve which user this email is for
   const resolved = resolveRecipient(recipient);
@@ -197,22 +176,22 @@ Deno.serve(async (req) => {
   }
 
   // Parse email with Claude
-  const emailText = strippedText || bodyPlain;
-  if (!emailText.trim()) {
+  if (!emailBody.trim()) {
     return new Response(JSON.stringify({ error: "Empty email body" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
   }
 
+  const fromDisplay = from_name ? `${from_name} <${fromAddress}>` : fromAddress;
+
   let parsed: ParsedLead;
   try {
-    parsed = await parseEmailWithClaude(emailText, subject, from, claudeApiKey);
+    parsed = await parseEmailWithClaude(emailBody, subject, fromDisplay, claudeApiKey);
   } catch (err) {
     console.error("Failed to parse email:", err);
-    // Fallback: create lead with raw data
     parsed = {
-      name: from.replace(/<.*>/, "").trim() || null,
+      name: from_name || fromAddress.replace(/<.*>/, "").trim() || null,
       phone: null,
       email: sender,
       description: subject || "Forwarded email (parsing failed)",
@@ -220,7 +199,7 @@ Deno.serve(async (req) => {
   }
 
   // Create the lead
-  const leadName = (parsed.name || from.replace(/<.*>/, "").trim() || "Unknown Lead").slice(0, 255);
+  const leadName = (parsed.name || from_name || fromAddress.replace(/<.*>/, "").trim() || "Unknown Lead").slice(0, 255);
   const leadDescription = (parsed.description || subject || "Forwarded email").slice(0, 1000);
 
   // Check for possible duplicate (active lead with same email or name in last 24h)

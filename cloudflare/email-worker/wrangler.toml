@@ -1,0 +1,8 @@
+name = "naglead-email-intake"
+main = "src/index.ts"
+compatibility_date = "2024-09-01"
+
+[vars]
+# Set these as secrets via: wrangler secret put EMAIL_INTAKE_SECRET
+# EMAIL_INTAKE_SECRET = "shared-secret-between-cf-worker-and-supabase"
+# SUPABASE_EDGE_FUNCTION_URL = "https://<project-ref>.supabase.co/functions/v1/email-intake"

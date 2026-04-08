@@ -24,10 +24,10 @@
 
 ### Infrastructure
 - **Hosting:** Vercel (web), Supabase (backend)
-- **Email intake:** Mailgun inbound routing (planned)
+- **Email intake:** Cloudflare Email Workers → Supabase Edge Function
 - **Phone/SMS:** Twilio (post-MVP)
 - **Analytics:** PostHog (planned)
-- **Error tracking:** Sentry (planned)
+- **Error tracking:** Sentry (@sentry/nextjs + @sentry/react-native)
 - **Payments:** Stripe (planned, gated by `NEXT_PUBLIC_PAYMENTS_LIVE` env var)
 
 ## Data Model
@@ -46,6 +46,9 @@
 naglead/
   CLAUDE.md                         — This file
   TODO.md                           — Build tracker
+  GOING-LIVE.md                     — Production deployment checklist
+  cloudflare/
+    email-worker/                   — Cloudflare Email Worker (routes *@leads.naglead.com)
   naglead-spec.md                   — Full product specification
   supabase/
     config.toml
