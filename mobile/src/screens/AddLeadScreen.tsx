@@ -128,6 +128,7 @@ export function AddLeadScreen({ navigation }: Props) {
           placeholderTextColor={colors.zinc[500]}
           value={name}
           onChangeText={setName}
+          maxLength={255}
           autoFocus
         />
 
@@ -138,6 +139,7 @@ export function AddLeadScreen({ navigation }: Props) {
           placeholderTextColor={colors.zinc[500]}
           value={description}
           onChangeText={setDescription}
+          maxLength={1000}
         />
 
         <Text style={styles.label}>Phone</Text>

@@ -434,6 +434,7 @@ export function SettingsScreen() {
           onChangeText={setName}
           placeholder="Your name"
           placeholderTextColor={colors.zinc[600]}
+          maxLength={255}
         />
 
         <Text style={[styles.label, { marginTop: 14 }]}>Business Name</Text>
@@ -443,6 +444,7 @@ export function SettingsScreen() {
           onChangeText={setBusinessName}
           placeholder="Optional"
           placeholderTextColor={colors.zinc[600]}
+          maxLength={255}
         />
 
         <Text style={[styles.label, { marginTop: 14 }]}>Trade</Text>
@@ -452,6 +454,7 @@ export function SettingsScreen() {
           onChangeText={setTrade}
           placeholder="Plumber, Electrician, etc."
           placeholderTextColor={colors.zinc[600]}
+          maxLength={255}
         />
 
         <Text style={[styles.label, { marginTop: 14 }]}>Email</Text>

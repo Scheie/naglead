@@ -84,6 +84,7 @@ export function AddLeadModal({ onAdd, onClose }: AddLeadModalProps) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              maxLength={255}
               className="w-full bg-black border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
               placeholder="Sarah M."
               required
@@ -98,6 +99,7 @@ export function AddLeadModal({ onAdd, onClose }: AddLeadModalProps) {
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              maxLength={1000}
               className="w-full bg-black border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
               placeholder="bathroom reno"
               required

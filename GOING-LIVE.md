@@ -39,6 +39,7 @@ Run these in the Supabase SQL Editor (all are idempotent, safe to re-run):
 - [ ] `20260407120001_pg_cron_stripe_sync.sql` — uncomment + set project ref
 - [ ] `20260407120002_add_webhook_token.sql` — cryptographic webhook tokens
 - [ ] `20260407120003_stripe_webhook_events.sql` — Stripe event idempotency
+- [ ] `20260407120004_signup_timezone_country.sql` — Auto-detect timezone/country on signup
 
 ---
 
@@ -218,7 +219,7 @@ These are built but not wired, or planned but not built:
 | **Twilio phone/SMS** | Planned, UI teaser in settings | Twilio account, phone number, Edge Function |
 | **PostHog analytics** | Planned | PostHog account, add tracking script |
 | **Sentry error tracking** | Planned | Sentry account, add SDK to web + edge functions |
-| **Expo mobile app** | Planned | Apple Developer ($99/yr), Google Play ($25), Expo scaffold |
+| **Expo mobile app** | Built, needs dev builds | Apple Developer ($99/yr), Google Play ($25), EAS projectId |
 
 ---
 
@@ -254,3 +255,7 @@ Verify before launch:
 - [ ] RLS enabled on all tables (users, leads, lead_events, web_push_subscriptions)
 - [ ] Account deletion cancels Stripe subscription
 - [ ] Input sanitization on webhook payloads (HTML chars stripped, lengths capped)
+- [ ] Security headers configured in `next.config.ts` (X-Frame-Options, HSTS, etc.) — **done**
+- [ ] Input `maxLength` on all text fields (255 names, 1000 descriptions) — **done**
+- [ ] Mobile env vars throw on missing (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`) — **done**
+- [ ] EAS `projectId` set in `mobile/app.json` for push token registration
