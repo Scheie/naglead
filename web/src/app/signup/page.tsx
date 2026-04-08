@@ -58,7 +58,7 @@ export default function SignupPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/app");
+      setStep(4);
     }
   }
 
@@ -204,6 +204,27 @@ export default function SignupPage() {
           </form>
         )}
 
+        {step === 4 && (
+          <div className="text-center">
+            <div className="text-6xl mb-6">📬</div>
+            <h1 className="font-loud text-4xl headline text-white mb-3">
+              CHECK YOUR EMAIL
+            </h1>
+            <p className="text-zinc-400 font-medium text-lg mb-2">
+              We sent a confirmation link to <span className="text-white">{email}</span>
+            </p>
+            <p className="text-zinc-500 text-sm mb-8">
+              Click the link to activate your account, then come back and log in.
+            </p>
+            <Link
+              href="/login"
+              className="bg-nag-orange text-black font-loud text-2xl headline px-8 py-3 rounded-sm shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all inline-block"
+            >
+              GO TO LOGIN
+            </Link>
+          </div>
+        )}
+
         {step > 1 && step < 3 && (
           <button
             onClick={() => setStep(step - 1)}
@@ -213,15 +234,17 @@ export default function SignupPage() {
           </button>
         )}
 
-        <p className="text-zinc-500 text-sm text-center mt-6">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="text-nag-orange font-semibold hover:underline"
-          >
-            Log in
-          </Link>
-        </p>
+        {step < 4 && (
+          <p className="text-zinc-500 text-sm text-center mt-6">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-nag-orange font-semibold hover:underline"
+            >
+              Log in
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
