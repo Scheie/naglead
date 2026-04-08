@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Check, X } from "@phosphor-icons/react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 const PAYMENTS_LIVE = process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true";
 
@@ -55,6 +57,38 @@ const tiers = [
 ];
 
 export function Pricing() {
+  const [loading, setLoading] = useState<string | null>(null);
+
+  async function handlePaidClick(plan: "pro" | "pro_annual") {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      // Not logged in — send to signup
+      window.location.href = "/signup";
+      return;
+    }
+
+    // Logged in — go to checkout
+    setLoading(plan);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+      if (!res.ok) { setLoading(null); return; }
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setLoading(null);
+      }
+    } catch {
+      setLoading(null);
+    }
+  }
+
   return (
     <section
       id="pricing"
@@ -164,6 +198,14 @@ export function Pricing() {
                   >
                     COMING SOON
                   </span>
+                ) : tier.paid ? (
+                  <button
+                    onClick={() => handlePaidClick(tier.name === "ANNUAL PRO" ? "pro_annual" : "pro")}
+                    disabled={loading !== null}
+                    className={`w-full block text-center ${btnClass} font-loud ${isHighlighted ? "" : "text-2xl headline"} py-3 transition-all disabled:opacity-50`}
+                  >
+                    {loading === (tier.name === "ANNUAL PRO" ? "pro_annual" : "pro") ? "REDIRECTING..." : tier.cta}
+                  </button>
                 ) : (
                   <Link
                     href="/signup"
