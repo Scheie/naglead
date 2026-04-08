@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { StatusBar, TouchableOpacity, Text as RNText, View } from "react-native";
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as Sentry from "@sentry/react-native";
 import { Teko_700Bold } from "@expo-google-fonts/teko";
 import {
   WorkSans_400Regular,
@@ -26,6 +27,12 @@ import {
 } from "./src/lib/notifications";
 import { colors } from "./src/lib/theme";
 import type { AuthStackParamList, AppStackParamList } from "./src/navigation";
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  enabled: !!process.env.EXPO_PUBLIC_SENTRY_DSN,
+  tracesSampleRate: 0.1,
+});
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const AppStack = createNativeStackNavigator<AppStackParamList>();
@@ -134,7 +141,7 @@ function AppNavigator() {
   );
 }
 
-export default function App() {
+function App() {
   const { session, loading } = useAuth();
   const navigationRef = useRef<NavigationContainerRef<AppStackParamList>>(null);
 
@@ -182,3 +189,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export default Sentry.wrap(App);

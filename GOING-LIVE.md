@@ -163,6 +163,12 @@ STRIPE_PRICE_ID_PRO_ANNUAL=price_...
 UPSTASH_REDIS_REST_URL=https://...upstash.io
 UPSTASH_REDIS_REST_TOKEN=...
 
+# Sentry (error tracking — SDK installed, just add credentials)
+NEXT_PUBLIC_SENTRY_DSN=https://...@sentry.io/...
+SENTRY_ORG=your-org
+SENTRY_PROJECT=naglead
+SENTRY_AUTH_TOKEN=sntrys_...
+
 # Feature flag — flip to "true" when ready to accept payments
 NEXT_PUBLIC_PAYMENTS_LIVE=false
 ```
@@ -198,10 +204,23 @@ Do these in order:
 
 ---
 
-## 13. Post-Launch Monitoring
+## 13. Sentry (Error Tracking)
+
+- [ ] Create free account at sentry.io
+- [ ] Create a Next.js project, note the DSN
+- [ ] Add to Vercel env vars:
+  - `NEXT_PUBLIC_SENTRY_DSN=https://...@sentry.io/...`
+  - `SENTRY_ORG=your-org`
+  - `SENTRY_PROJECT=naglead`
+  - `SENTRY_AUTH_TOKEN=sntrys_...` (for source map uploads)
+- [ ] SDK is already installed and configured (`@sentry/nextjs`)
+- [ ] Verify errors appear in Sentry dashboard after deploy
+
+---
+
+## 14. Post-Launch Monitoring
 
 - [ ] Set up PostHog for product analytics (track signups, lead creation, upgrades)
-- [ ] Set up Sentry for error tracking
 - [ ] Monitor Stripe Dashboard for failed payments
 - [ ] Monitor Upstash Dashboard for rate limit hits
 - [ ] Check Supabase logs for Edge Function errors
@@ -218,7 +237,7 @@ These are built but not wired, or planned but not built:
 | **Mailgun email intake** | Edge Function built, needs Mailgun config | See step 9 |
 | **Twilio phone/SMS** | Planned, UI teaser in settings | Twilio account, phone number, Edge Function |
 | **PostHog analytics** | Planned | PostHog account, add tracking script |
-| **Sentry error tracking** | Planned | Sentry account, add SDK to web + edge functions |
+| **Sentry error tracking** | SDK installed in web, needs credentials | See step 13 |
 | **Expo mobile app** | Built, needs dev builds | Apple Developer ($99/yr), Google Play ($25), EAS projectId |
 
 ---
@@ -235,6 +254,7 @@ These are built but not wired, or planned but not built:
 | Upstash Redis | Free tier (10k commands/day) | Rate limiting |
 | Mailgun | Free tier (100 emails/day) | Email intake |
 | Anthropic API | Pay-per-use (~$0.001/email) | Email parsing |
+| Sentry | Free tier (5k errors/mo) | Error tracking |
 | Apple Developer | $99/yr | iOS app (when ready) |
 | Google Play Developer | $25 one-time | Android app (when ready) |
 
