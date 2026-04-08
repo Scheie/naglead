@@ -6,23 +6,29 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Megaphone, ArrowRight } from "@phosphor-icons/react";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
+export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    if (password !== confirm) {
+      setError("Passwords don't match");
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
 
     if (error) {
       setError(error.message);
@@ -44,35 +50,37 @@ export default function LoginPage() {
       </Link>
 
       <div className="w-full max-w-sm bg-nag-zinc border-4 border-zinc-800 rounded-lg p-8">
-        <h1 className="font-loud text-4xl headline text-white mb-2">LOG IN</h1>
+        <h1 className="font-loud text-3xl headline text-white mb-2">NEW PASSWORD</h1>
         <p className="text-zinc-400 text-sm mb-8">
-          Your leads are waiting. Get back to nagging.
+          Choose a new password for your account.
         </p>
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-black border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
-              Password
+              New Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-black border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
-              placeholder="Your password"
+              placeholder="Min 6 characters"
+              minLength={6}
+              required
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1 block">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              className="w-full bg-black border-2 border-zinc-700 rounded px-4 py-3 text-white font-medium focus:border-nag-orange focus:outline-none transition-colors"
+              placeholder="Type it again"
+              minLength={6}
               required
             />
           </div>
@@ -88,26 +96,10 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-nag-orange text-black font-loud text-2xl headline py-3 rounded-sm shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
           >
-            {loading ? "LOGGING IN..." : "LOG IN"}
+            {loading ? "SAVING..." : "SET NEW PASSWORD"}
             <ArrowRight weight="bold" />
           </button>
         </form>
-
-        <p className="text-zinc-500 text-sm text-center mt-4">
-          <Link href="/forgot-password" className="text-zinc-400 hover:text-white transition-colors">
-            Forgot password?
-          </Link>
-        </p>
-
-        <p className="text-zinc-500 text-sm text-center mt-3">
-          No account?{" "}
-          <Link
-            href="/signup"
-            className="text-nag-orange font-semibold hover:underline"
-          >
-            Sign up free
-          </Link>
-        </p>
       </div>
     </div>
   );
