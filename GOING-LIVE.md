@@ -175,7 +175,24 @@ NEXT_PUBLIC_PAYMENTS_LIVE=false
 
 ---
 
-## 11. Vercel — Deployment Settings
+## 11. Mobile App — Environment Variables
+
+Set in `mobile/.env`:
+
+```
+# Supabase
+EXPO_PUBLIC_SUPABASE_URL=https://fzedsixotdapeiztdjrf.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+
+# Sentry (error tracking — optional but recommended)
+EXPO_PUBLIC_SENTRY_DSN=https://...@sentry.io/...
+```
+
+Also set in `mobile/app.json` → `extra.eas.projectId` for push notifications.
+
+---
+
+## 12. Vercel — Deployment Settings
 
 - [ ] Verify root directory is set to `web/` in Vercel project settings
 - [ ] Verify build command is `next build`
@@ -184,7 +201,7 @@ NEXT_PUBLIC_PAYMENTS_LIVE=false
 
 ---
 
-## 12. Go Live Sequence
+## 13. Go Live Sequence
 
 Do these in order:
 
@@ -204,7 +221,7 @@ Do these in order:
 
 ---
 
-## 13. Sentry (Error Tracking)
+## 14. Sentry (Error Tracking)
 
 - [ ] Create free account at sentry.io
 - [ ] Create a Next.js project, note the DSN
@@ -218,7 +235,7 @@ Do these in order:
 
 ---
 
-## 14. Post-Launch Monitoring
+## 15. Post-Launch Monitoring
 
 - [ ] Set up PostHog for product analytics (track signups, lead creation, upgrades)
 - [ ] Monitor Stripe Dashboard for failed payments
@@ -228,7 +245,7 @@ Do these in order:
 
 ---
 
-## 14. Future Integrations (Post-MVP)
+## 16. Future Integrations (Post-MVP)
 
 These are built but not wired, or planned but not built:
 
