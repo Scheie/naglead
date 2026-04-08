@@ -1,0 +1,9 @@
+# Allow search engines to index public pages
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /monitoring
+
+Sitemap: https://naglead.com/sitemap.xml
