@@ -79,12 +79,19 @@ export async function POST(request: Request) {
     );
   }
 
-  // Get or create Stripe customer
+  // Check if user already has an active subscription
   const { data: profile } = await admin
     .from("users")
-    .select("stripe_customer_id, email, name")
+    .select("stripe_customer_id, email, name, subscription_status")
     .eq("id", user.id)
     .single();
+
+  if (profile?.subscription_status === "pro" || profile?.subscription_status === "pro_annual") {
+    return NextResponse.json(
+      { error: "You already have an active subscription." },
+      { status: 400 }
+    );
+  }
 
   const stripe = getStripe();
   let customerId = profile?.stripe_customer_id;
