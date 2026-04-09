@@ -58,9 +58,18 @@ export default function CleaningLeadFollowUpPost() {
           </h2>
 
           <p>
-            Research shows that responding to a lead within 5 minutes makes you{" "}
-            <strong className="text-white">21 times more likely</strong> to win the
-            job than if you wait 30 minutes. And when someone searches
+            A{" "}
+            <a
+              href="https://cdn2.hubspot.net/hub/25649/file-13535879-pdf/docs/mit_study.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-nag-orange hover:underline"
+            >
+              study from MIT
+            </a>{" "}
+            found that responding to a lead within 5 minutes makes you{" "}
+            <strong className="text-white">21 times more likely</strong> to win
+            the job than if you wait 30 minutes. And when someone searches
             &quot;house cleaning near me,&quot; they&apos;re usually contacting 3-5
             companies at once. The first one to respond clearly wins.
           </p>
@@ -195,6 +204,31 @@ export default function CleaningLeadFollowUpPost() {
             <li>Works on your phone — because that&apos;s where leads come in</li>
             <li>$10/month. Free for up to 5 active leads.</li>
           </ul>
+
+          <h2 className="font-loud text-3xl headline text-white pt-4">
+            EVEN BETTER: AUTO-ADD LEADS
+          </h2>
+
+          <p>
+            Here&apos;s where it gets interesting. Most cleaning leads come
+            through email — Yelp notifications, Thumbtack requests, website
+            contact forms, even forwarded texts. With NagLead Pro, you get a
+            dedicated email address. Forward your lead emails there, and they
+            automatically appear in your inbox as a new lead.
+          </p>
+
+          <p>
+            No manual entry at all. A customer fills out your website form →
+            you get a notification → the lead is already in NagLead with their
+            name, phone, and what they need extracted automatically. You just
+            tap &quot;Call&quot; and get to work.
+          </p>
+
+          <p>
+            That means leads start getting nagged the moment they come in, even
+            if you&apos;re elbow-deep in a kitchen clean. No more
+            &quot;I&apos;ll add it later&quot; — because later never comes.
+          </p>
 
           <p>
             No pipeline. No automations. No onboarding webinar. Just open it, add
