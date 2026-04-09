@@ -8,10 +8,10 @@ import { resolveRecipient } from "../_shared/resolve-user.ts";
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-haiku-4-5-20251001";
 
-const PARSE_PROMPT = `Extract from this email:
-- Contact name (first + last if available)
-- Phone number (if present)
-- Email address (if present, not the sender's forwarding address)
+const PARSE_PROMPT = `This email was forwarded to a lead tracking system. Extract the CUSTOMER's details, not the person who forwarded it:
+- Customer name from the email body (sign-off, form fields, or signature — NOT the From address, which is usually the forwarder)
+- Phone number (if present in the body)
+- Customer email address (if present in the body — NOT the sender/forwarder address)
 - What they need (1 short sentence)
 
 Return ONLY valid JSON: { "name": string | null, "phone": string | null, "email": string | null, "description": string | null }
