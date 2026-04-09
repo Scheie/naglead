@@ -79,7 +79,7 @@ export function LeadCard({
       ])
     );
     animation.start();
-    return () => animation.stop();
+    return () => { animation.stop(); pulseAnim.setValue(1); };
   }, [isCritical, pulseAnim]);
 
   function handleSnooze() {

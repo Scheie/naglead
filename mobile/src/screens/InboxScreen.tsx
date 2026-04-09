@@ -18,7 +18,9 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { AppStackParamList } from "../navigation";
 
 function snoozedUntilLabel(until: string): string {
-  const diff = new Date(until).getTime() - Date.now();
+  const untilTime = new Date(until).getTime();
+  if (isNaN(untilTime)) return "snoozed";
+  const diff = untilTime - Date.now();
   if (diff <= 0) return "expiring...";
   const hours = Math.floor(diff / 3600000);
   if (hours < 1) return `${Math.ceil(diff / 60000)}m left`;
@@ -65,21 +67,31 @@ export function InboxScreen({ navigation }: Props) {
     loadUserSettings();
   }, []);
 
-  // Fetch on mount and refetch when screen regains focus (e.g. after adding a lead)
+  // Fetch on mount and refetch when screen regains focus
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      fetchLeads().then(() => {
-        if (loading) setLoading(false);
-      });
+      fetchLeads().then(() => setLoading(false));
     });
     return unsubscribe;
-  }, [navigation, fetchLeads, loading]);
+  }, [navigation, fetchLeads]);
 
-  // Poll for new leads every 30 seconds (catches email intake, webhooks, etc.)
+  // Poll every 30 seconds, but only while screen is focused
   useEffect(() => {
-    const interval = setInterval(fetchLeads, 30000);
-    return () => clearInterval(interval);
-  }, [fetchLeads]);
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    const unsubFocus = navigation.addListener("focus", () => {
+      interval = setInterval(fetchLeads, 30000);
+    });
+    const unsubBlur = navigation.addListener("blur", () => {
+      if (interval) clearInterval(interval);
+    });
+
+    return () => {
+      unsubFocus();
+      unsubBlur();
+      if (interval) clearInterval(interval);
+    };
+  }, [navigation, fetchLeads]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -204,16 +216,16 @@ export function InboxScreen({ navigation }: Props) {
     fetchLeads();
   }
 
-  function callLead(phone: string) {
-    Linking.openURL(`tel:${phone}`);
+  async function callLead(phone: string) {
+    try { await Linking.openURL(`tel:${phone}`); } catch { Alert.alert("Error", "Could not open phone app."); }
   }
 
-  function textLead(phone: string) {
-    Linking.openURL(`sms:${phone}`);
+  async function textLead(phone: string) {
+    try { await Linking.openURL(`sms:${phone}`); } catch { Alert.alert("Error", "Could not open messaging app."); }
   }
 
-  function emailLead(email: string) {
-    Linking.openURL(`mailto:${email}`);
+  async function emailLead(email: string) {
+    try { await Linking.openURL(`mailto:${email}`); } catch { Alert.alert("Error", "Could not open email app."); }
   }
 
   const wonThisMonth = useMemo(() => {

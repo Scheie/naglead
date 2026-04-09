@@ -9,13 +9,11 @@ type Props = NativeStackScreenProps<AppStackParamList, "UpgradeSuccess">;
 
 export function UpgradeSuccessScreen({ navigation }: Props) {
   useEffect(() => {
-    // Refresh session to pick up updated subscription status
-    supabase.auth.refreshSession().then(() => {
-      const timer = setTimeout(() => {
-        navigation.reset({ index: 0, routes: [{ name: "Inbox" }] });
-      }, 2000);
-      return () => clearTimeout(timer);
-    });
+    supabase.auth.refreshSession();
+    const timer = setTimeout(() => {
+      navigation.reset({ index: 0, routes: [{ name: "Inbox" }] });
+    }, 2000);
+    return () => clearTimeout(timer);
   }, [navigation]);
 
   return (

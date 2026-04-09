@@ -110,7 +110,8 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
     setSaving(false);
     if (error) {
-      setSaved(false);
+      console.error("Failed to save settings:", error);
+      alert("Failed to save settings. Please try again.");
       return;
     }
     setSaved(true);
@@ -554,14 +555,18 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             onClick={async () => {
               setExporting(true);
               try {
-                const { data: leads } = await supabase
+                const { data: leads, error } = await supabase
                   .from("leads")
                   .select("*")
                   .order("created_at", { ascending: false });
-                if (leads && leads.length > 0) {
+                if (error) {
+                  alert("Failed to export leads. Please try again.");
+                } else if (leads && leads.length > 0) {
                   const csv = leadsToCSV(leads);
                   const date = new Date().toISOString().split("T")[0];
                   downloadCSV(csv, `naglead-export-${date}.csv`);
+                } else {
+                  alert("No leads to export.");
                 }
               } finally {
                 setExporting(false);

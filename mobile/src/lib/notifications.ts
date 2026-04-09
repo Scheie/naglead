@@ -50,10 +50,14 @@ export async function savePushToken(token: string): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
-  await supabase
+  const { error } = await supabase
     .from("users")
     .update({ push_token: token })
     .eq("id", user.id);
+
+  if (error) {
+    console.warn("Failed to save push token:", error);
+  }
 }
 
 export function addNotificationResponseListener(
