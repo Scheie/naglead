@@ -258,7 +258,7 @@ EXPO_PUBLIC_SENTRY_DSN=https://...@sentry.io/...
 - [x] Create a Next.js project, note the DSN
 - [x] Add to Vercel env vars (DSN, org, project, auth token)
 - [x] SDK installed and configured (`@sentry/nextjs` + `@sentry/react-native`)
-- [ ] Verify errors appear in Sentry dashboard after deploy
+- [x] Verified errors appear in Sentry dashboard
 
 ---
 
