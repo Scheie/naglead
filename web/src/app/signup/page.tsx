@@ -8,14 +8,14 @@ import Link from "next/link";
 import { Megaphone, ArrowRight } from "@phosphor-icons/react";
 
 const trades = [
+  "Cleaner",
   "Plumber",
   "Electrician",
-  "Cleaner",
   "Landscaper",
   "Painter",
   "Handyman",
+  "Roofer",
   "Photographer",
-  "Consultant",
   "Other",
 ];
 
