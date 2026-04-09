@@ -34,6 +34,7 @@ const LOST_REASONS = ["Competitor", "No budget", "No response", "Other"] as cons
 interface LeadCardProps {
   lead: Lead;
   compact?: boolean;
+  currencySymbol?: string;
   onMarkDone: (valueCents?: number) => void;
   onMarkLost: (reason?: string) => void;
   onSnooze?: (until: Date) => void;
@@ -45,6 +46,7 @@ interface LeadCardProps {
 export function LeadCard({
   lead,
   compact,
+  currencySymbol = "$",
   onMarkDone,
   onMarkLost,
   onSnooze,
@@ -135,7 +137,7 @@ export function LeadCard({
           <Text style={styles.description} numberOfLines={1}>{lead.description}</Text>
           {showValueInput && (
             <View style={styles.valueRow}>
-              <Text style={styles.currencySymbol}>$</Text>
+              <Text style={styles.currencySymbol}>{currencySymbol}</Text>
               <TextInput
                 style={styles.valueInput}
                 value={valueInput}

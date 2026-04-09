@@ -13,10 +13,11 @@ import type { Lead } from "../lib/types";
 interface MonthlyScorecardProps {
   leads: Lead[];
   visible: boolean;
+  currencySymbol?: string;
   onClose: () => void;
 }
 
-export function MonthlyScorecard({ leads, visible, onClose }: MonthlyScorecardProps) {
+export function MonthlyScorecard({ leads, visible, currencySymbol = "$", onClose }: MonthlyScorecardProps) {
   const stats = useMemo(() => {
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -67,8 +68,8 @@ export function MonthlyScorecard({ leads, visible, onClose }: MonthlyScorecardPr
   }, [leads]);
 
   function formatMoney(cents: number): string {
-    if (cents === 0) return "$0";
-    return "$" + (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    if (cents === 0) return `${currencySymbol}0`;
+    return currencySymbol + (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   }
 
   return (

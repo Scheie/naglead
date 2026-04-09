@@ -29,12 +29,20 @@ function snoozedUntilLabel(until: string): string {
 
 type Props = NativeStackScreenProps<AppStackParamList, "Inbox">;
 
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  US: "$", CA: "C$", GB: "£", AU: "A$", NZ: "NZ$",
+  IE: "€", DE: "€", FR: "€", ES: "€", IT: "€", NL: "€", FI: "€", AT: "€", BE: "€", PT: "€",
+  SE: "kr", NO: "kr", DK: "kr", CH: "CHF",
+  IN: "₹", ZA: "R", MX: "MX$", BR: "R$", JP: "¥",
+};
+
 export function InboxScreen({ navigation }: Props) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showScorecard, setShowScorecard] = useState(false);
   const [showSnoozed, setShowSnoozed] = useState(false);
+  const [currencySymbol, setCurrencySymbol] = useState("$");
 
   const fetchLeads = useCallback(async () => {
     const { data } = await supabase
@@ -42,6 +50,17 @@ export function InboxScreen({ navigation }: Props) {
       .select("*")
       .order("created_at", { ascending: false });
     if (data) setLeads(data);
+  }, []);
+
+  // Fetch user's currency setting
+  useEffect(() => {
+    async function loadCurrency() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase.from("users").select("country").eq("id", user.id).single();
+      if (data?.country) setCurrencySymbol(CURRENCY_SYMBOLS[data.country] ?? "$");
+    }
+    loadCurrency();
   }, []);
 
   // Fetch on mount and refetch when screen regains focus (e.g. after adding a lead)
@@ -227,7 +246,7 @@ export function InboxScreen({ navigation }: Props) {
         </Text>
         {wonRevenue > 0 && (
           <Text style={styles.revenueText}>
-            ${Math.round(wonRevenue / 100).toLocaleString()}
+            {currencySymbol}{Math.round(wonRevenue / 100).toLocaleString()}
           </Text>
         )}
       </View>
@@ -363,6 +382,7 @@ export function InboxScreen({ navigation }: Props) {
             <LeadCard
               lead={lead}
               compact={lead.section === "waiting"}
+              currencySymbol={currencySymbol}
               onMarkDone={(valueCents?: number) =>
                 lead.section === "waiting"
                   ? markWon(lead.id, valueCents)
@@ -393,6 +413,7 @@ export function InboxScreen({ navigation }: Props) {
       <MonthlyScorecard
         leads={leads}
         visible={showScorecard}
+        currencySymbol={currencySymbol}
         onClose={() => setShowScorecard(false)}
       />
     </View>
