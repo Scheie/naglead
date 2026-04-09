@@ -98,13 +98,6 @@ Deno.serve(async (req) => {
   );
 
   const claudeApiKey = Deno.env.get("ANTHROPIC_API_KEY");
-  if (!claudeApiKey) {
-    console.error("ANTHROPIC_API_KEY not set");
-    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
 
   // Verify shared secret from Cloudflare Email Worker
   const intakeSecret = Deno.env.get("EMAIL_INTAKE_SECRET");
@@ -186,15 +179,25 @@ Deno.serve(async (req) => {
   const fromDisplay = from_name ? `${from_name} <${fromAddress}>` : fromAddress;
 
   let parsed: ParsedLead;
-  try {
-    parsed = await parseEmailWithClaude(emailBody, subject, fromDisplay, claudeApiKey);
-  } catch (err) {
-    console.error("Failed to parse email:", err);
+  if (claudeApiKey) {
+    try {
+      parsed = await parseEmailWithClaude(emailBody, subject, fromDisplay, claudeApiKey);
+    } catch (err) {
+      console.error("Failed to parse email:", err);
+      parsed = {
+        name: from_name || fromAddress.replace(/<.*>/, "").trim() || null,
+        phone: null,
+        email: sender,
+        description: subject || "Forwarded email (parsing failed)",
+      };
+    }
+  } else {
+    // No Claude API key — use raw email data
     parsed = {
       name: from_name || fromAddress.replace(/<.*>/, "").trim() || null,
       phone: null,
       email: sender,
-      description: subject || "Forwarded email (parsing failed)",
+      description: subject || emailBody.slice(0, 200),
     };
   }
 
