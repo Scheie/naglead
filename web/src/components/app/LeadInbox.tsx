@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import type { Lead } from "@/lib/database.types";
 import { LeadCard } from "./LeadCard";
 import { AddLeadModal } from "./AddLeadModal";
@@ -60,6 +60,20 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       .order("created_at", { ascending: false });
     if (data) setLeads(data);
   }, [supabase]);
+
+  // Auto-refresh when leads change in the database
+  useEffect(() => {
+    const channel = supabase
+      .channel("leads-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "leads", filter: `user_id=eq.${userId}` },
+        () => { refreshLeads(); }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [supabase, userId, refreshLeads]);
 
   const replyNow = useMemo(
     () =>
