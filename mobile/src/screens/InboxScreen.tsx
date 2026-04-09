@@ -54,6 +54,12 @@ export function InboxScreen({ navigation }: Props) {
     return unsubscribe;
   }, [navigation, fetchLeads, loading]);
 
+  // Poll for new leads every 30 seconds (catches email intake, webhooks, etc.)
+  useEffect(() => {
+    const interval = setInterval(fetchLeads, 30000);
+    return () => clearInterval(interval);
+  }, [fetchLeads]);
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchLeads();
