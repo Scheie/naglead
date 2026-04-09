@@ -46,8 +46,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "469be494-83bf-4ed1-9d88-247389d1f744"
       }
-    }
+    },
+    "owner": "scheie"
   }
 }
