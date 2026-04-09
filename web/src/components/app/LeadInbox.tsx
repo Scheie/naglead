@@ -11,6 +11,7 @@ import { NagEngine } from "./NagEngine";
 import { NotificationPrompt } from "./NotificationPrompt";
 import { AppHeader } from "./AppHeader";
 import { useToast } from "./Toast";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoney, getCurrencySymbol } from "@/lib/country-codes";
 
@@ -36,7 +37,16 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
     existingName: string;
   } | null>(null);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  // Show upgrade success toast
+  useEffect(() => {
+    if (searchParams.get("upgraded") === "true") {
+      toast("You're Pro! Unlimited leads unlocked.", "success");
+      window.history.replaceState({}, "", "/app");
+    }
+  }, [searchParams, toast]);
 
   const isFree = subscriptionStatus === "free";
   const activeLeadCount = leads.filter(
