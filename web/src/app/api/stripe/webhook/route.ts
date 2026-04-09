@@ -94,9 +94,15 @@ export async function POST(request: Request) {
       }
 
       // Retrieve the subscription to get plan details
-      const subscription = await stripe.subscriptions.retrieve(
-        session.subscription as string
-      );
+      let subscription;
+      try {
+        subscription = await stripe.subscriptions.retrieve(
+          session.subscription as string
+        );
+      } catch (err) {
+        console.error("Failed to retrieve subscription:", err);
+        break;
+      }
       const plan = resolvePlan(subscription);
 
       await admin

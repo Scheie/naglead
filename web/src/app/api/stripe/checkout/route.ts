@@ -74,45 +74,54 @@ export async function POST(request: Request) {
     );
   }
 
-  const stripe = getStripe();
-  let customerId = profile?.stripe_customer_id;
+  let session;
+  try {
+    const stripe = getStripe();
+    let customerId = profile?.stripe_customer_id;
 
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: profile?.email ?? user.email,
-      name: profile?.name ?? undefined,
-      metadata: { naglead_user_id: user.id },
-    });
-    customerId = customer.id;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: profile?.email ?? user.email,
+        name: profile?.name ?? undefined,
+        metadata: { naglead_user_id: user.id },
+      });
+      customerId = customer.id;
 
-    await admin
-      .from("users")
-      .update({ stripe_customer_id: customerId })
-      .eq("id", user.id);
-  }
+      await admin
+        .from("users")
+        .update({ stripe_customer_id: customerId })
+        .eq("id", user.id);
+    }
 
-  // Create checkout session — validate origin to prevent redirect attacks
-  const allowedOrigins = [
-    "https://naglead.com",
-    "https://www.naglead.com",
-    ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
-  ];
-  const requestOrigin = request.headers.get("origin");
-  const origin = requestOrigin && allowedOrigins.includes(requestOrigin)
-    ? requestOrigin
-    : "https://naglead.com";
+    // Create checkout session — validate origin to prevent redirect attacks
+    const allowedOrigins = [
+      "https://naglead.com",
+      "https://www.naglead.com",
+      ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
+    ];
+    const requestOrigin = request.headers.get("origin");
+    const origin = requestOrigin && allowedOrigins.includes(requestOrigin)
+      ? requestOrigin
+      : "https://naglead.com";
 
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
-    success_url: `${origin}/app?upgraded=true`,
-    cancel_url: `${origin}/app`,
-    client_reference_id: user.id,
-    subscription_data: {
-      metadata: { naglead_user_id: user.id },
+    session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: "subscription",
+      line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
+      success_url: `${origin}/app?upgraded=true`,
+      cancel_url: `${origin}/app`,
+      client_reference_id: user.id,
+      subscription_data: {
+        metadata: { naglead_user_id: user.id },
     },
-  });
+    });
+  } catch (err) {
+    console.error("Stripe checkout error:", err);
+    return NextResponse.json(
+      { error: "Payment service temporarily unavailable. Please try again." },
+      { status: 502 }
+    );
+  }
 
   return NextResponse.json({ url: session.url });
 }

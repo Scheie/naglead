@@ -51,6 +51,11 @@ export async function checkRateLimit(
   const limiter = l[limiterName];
   if (!limiter) return { allowed: true };
 
-  const { success, remaining } = await limiter.limit(identifier);
-  return { allowed: success, remaining };
+  try {
+    const { success, remaining } = await limiter.limit(identifier);
+    return { allowed: success, remaining };
+  } catch (err) {
+    console.error("Rate limit check failed:", err);
+    return { allowed: true }; // Redis down — allow request rather than block
+  }
 }

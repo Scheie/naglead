@@ -48,10 +48,16 @@ Deno.serve(async () => {
   let corrected = 0;
 
   for (const user of users ?? []) {
-    const res = await stripeGet(
-      `/subscriptions/${user.stripe_subscription_id}`,
-      stripeKey
-    );
+    let res;
+    try {
+      res = await stripeGet(
+        `/subscriptions/${user.stripe_subscription_id}`,
+        stripeKey
+      );
+    } catch (err) {
+      console.error(`Stripe API error for user ${user.id}:`, err);
+      continue; // Skip this user, try the rest
+    }
 
     if (!res.ok) {
       // Subscription no longer exists in Stripe

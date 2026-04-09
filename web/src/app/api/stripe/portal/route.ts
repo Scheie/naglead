@@ -57,11 +57,18 @@ export async function POST(request: Request) {
     ? requestOrigin
     : "https://naglead.com";
 
-  const stripe = getStripe();
-  const session = await stripe.billingPortal.sessions.create({
-    customer: profile.stripe_customer_id,
-    return_url: `${origin}/app/settings`,
-  });
-
-  return NextResponse.json({ url: session.url });
+  try {
+    const stripe = getStripe();
+    const session = await stripe.billingPortal.sessions.create({
+      customer: profile.stripe_customer_id,
+      return_url: `${origin}/app/settings`,
+    });
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    console.error("Stripe portal error:", err);
+    return NextResponse.json(
+      { error: "Could not load subscription portal. Please try again." },
+      { status: 502 }
+    );
+  }
 }

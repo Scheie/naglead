@@ -93,37 +93,45 @@ export async function POST(request: Request) {
     );
   }
 
-  const stripe = getStripe();
-  let customerId = profile?.stripe_customer_id;
+  let session;
+  try {
+    const stripe = getStripe();
+    let customerId = profile?.stripe_customer_id;
 
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: profile?.email ?? user.email,
-      name: profile?.name ?? undefined,
-      metadata: { naglead_user_id: user.id },
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: profile?.email ?? user.email,
+        name: profile?.name ?? undefined,
+        metadata: { naglead_user_id: user.id },
+      });
+      customerId = customer.id;
+
+      await admin
+        .from("users")
+        .update({ stripe_customer_id: customerId })
+        .eq("id", user.id);
+    }
+
+    const origin = "https://naglead.com";
+
+    session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: "subscription",
+      line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
+      success_url: `${origin}/app/upgrade-success`,
+      cancel_url: `${origin}/app/upgrade-cancelled`,
+      client_reference_id: user.id,
+      subscription_data: {
+        metadata: { naglead_user_id: user.id },
+      },
     });
-    customerId = customer.id;
-
-    await admin
-      .from("users")
-      .update({ stripe_customer_id: customerId })
-      .eq("id", user.id);
+  } catch (err) {
+    console.error("Stripe checkout error:", err);
+    return NextResponse.json(
+      { error: "Payment service temporarily unavailable. Please try again." },
+      { status: 502 }
+    );
   }
-
-  // Use fixed origin for mobile (not request origin — mobile has no origin)
-  const origin = "https://naglead.com";
-
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
-    success_url: `${origin}/app/upgrade-success`,
-    cancel_url: `${origin}/app/upgrade-cancelled`,
-    client_reference_id: user.id,
-    subscription_data: {
-      metadata: { naglead_user_id: user.id },
-    },
-  });
 
   return NextResponse.json({ url: session.url });
 }
