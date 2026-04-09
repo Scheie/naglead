@@ -606,8 +606,21 @@ export function SettingsScreen() {
       </View>
 
       {/* Intake Email */}
-      {profile?.intake_alias && (
+      {profile?.intake_alias ? (
         <EmailIntakeSection alias={profile.intake_alias} />
+      ) : (
+        <>
+          <Text style={styles.sectionTitle}>EMAIL INTAKE</Text>
+          <View style={[styles.card, { opacity: 0.5 }]}>
+            <Text style={styles.value}>Auto-Add Leads via Email</Text>
+            <Text style={[styles.valueSubtle, { marginTop: 4 }]}>
+              Forward lead emails from Gmail, Outlook, or any inbox and we'll auto-create leads. Upgrade to Pro to unlock.
+            </Text>
+            <View style={styles.comingSoonBadge}>
+              <Text style={styles.comingSoonText}>PRO</Text>
+            </View>
+          </View>
+        </>
       )}
 
       {/* Phone — coming soon */}

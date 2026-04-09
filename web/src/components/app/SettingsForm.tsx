@@ -366,8 +366,24 @@ export function SettingsForm({ profile }: SettingsFormProps) {
           )}
         </section>
 
-        {/* Email Intake — Pro only */}
-        {profile.subscription_status !== "free" && <section className="space-y-4">
+        {/* Email Intake */}
+        {profile.subscription_status === "free" ? (
+          <section className="space-y-4 opacity-60">
+            <div className="flex items-center gap-2 text-zinc-400 mb-4">
+              <EnvelopeSimple weight="bold" />
+              <h2 className="font-loud text-xl headline uppercase">
+                Email Intake
+              </h2>
+              <span className="text-xs bg-zinc-700 text-zinc-300 font-bold px-2 py-0.5 rounded ml-2">
+                PRO
+              </span>
+            </div>
+            <p className="text-sm text-zinc-500">
+              Forward lead emails from Gmail, Outlook, or any inbox and we&apos;ll auto-create leads. Upgrade to Pro to unlock.
+            </p>
+          </section>
+        ) : (
+        <section className="space-y-4">
           <div className="flex items-center gap-2 text-zinc-400 mb-4">
             <EnvelopeSimple weight="bold" />
             <h2 className="font-loud text-xl headline uppercase">
@@ -497,7 +513,8 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               </div>
             ))}
           </div>
-        </section>}
+        </section>
+        )}
 
         {/* Coming Soon — SMS & Phone */}
         <section className="space-y-4 opacity-60">
