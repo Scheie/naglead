@@ -21,6 +21,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: "https://naglead.com/blog",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: "https://naglead.com/blog/cleaning-business-lead-follow-up",
+      lastModified: new Date("2026-04-09"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: "https://naglead.com/privacy",
       lastModified: new Date(),
       changeFrequency: "monthly",
