@@ -5,7 +5,7 @@
 
 select cron.schedule(
   'stripe-sync',
-  '0 */6 * * *',
+  '0 * * * *',
   $$
   select net.http_post(
     url := 'https://fzedsixotdapeiztdjrf.supabase.co/functions/v1/stripe-sync',
