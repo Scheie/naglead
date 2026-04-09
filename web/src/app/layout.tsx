@@ -26,7 +26,31 @@ export const metadata: Metadata = {
     "plumber lead management",
     "simple CRM alternative",
     "service business",
+    "lead follow up",
+    "electrician lead tracker",
+    "cleaning business leads",
+    "landscaper CRM alternative",
+    "handyman lead management",
   ],
+  metadataBase: new URL("https://naglead.com"),
+  openGraph: {
+    title: "NagLead — Stop Losing Leads",
+    description:
+      "Dead-simple lead tracker for solo service businesses. Add a lead in 5 seconds, get nagged until you call them back.",
+    url: "https://naglead.com",
+    siteName: "NagLead",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NagLead — Stop Losing Leads",
+    description:
+      "Dead-simple lead tracker for solo service businesses. Get nagged until you call them back.",
+  },
+  alternates: {
+    canonical: "https://naglead.com",
+  },
 };
 
 export default function RootLayout({
