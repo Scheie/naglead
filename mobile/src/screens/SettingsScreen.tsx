@@ -153,7 +153,7 @@ const SETUP_GUIDES: { provider: string; steps: string[] }[] = [
 function EmailIntakeSection({ alias }: { alias: string }) {
   const [copied, setCopied] = useState(false);
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
-  const intakeEmail = `${alias}@leads.naglead.com`;
+  const intakeEmail = `leads+${alias}@naglead.com`;
 
   async function copyEmail() {
     await Clipboard.setStringAsync(intakeEmail);
