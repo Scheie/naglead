@@ -68,7 +68,7 @@ export default function CleaningLeadFollowUpPost() {
               study from MIT
             </a>{" "}
             found that responding to a lead within 5 minutes makes you{" "}
-            <strong className="text-white">21 times more likely</strong> to win
+            <strong className="text-white">21 times more likely</strong>{" "}to win
             the job than if you wait 30 minutes. And when someone searches
             &quot;house cleaning near me,&quot; they&apos;re usually contacting 3-5
             companies at once. The first one to respond clearly wins.
