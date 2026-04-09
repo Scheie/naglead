@@ -56,6 +56,9 @@ export function Footer() {
               >
                 PRICING
               </Link>
+              <Link href="/blog" className="hover:text-white transition-colors">
+                BLOG
+              </Link>
             </div>
             <div className="flex flex-col gap-2 text-center md:text-left">
               <a href="mailto:hello@naglead.com" className="hover:text-white transition-colors">
