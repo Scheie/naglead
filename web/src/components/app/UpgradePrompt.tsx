@@ -21,6 +21,10 @@ export function UpgradePrompt({ activeCount, limit, onClose }: UpgradePromptProp
         body: JSON.stringify({ plan }),
       });
       if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        if (res.status === 400 && data?.error?.includes("already")) {
+          onClose();
+        }
         setLoading(null);
         return;
       }

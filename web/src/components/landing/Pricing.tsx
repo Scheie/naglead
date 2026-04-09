@@ -64,12 +64,10 @@ export function Pricing() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      // Not logged in — send to signup
       window.location.href = "/signup";
       return;
     }
 
-    // Logged in — go to checkout
     setLoading(plan);
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -77,7 +75,15 @@ export function Pricing() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
       });
-      if (!res.ok) { setLoading(null); return; }
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        if (res.status === 400 && data?.error?.includes("already")) {
+          // Already subscribed — go to app
+          window.location.href = "/app";
+        }
+        setLoading(null);
+        return;
+      }
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
