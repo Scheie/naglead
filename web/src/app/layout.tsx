@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Teko, Work_Sans } from "next/font/google";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import "./globals.css";
 
 const teko = Teko({
@@ -39,7 +40,7 @@ export default function RootLayout({
       className={`${teko.variable} ${workSans.variable} scroll-smooth`}
     >
       <body className="min-h-full font-body antialiased overflow-x-hidden selection:bg-nag-orange selection:text-white">
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );
