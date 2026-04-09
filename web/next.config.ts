@@ -28,6 +28,4 @@ export default withSentryConfig(nextConfig, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   silent: !process.env.CI,
-  // Tunnel route avoids ad-blockers from blocking Sentry events
-  tunnelRoute: "/api/monitoring",
 });

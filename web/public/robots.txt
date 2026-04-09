@@ -4,6 +4,6 @@ Allow: /
 Disallow: /app/
 Disallow: /api/
 Disallow: /auth/
-Disallow: /api/monitoring
+
 
 Sitemap: https://naglead.com/sitemap.xml
