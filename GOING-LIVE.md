@@ -30,14 +30,14 @@ Everything needed to go from "code works locally" to "real users paying money."
 Run these in the Supabase SQL Editor (all are idempotent, safe to re-run):
 
 - [x] `20260404120000_initial_schema.sql` — users, leads, lead_events, RLS
-- [ ] `20260404120001_pg_cron_nag_engine.sql` — uncomment + set project ref
+- [x] `20260404120001_pg_cron_nag_engine.sql` — nag engine every 15 minutes
 - [x] `20260404120002_free_tier_limit.sql` — 5-lead DB trigger
 - [x] `20260404120003_add_user_country.sql` — country column
-- [ ] `20260404120004_pg_cron_weekly_summary.sql` — uncomment + set project ref
+- [x] `20260404120004_pg_cron_weekly_summary.sql` — weekly summary hourly on Mondays
 - [x] `20260404120005_web_push_subscriptions.sql` — web push table
 - [x] `20260405120000_add_intake_alias.sql` — intake email aliases
 - [x] `20260407120000_stripe_customer_fields.sql` — Stripe columns
-- [ ] `20260407120001_pg_cron_stripe_sync.sql` — uncomment + set project ref
+- [x] `20260407120001_pg_cron_stripe_sync.sql` — Stripe sync every hour
 - [x] `20260407120002_add_webhook_token.sql` — cryptographic webhook tokens
 - [x] `20260407120003_stripe_webhook_events.sql` — Stripe event idempotency
 - [x] `20260407120004_signup_timezone_country.sql` — Auto-detect timezone/country on signup
@@ -54,6 +54,9 @@ supabase functions deploy stripe-sync --no-verify-jwt
 ```
 
 - [x] `email-intake` deployed and tested
+- [x] `nag-engine` deployed
+- [x] `weekly-summary` deployed
+- [ ] `stripe-sync` deployed
 
 ---
 
@@ -79,17 +82,23 @@ supabase secrets set EMAIL_INTAKE_SECRET=...
 
 - [x] `ANTHROPIC_API_KEY` set
 - [x] `EMAIL_INTAKE_SECRET` set
+- [x] `VAPID_PUBLIC_KEY` set
+- [x] `VAPID_PRIVATE_KEY` set
+- [x] `VAPID_SUBJECT` set
+- [x] `STRIPE_SECRET_KEY` set
+- [x] `STRIPE_PRICE_ID_PRO_MONTHLY` set
+- [x] `STRIPE_PRICE_ID_PRO_ANNUAL` set
 
 ---
 
 ## 6. Supabase — Enable pg_cron
 
-- [ ] Go to Supabase Dashboard → Database → Extensions
-- [ ] Enable `pg_cron` and `pg_net` extensions
-- [ ] Run the cron migration SQL (uncommented versions) to schedule:
+- [x] Go to Supabase Dashboard → Database → Extensions
+- [x] Enable `pg_cron` and `pg_net` extensions
+- [x] Run the cron migration SQL to schedule:
   - `nag-engine` — every 15 minutes
   - `weekly-summary` — hourly on Mondays
-  - `stripe-sync` — every 6 hours
+  - `stripe-sync` — every hour
 
 ---
 
@@ -112,6 +121,7 @@ supabase secrets set EMAIL_INTAKE_SECRET=...
 - [ ] Enable Stripe Customer Portal in Dashboard → Settings → Billing → Customer portal
 - [ ] Configure portal to allow: cancellation (at end of period), plan switching, payment method updates
 - [x] Tested checkout flow in sandbox mode
+- [x] Branding configured (icon, colors)
 - [ ] Switch to Stripe live keys when ready
 
 ---
@@ -175,14 +185,18 @@ STRIPE_PRICE_ID_PRO_ANNUAL=price_...
 UPSTASH_REDIS_REST_URL=https://...upstash.io
 UPSTASH_REDIS_REST_TOKEN=...
 
-# Sentry (error tracking — SDK installed, just add credentials)
+# Sentry
 NEXT_PUBLIC_SENTRY_DSN=https://...@sentry.io/...
 SENTRY_ORG=your-org
 SENTRY_PROJECT=naglead
 SENTRY_AUTH_TOKEN=sntrys_...
 
-# Feature flag — flip to "true" when ready to accept payments
-NEXT_PUBLIC_PAYMENTS_LIVE=false
+# PostHog
+NEXT_PUBLIC_POSTHOG_KEY=phc_...
+NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
+
+# Feature flag
+NEXT_PUBLIC_PAYMENTS_LIVE=true
 ```
 
 - [x] `NEXT_PUBLIC_SUPABASE_URL` set
@@ -193,6 +207,12 @@ NEXT_PUBLIC_PAYMENTS_LIVE=false
 - [x] `STRIPE_PRICE_ID_PRO_MONTHLY` set
 - [x] `STRIPE_PRICE_ID_PRO_ANNUAL` set
 - [x] `NEXT_PUBLIC_PAYMENTS_LIVE` set to `true`
+- [x] `NEXT_PUBLIC_SENTRY_DSN` set
+- [x] `SENTRY_ORG` set
+- [x] `SENTRY_PROJECT` set
+- [x] `SENTRY_AUTH_TOKEN` set
+- [x] `NEXT_PUBLIC_POSTHOG_KEY` set
+- [x] `NEXT_PUBLIC_POSTHOG_HOST` set
 
 ---
 
@@ -209,7 +229,9 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=...
 EXPO_PUBLIC_SENTRY_DSN=https://...@sentry.io/...
 ```
 
-Also set in `mobile/app.json` → `extra.eas.projectId` for push notifications.
+- [x] `EXPO_PUBLIC_SUPABASE_URL` set
+- [x] `EXPO_PUBLIC_SUPABASE_ANON_KEY` set
+- [x] `extra.eas.projectId` set in `mobile/app.json`
 
 ---
 
@@ -230,7 +252,42 @@ Also set in `mobile/app.json` → `extra.eas.projectId` for push notifications.
 
 ---
 
-## 14. Go Live Sequence
+## 14. Sentry (Error Tracking)
+
+- [x] Create free account at sentry.io
+- [x] Create a Next.js project, note the DSN
+- [x] Add to Vercel env vars (DSN, org, project, auth token)
+- [x] SDK installed and configured (`@sentry/nextjs` + `@sentry/react-native`)
+- [ ] Verify errors appear in Sentry dashboard after deploy
+
+---
+
+## 15. PostHog (Analytics)
+
+- [x] Create free account at posthog.com
+- [x] Create project, note the API key
+- [x] Add to Vercel env vars (`NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST`)
+- [x] SDK installed with cookieless mode (no cookie banner needed)
+- [x] Verified events appearing in PostHog dashboard
+
+---
+
+## 16. GDPR & Compliance
+
+- [x] Privacy policy published (`/privacy`)
+- [x] Terms of service published (`/terms`)
+- [x] Refund policy published (`/refunds`)
+- [x] Account deletion with data cascade
+- [x] CSV data export available
+- [x] PostHog cookieless mode (no cookie banner)
+- [x] `privacy@naglead.com` contact set up
+- [ ] Sign DPA with Supabase (Dashboard → Settings → Legal)
+- [ ] Sign DPA with PostHog (Settings → Legal)
+- [ ] Review Anthropic data processing terms
+
+---
+
+## 17. Go Live Sequence
 
 Do these in order:
 
@@ -240,7 +297,7 @@ Do these in order:
 4. [x] Test signup flow end-to-end (create account, add lead)
 5. [ ] Test Web Push notifications (allow notifications, wait for nag)
 6. [x] Test email intake (forward an email to your intake address)
-7. [x] Test Stripe in test mode (checkout, webhook, subscription update)
+7. [x] Test Stripe in sandbox mode (checkout, webhook, subscription update)
 8. [ ] Switch to Stripe live keys
 9. [x] Set `NEXT_PUBLIC_PAYMENTS_LIVE=true` in Vercel
 10. [ ] Test a real $10 payment (refund yourself after)
@@ -249,41 +306,15 @@ Do these in order:
 
 ---
 
-## 15. Sentry (Error Tracking)
-
-- [ ] Create free account at sentry.io
-- [ ] Create a Next.js project, note the DSN
-- [ ] Add to Vercel env vars:
-  - `NEXT_PUBLIC_SENTRY_DSN=https://...@sentry.io/...`
-  - `SENTRY_ORG=your-org`
-  - `SENTRY_PROJECT=naglead`
-  - `SENTRY_AUTH_TOKEN=sntrys_...` (for source map uploads)
-- [x] SDK is already installed and configured (`@sentry/nextjs` + `@sentry/react-native`)
-- [ ] Verify errors appear in Sentry dashboard after deploy
-
----
-
-## 16. Post-Launch Monitoring
-
-- [ ] Set up PostHog for product analytics (track signups, lead creation, upgrades)
-- [ ] Monitor Stripe Dashboard for failed payments
-- [ ] Monitor Upstash Dashboard for rate limit hits
-- [ ] Check Supabase logs for Edge Function errors
-- [ ] Watch Vercel function logs for webhook/API issues
-
----
-
-## 17. Future Integrations (Post-MVP)
-
-These are built but not wired, or planned but not built:
+## 18. Future Integrations (Post-MVP)
 
 | Integration | Status | What's needed |
 |---|---|---|
 | **Cloudflare email intake** | Deployed and tested | **done** |
 | **Twilio phone/SMS** | Planned, UI teaser in settings | Twilio account, phone number, Edge Function |
-| **PostHog analytics** | Planned | PostHog account, add tracking script |
-| **Sentry error tracking** | SDK installed in web + mobile | See step 15 |
-| **Expo mobile app** | Built, needs dev builds | Apple Developer ($99/yr), Google Play ($25), EAS projectId |
+| **PostHog analytics** | Installed and active | **done** |
+| **Sentry error tracking** | Installed, credentials set | **done** |
+| **Expo mobile app** | Built, EAS configured | Apple Developer ($99/yr), Google Play ($25) |
 
 ---
 
@@ -292,12 +323,13 @@ These are built but not wired, or planned but not built:
 | Service | Cost | Status |
 |---|---|---|
 | Cloudflare (domain + email) | ~$9/yr | **done** |
-| Stripe | Free (2.9% + $0.30 per txn) | **done** (sandbox) |
+| Stripe | Free (2.9% + $0.30 per txn) | **done** (live mode) |
 | Supabase | Free tier | **done** |
 | Vercel | Free tier (upgrade to Pro $20/mo when taking payments) | **done** |
 | Anthropic API | Pay-per-use (~$0.001/email) | **done** |
+| Sentry | Free tier (5k errors/mo) | **done** |
+| PostHog | Free tier (1M events/mo) | **done** |
 | Upstash Redis | Free tier (10k commands/day) | Not yet |
-| Sentry | Free tier (5k errors/mo) | Not yet |
 | Norwegian business (ENK or AS) | 0–2,000+ NOK | Not yet |
 | Apple Developer | $99/yr | Not yet |
 | Google Play Developer | $25 one-time | Not yet |
@@ -324,4 +356,5 @@ Verify before launch:
 - [x] Security headers configured in `next.config.ts` (X-Frame-Options, HSTS, etc.)
 - [x] Input `maxLength` on all text fields (255 names, 1000 descriptions)
 - [x] Mobile env vars throw on missing (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`)
-- [ ] EAS `projectId` set in `mobile/app.json` for push token registration
+- [x] EAS `projectId` set in `mobile/app.json` for push token registration
+- [x] PostHog cookieless mode (GDPR compliant without cookie banner)
