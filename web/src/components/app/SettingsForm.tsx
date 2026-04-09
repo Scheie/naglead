@@ -366,8 +366,8 @@ export function SettingsForm({ profile }: SettingsFormProps) {
           )}
         </section>
 
-        {/* Email Intake */}
-        <section className="space-y-4">
+        {/* Email Intake — Pro only */}
+        {profile.subscription_status !== "free" && <section className="space-y-4">
           <div className="flex items-center gap-2 text-zinc-400 mb-4">
             <EnvelopeSimple weight="bold" />
             <h2 className="font-loud text-xl headline uppercase">
@@ -497,7 +497,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               </div>
             ))}
           </div>
-        </section>
+        </section>}
 
         {/* Coming Soon — SMS & Phone */}
         <section className="space-y-4 opacity-60">

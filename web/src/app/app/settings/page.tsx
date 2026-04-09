@@ -17,8 +17,8 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  // Generate intake alias if user doesn't have one yet
-  if (profile && !profile.intake_alias) {
+  // Generate intake alias only for Pro subscribers
+  if (profile && !profile.intake_alias && profile.subscription_status !== "free") {
     let alias = generateIntakeAlias();
     let retries = 0;
     while (retries < 5) {
