@@ -1,6 +1,6 @@
 // NagLead Cloudflare Email Worker
-// Receives inbound email at *@leads.naglead.com, parses with postal-mime,
-// and forwards as JSON to the Supabase email-intake edge function.
+// Receives inbound email at leads+<alias>@naglead.com or *@leads.naglead.com,
+// parses with postal-mime, and forwards as JSON to the Supabase email-intake edge function.
 
 import PostalMime from "postal-mime";
 
@@ -13,6 +13,13 @@ export default {
   async email(message: ForwardableEmailMessage, env: Env): Promise<void> {
     const recipient = message.to;
     const sender = message.from;
+
+    // Only process intake emails — ignore hello@, privacy@, etc.
+    const local = recipient.split("@")[0]?.toLowerCase() ?? "";
+    const domain = recipient.split("@")[1]?.toLowerCase() ?? "";
+    const isIntake = domain === "leads.naglead.com" || (domain === "naglead.com" && local.startsWith("leads+"));
+    if (!isIntake) return;
+
     const rawEmail = await new Response(message.raw).arrayBuffer();
 
     // Parse email with postal-mime
