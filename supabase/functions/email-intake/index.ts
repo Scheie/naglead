@@ -168,6 +168,22 @@ Deno.serve(async (req) => {
     );
   }
 
+  // Rate limit: max 30 email leads per hour per user
+  const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count } = await supabase
+    .from("leads")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .eq("source", "email")
+    .gte("created_at", hourAgo);
+
+  if (count !== null && count >= 30) {
+    return new Response(
+      JSON.stringify({ error: "Rate limit exceeded (30 email leads/hour)" }),
+      { status: 429, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   // Parse email with Claude
   if (!emailBody.trim()) {
     return new Response(JSON.stringify({ error: "Empty email body" }), {
