@@ -36,6 +36,20 @@ export function LoginScreen({ navigation }: Props) {
     }
   }
 
+  async function handleForgotPassword() {
+    const trimmed = email.trim();
+    if (!trimmed) {
+      Alert.alert("Enter your email", "Type your email above, then tap Forgot password.");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(trimmed);
+    if (error) {
+      Alert.alert("Error", error.message);
+    } else {
+      Alert.alert("Check your email", `We sent a password reset link to ${trimmed}`);
+    }
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -74,6 +88,10 @@ export function LoginScreen({ navigation }: Props) {
           <Text style={styles.buttonText}>
             {loading ? "LOGGING IN..." : "LOG IN"}
           </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text style={styles.forgotLink}>Forgot password?</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
@@ -145,5 +163,12 @@ const styles = StyleSheet.create({
   },
   linkOrange: {
     color: colors.orange,
+  },
+  forgotLink: {
+    textAlign: "center",
+    color: colors.zinc[500],
+    fontSize: 13,
+    fontFamily: "WorkSans-Medium",
+    marginBottom: 16,
   },
 });

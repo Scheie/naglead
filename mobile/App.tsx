@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { StatusBar, TouchableOpacity, Text as RNText, View } from "react-native";
+import { StatusBar, TouchableOpacity, Text as RNText, View, Alert } from "react-native";
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Sentry from "@sentry/react-native";
@@ -20,6 +20,7 @@ import { InboxScreen } from "./src/screens/InboxScreen";
 import { AddLeadScreen } from "./src/screens/AddLeadScreen";
 import { SettingsScreen } from "./src/screens/SettingsScreen";
 import { UpgradeSuccessScreen } from "./src/screens/UpgradeSuccessScreen";
+import * as Notifications from "expo-notifications";
 import {
   registerForPushNotifications,
   savePushToken,
@@ -158,9 +159,30 @@ function App() {
     if (!session) return;
 
     async function setupPush() {
-      const token = await registerForPushNotifications();
-      if (token) {
-        await savePushToken(token);
+      // Check if we already have permission
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status === "granted") {
+        const token = await registerForPushNotifications();
+        if (token) await savePushToken(token);
+        return;
+      }
+
+      // First time — show a friendly prompt before the system dialog
+      if (status !== "denied") {
+        Alert.alert(
+          "Enable nag reminders?",
+          "NagLead needs notifications to nag you about unanswered leads. That's the whole point.",
+          [
+            { text: "Not now", style: "cancel" },
+            {
+              text: "Enable",
+              onPress: async () => {
+                const token = await registerForPushNotifications();
+                if (token) await savePushToken(token);
+              },
+            },
+          ]
+        );
       }
     }
 

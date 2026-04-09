@@ -80,10 +80,10 @@ export function AddLeadScreen({ navigation }: Props) {
 
     if (error) {
       Alert.alert(
-        "Failed",
+        error.message?.includes("Free tier") ? "Lead limit reached" : "Failed",
         error.message?.includes("Free tier")
-          ? "Free tier limit reached (5 active leads). Mark some as won or lost to free up slots."
-          : "Failed to add lead"
+          ? "You've hit the 5 active lead limit on the free plan. Mark some as won or lost to free up slots, or upgrade to Pro for unlimited leads."
+          : "Failed to add lead. Check your connection."
       );
       setSaving(false);
       return;
