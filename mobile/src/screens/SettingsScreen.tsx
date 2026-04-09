@@ -16,63 +16,7 @@ import { supabase } from "../lib/supabase";
 import { colors } from "../lib/theme";
 import { PickerModal } from "../components/PickerModal";
 import type { UserProfile } from "../lib/types";
-
-const COUNTRIES = [
-  { code: "US", flag: "🇺🇸", currency: "USD", symbol: "$" },
-  { code: "CA", flag: "🇨🇦", currency: "CAD", symbol: "C$" },
-  { code: "GB", flag: "🇬🇧", currency: "GBP", symbol: "£" },
-  { code: "AU", flag: "🇦🇺", currency: "AUD", symbol: "A$" },
-  { code: "NZ", flag: "🇳🇿", currency: "NZD", symbol: "NZ$" },
-  { code: "IE", flag: "🇮🇪", currency: "EUR", symbol: "€" },
-  { code: "DE", flag: "🇩🇪", currency: "EUR", symbol: "€" },
-  { code: "FR", flag: "🇫🇷", currency: "EUR", symbol: "€" },
-  { code: "ES", flag: "🇪🇸", currency: "EUR", symbol: "€" },
-  { code: "IT", flag: "🇮🇹", currency: "EUR", symbol: "€" },
-  { code: "NL", flag: "🇳🇱", currency: "EUR", symbol: "€" },
-  { code: "SE", flag: "🇸🇪", currency: "SEK", symbol: "kr" },
-  { code: "NO", flag: "🇳🇴", currency: "NOK", symbol: "kr" },
-  { code: "DK", flag: "🇩🇰", currency: "DKK", symbol: "kr" },
-  { code: "FI", flag: "🇫🇮", currency: "EUR", symbol: "€" },
-  { code: "CH", flag: "🇨🇭", currency: "CHF", symbol: "CHF" },
-  { code: "IN", flag: "🇮🇳", currency: "INR", symbol: "₹" },
-  { code: "ZA", flag: "🇿🇦", currency: "ZAR", symbol: "R" },
-  { code: "MX", flag: "🇲🇽", currency: "MXN", symbol: "MX$" },
-  { code: "BR", flag: "🇧🇷", currency: "BRL", symbol: "R$" },
-  { code: "JP", flag: "🇯🇵", currency: "JPY", symbol: "¥" },
-] as const;
-
-const TIMEZONES = [
-  "America/New_York",
-  "America/Chicago",
-  "America/Denver",
-  "America/Los_Angeles",
-  "America/Anchorage",
-  "Pacific/Honolulu",
-  "America/Toronto",
-  "America/Sao_Paulo",
-  "America/Mexico_City",
-  "Europe/London",
-  "Europe/Berlin",
-  "Europe/Paris",
-  "Europe/Oslo",
-  "Europe/Stockholm",
-  "Europe/Helsinki",
-  "Europe/Amsterdam",
-  "Europe/Madrid",
-  "Europe/Rome",
-  "Europe/Istanbul",
-  "Europe/Moscow",
-  "Africa/Johannesburg",
-  "Asia/Dubai",
-  "Asia/Kolkata",
-  "Asia/Singapore",
-  "Asia/Tokyo",
-  "Asia/Seoul",
-  "Asia/Shanghai",
-  "Australia/Sydney",
-  "Australia/Perth",
-  "Pacific/Auckland",
-] as const;
+import { COUNTRIES, TIMEZONES } from "../lib/country-codes";
 
 // Detect if user's locale uses 12-hour clock
 const is12Hour = (() => {
@@ -227,7 +171,7 @@ export function SettingsScreen() {
   const [showQuietEndPicker, setShowQuietEndPicker] = useState(false);
 
   const countryOptions = useMemo(() =>
-    COUNTRIES.map((c) => ({ label: `${c.flag} ${c.code} — ${c.symbol} (${c.currency})`, value: c.code })),
+    COUNTRIES.map((c) => ({ label: `${c.flag} ${c.code} — ${c.currencySymbol} (${c.currency})`, value: c.code })),
     []
   );
 
@@ -470,7 +414,7 @@ export function SettingsScreen() {
           onPress={() => setShowCountryPicker(true)}
         >
           <Text style={styles.pickerBtnText}>
-            {selectedCountry ? `${selectedCountry.flag} ${selectedCountry.code} — ${selectedCountry.symbol} (${selectedCountry.currency})` : country}
+            {selectedCountry ? `${selectedCountry.flag} ${selectedCountry.code} — ${selectedCountry.currencySymbol} (${selectedCountry.currency})` : country}
           </Text>
           <Text style={styles.pickerChevron}>›</Text>
         </TouchableOpacity>

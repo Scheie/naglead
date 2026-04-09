@@ -31,12 +31,7 @@ function snoozedUntilLabel(until: string): string {
 
 type Props = NativeStackScreenProps<AppStackParamList, "Inbox">;
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  US: "$", CA: "C$", GB: "£", AU: "A$", NZ: "NZ$",
-  IE: "€", DE: "€", FR: "€", ES: "€", IT: "€", NL: "€", FI: "€", AT: "€", BE: "€", PT: "€",
-  SE: "kr", NO: "kr", DK: "kr", CH: "CHF",
-  IN: "₹", ZA: "R", MX: "MX$", BR: "R$", JP: "¥",
-};
+import { getCurrencySymbol } from "../lib/country-codes";
 
 export function InboxScreen({ navigation }: Props) {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -46,12 +41,14 @@ export function InboxScreen({ navigation }: Props) {
   const [showSnoozed, setShowSnoozed] = useState(false);
   const [currencySymbol, setCurrencySymbol] = useState("$");
   const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
   const fetchLeads = useCallback(async () => {
     const { data } = await supabase
       .from("leads")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(200);
     if (data) setLeads(data);
   }, []);
 
@@ -61,7 +58,7 @@ export function InboxScreen({ navigation }: Props) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       const { data } = await supabase.from("users").select("country, subscription_status").eq("id", user.id).single();
-      if (data?.country) setCurrencySymbol(CURRENCY_SYMBOLS[data.country] ?? "$");
+      if (data?.country) setCurrencySymbol(getCurrencySymbol(data.country));
       if (data?.subscription_status) setSubscriptionStatus(data.subscription_status);
     }
     loadUserSettings();
@@ -153,17 +150,22 @@ export function InboxScreen({ navigation }: Props) {
   }
 
   async function markReplied(leadId: string) {
+    if (actionInProgress) return;
+    setActionInProgress(leadId);
     const now = new Date().toISOString();
     const { error } = await supabase
       .from("leads")
       .update({ state: "waiting", replied_at: now, updated_at: now })
       .eq("id", leadId);
+    setActionInProgress(null);
     if (error) { Alert.alert("Error", "Failed to update lead. Check your connection."); return; }
     logEvent(leadId, "replied");
     fetchLeads();
   }
 
   async function markWon(leadId: string, valueCents?: number) {
+    if (actionInProgress) return;
+    setActionInProgress(leadId);
     const now = new Date().toISOString();
     const { error } = await supabase
       .from("leads")
@@ -174,12 +176,15 @@ export function InboxScreen({ navigation }: Props) {
         value_cents: valueCents ?? null,
       })
       .eq("id", leadId);
+    setActionInProgress(null);
     if (error) { Alert.alert("Error", "Failed to update lead. Check your connection."); return; }
     logEvent(leadId, "won", valueCents ? { value_cents: valueCents } : undefined);
     fetchLeads();
   }
 
   async function markLost(leadId: string, reason?: string) {
+    if (actionInProgress) return;
+    setActionInProgress(leadId);
     const now = new Date().toISOString();
     const { error } = await supabase
       .from("leads")
@@ -190,17 +195,21 @@ export function InboxScreen({ navigation }: Props) {
         lost_reason: reason ?? null,
       })
       .eq("id", leadId);
+    setActionInProgress(null);
     if (error) { Alert.alert("Error", "Failed to update lead. Check your connection."); return; }
     logEvent(leadId, "lost", reason ? { reason } : undefined);
     fetchLeads();
   }
 
   async function snoozeLead(leadId: string, until: Date) {
+    if (actionInProgress) return;
+    setActionInProgress(leadId);
     const now = new Date().toISOString();
     const { error } = await supabase
       .from("leads")
       .update({ snoozed_until: until.toISOString(), updated_at: now })
       .eq("id", leadId);
+    setActionInProgress(null);
     if (error) { Alert.alert("Error", "Failed to snooze lead. Check your connection."); return; }
     logEvent(leadId, "snoozed", { until: until.toISOString() });
     fetchLeads();

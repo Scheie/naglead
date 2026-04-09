@@ -35,6 +35,12 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
     const emailDomain = email.split("@")[1]?.toLowerCase();
     if (emailDomain === "naglead.com" || emailDomain === "leads.naglead.com") {
       setError("You cannot register with a naglead.com email address.");

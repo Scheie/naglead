@@ -67,7 +67,8 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
     const { data } = await supabase
       .from("leads")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(200);
     if (data) setLeads(data);
   }, [supabase]);
 

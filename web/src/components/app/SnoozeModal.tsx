@@ -70,7 +70,7 @@ export function SnoozeModal({ leadName, onSnooze, onClose }: SnoozeModalProps) {
             <button
               key={option.label}
               onClick={() => onSnooze(option.getDate())}
-              className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-semibold py-3 px-4 rounded-lg text-left transition-colors"
+              className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-semibold py-3 px-4 rounded-lg text-left transition-colors focus:outline-none focus:ring-2 focus:ring-nag-orange"
             >
               {option.label}
             </button>
