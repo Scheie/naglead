@@ -63,13 +63,8 @@ export function SignupScreen({ navigation }: Props) {
     setLoading(false);
     if (error) {
       Alert.alert("Signup failed", error.message);
-    } else {
-      Alert.alert(
-        "Check your email",
-        "We sent you a confirmation link. Tap it to activate your account.",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
-      );
     }
+    // Session is auto-created — useAuth listener switches to AppNavigator
   }
 
   return (
