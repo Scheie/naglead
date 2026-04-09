@@ -42,6 +42,7 @@ export default {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${env.SUPABASE_ANON_KEY}`,
+        "apikey": env.SUPABASE_ANON_KEY,
         "X-Email-Intake-Secret": env.EMAIL_INTAKE_SECRET,
       },
       body: JSON.stringify({
