@@ -7,6 +7,7 @@ import PostalMime from "postal-mime";
 interface Env {
   EMAIL_INTAKE_SECRET: string;
   SUPABASE_EDGE_FUNCTION_URL: string;
+  SUPABASE_ANON_KEY: string;
 }
 
 export default {
@@ -40,6 +41,7 @@ export default {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${env.SUPABASE_ANON_KEY}`,
         "X-Email-Intake-Secret": env.EMAIL_INTAKE_SECRET,
       },
       body: JSON.stringify({
