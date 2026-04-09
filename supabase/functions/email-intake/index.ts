@@ -12,7 +12,7 @@ const PARSE_PROMPT = `This email was forwarded to a lead tracking system. Extrac
 - Customer name from the email body (sign-off, form fields, or signature — NOT the From address, which is usually the forwarder)
 - Phone number (if present in the body)
 - Customer email address (if present in the body — NOT the sender/forwarder address)
-- What they need (1-2 sentences, include specific details like sizes, materials, urgency, or location if mentioned)
+- What they need (1-2 sentences. ALWAYS start with the location/area if mentioned, then the job details including sizes, materials, and urgency)
 
 Return ONLY valid JSON: { "name": string | null, "phone": string | null, "email": string | null, "description": string | null }
 If any field is unclear, return null for that field.`;
