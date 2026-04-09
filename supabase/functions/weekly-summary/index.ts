@@ -86,6 +86,18 @@ Deno.serve(async () => {
       continue;
     }
 
+    // Check if we already sent a summary this week
+    const mondayStart = new Date(now);
+    mondayStart.setHours(0, 0, 0, 0);
+    const { count: alreadySent } = await supabase
+      .from("lead_events")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("event_type", "weekly_summary")
+      .gte("created_at", mondayStart.toISOString());
+
+    if (alreadySent && alreadySent > 0) continue;
+
     // New leads this week
     const { count: newLeads } = await supabase
       .from("leads")
@@ -140,6 +152,13 @@ Deno.serve(async () => {
       title: message.title,
       body: message.body,
       data: { type: "weekly_summary" },
+    });
+
+    // Mark as sent so we don't send again this Monday
+    await supabase.from("lead_events").insert({
+      user_id: user.id,
+      event_type: "weekly_summary",
+      metadata: { stats },
     });
 
     sent++;
