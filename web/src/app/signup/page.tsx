@@ -64,7 +64,7 @@ export default function SignupPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      setStep(4);
+      router.push("/app");
     }
   }
 
