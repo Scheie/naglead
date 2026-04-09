@@ -524,11 +524,13 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               Phone & SMS Intake
             </h2>
             <span className="text-xs bg-zinc-700 text-zinc-300 font-bold px-2 py-0.5 rounded ml-2">
-              PRO — COMING SOON
+              {profile.subscription_status === "free" ? "PRO — COMING SOON" : "COMING SOON"}
             </span>
           </div>
           <p className="text-sm text-zinc-500">
-            Get a dedicated business number. Missed calls and texts auto-create leads. Coming soon for Pro subscribers.
+            {profile.subscription_status === "free"
+              ? "Get a dedicated business number. Missed calls and texts auto-create leads. Upgrade to Pro to unlock when available."
+              : "Get a dedicated business number. Missed calls and texts auto-create leads. We'll notify you when this is ready."}
           </p>
         </section>
 
