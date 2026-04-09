@@ -516,33 +516,20 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         </section>
         )}
 
-        {/* Coming Soon — SMS & Phone */}
+        {/* Phone & SMS — Pro, coming soon */}
         <section className="space-y-4 opacity-60">
           <div className="flex items-center gap-2 text-zinc-400 mb-4">
             <Phone weight="bold" />
             <h2 className="font-loud text-xl headline uppercase">
-              SMS & Phone Intake
+              Phone & SMS Intake
             </h2>
             <span className="text-xs bg-zinc-700 text-zinc-300 font-bold px-2 py-0.5 rounded ml-2">
-              COMING SOON
+              PRO — COMING SOON
             </span>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-3">
-            <p className="text-sm text-zinc-400">
-              Get a dedicated business phone number. Missed calls and incoming
-              texts will automatically create leads in your inbox.
-            </p>
-            <div className="space-y-2 text-sm text-zinc-500">
-              <p className="font-semibold text-zinc-400">How it will work:</p>
-              <ul className="space-y-1.5 list-disc list-inside">
-                <li>Get a local phone number you can put on your van, website, or business cards</li>
-                <li>Missed calls auto-create a lead with the caller&apos;s number</li>
-                <li>Incoming texts create a lead with the message as the description</li>
-                <li>Optional auto-reply: &quot;Thanks for calling! I&apos;ll get back to you within an hour&quot;</li>
-                <li>Works alongside your existing phone — no need to switch numbers</li>
-              </ul>
-            </div>
-          </div>
+          <p className="text-sm text-zinc-500">
+            Get a dedicated business number. Missed calls and texts auto-create leads. Coming soon for Pro subscribers.
+          </p>
         </section>
 
         {/* Save */}

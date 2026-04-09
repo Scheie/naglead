@@ -625,13 +625,13 @@ export function SettingsScreen() {
 
       {/* Phone — coming soon */}
       <Text style={styles.sectionTitle}>PHONE & SMS</Text>
-      <View style={styles.card}>
+      <View style={[styles.card, { opacity: 0.5 }]}>
         <Text style={styles.value}>Dedicated Business Number</Text>
         <Text style={[styles.valueSubtle, { marginTop: 4 }]}>
-          Auto-create leads from missed calls and texts. Coming soon as a Pro feature.
+          Missed calls and texts auto-create leads. Coming soon for Pro subscribers.
         </Text>
         <View style={styles.comingSoonBadge}>
-          <Text style={styles.comingSoonText}>COMING SOON</Text>
+          <Text style={styles.comingSoonText}>PRO — COMING SOON</Text>
         </View>
       </View>
 
