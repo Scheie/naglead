@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "missed-leads-cost-service-business",
+    title: "What a Missed Lead Actually Costs Your Service Business",
+    description:
+      "The average service business misses 28% of incoming leads. Here's exactly how much that costs you per month — and the embarrassingly simple fix.",
+    date: "2026-04-10",
+    readTime: "5 min read",
+  },
+  {
     slug: "naglead-vs-jobber",
     title: "NagLead vs Jobber: Which Is Right for Solo Cleaners?",
     description:
