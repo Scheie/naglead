@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-vs-jobber",
+    title: "NagLead vs Jobber: Which Is Right for Solo Cleaners?",
+    description:
+      "Jobber starts at $39/month and is built for teams. NagLead is $10/month and built for one-person cleaning businesses. Here's an honest comparison.",
+    date: "2026-04-10",
+    readTime: "6 min read",
+  },
+  {
     slug: "cleaning-business-lead-follow-up",
     title: "How to Follow Up on Cleaning Leads Without a CRM",
     description:
