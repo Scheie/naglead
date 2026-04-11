@@ -27,6 +27,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://naglead.com/blog/naglead-vs-less-annoying-crm",
+      lastModified: new Date("2026-04-11"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: "https://naglead.com/blog/missed-leads-cost-service-business",
       lastModified: new Date("2026-04-10"),
       changeFrequency: "monthly",

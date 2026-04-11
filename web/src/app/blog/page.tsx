@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-vs-less-annoying-crm",
+    title: "NagLead vs Less Annoying CRM: Which One for Service Businesses?",
+    description:
+      "Less Annoying CRM does everything simply. NagLead does one thing aggressively. Here's which one fits your service business.",
+    date: "2026-04-11",
+    readTime: "5 min read",
+  },
+  {
     slug: "missed-leads-cost-service-business",
     title: "What a Missed Lead Actually Costs Your Service Business",
     description:
