@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "best-lead-tracker-cleaning-business-2026",
+    title: "Best Lead Tracker for Cleaning Businesses in 2026",
+    description:
+      "An honest look at 6 tools for tracking cleaning leads — from free options to full CRMs. Which one actually fits a solo cleaner's workflow?",
+    date: "2026-04-12",
+    readTime: "7 min read",
+  },
+  {
     slug: "naglead-vs-less-annoying-crm",
     title: "NagLead vs Less Annoying CRM: Which One for Service Businesses?",
     description:
