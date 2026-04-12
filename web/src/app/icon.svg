@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#FF4500"/>
-  <!-- Megaphone bell -->
-  <polygon points="8,12 8,20 13,20 22,25 22,7 13,12" fill="black" stroke="black" stroke-width="1" stroke-linejoin="round"/>
-  <!-- Sound waves -->
-  <path d="M24,12 Q27,16 24,20" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#000000"/>
+  <rect x="120" y="120" width="50" height="280" rx="25" fill="#FF4500"/>
+  <path d="M342,120 L342,390 L342,390 Q342,400 332,400 L332,400 Q322,400 322,390 L322,200 L322,120 L322,80 Q332,65 342,80 L362,60 Q375,50 380,65 L380,390 Q380,400 370,400 L360,400 Q350,400 350,390 L350,120 Z" fill="#FF4500"/>
+  <path d="M158,145 L335,370" stroke="#FF4500" stroke-width="50" stroke-linecap="round"/>
+  <path d="M395,90 Q418,110 395,135" fill="none" stroke="#FF4500" stroke-width="14" stroke-linecap="round"/>
+  <path d="M415,75 Q445,110 415,150" fill="none" stroke="#FF4500" stroke-width="10" stroke-linecap="round" opacity="0.5"/>
 </svg>
