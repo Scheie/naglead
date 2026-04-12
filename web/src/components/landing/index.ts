@@ -6,4 +6,5 @@ export { HowItWorks } from "./HowItWorks";
 export { EscalationTimeline } from "./EscalationTimeline";
 export { Pricing } from "./Pricing";
 export { Testimonials } from "./Testimonials";
+export { FAQ } from "./FAQ";
 export { Footer } from "./Footer";
