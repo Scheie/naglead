@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-pro-features",
+    title: "What You Get with NagLead Pro ($10/month)",
+    description:
+      "NagLead Pro unlocks unlimited leads, auto-add from email, monthly scorecards, and more. Here's exactly what $10/month gets you.",
+    date: "2026-04-13",
+    readTime: "4 min read",
+  },
+  {
     slug: "best-lead-tracker-cleaning-business-2026",
     title: "Best Lead Tracker for Cleaning Businesses in 2026",
     description:
