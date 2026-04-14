@@ -135,6 +135,54 @@ These rules apply to ALL code written or modified in this project. Follow them w
 - Handle errors gracefully — Edge Functions should return JSON responses with appropriate status codes.
 - Extract testable pure logic into `_shared/` modules. Keep handler files focused on I/O.
 
+### 3rd Party API Calls — Timeouts, Errors & Retries
+
+All `fetch()` calls to external APIs **must** have timeout and error handling. Use `fetchWithRetry` from `supabase/functions/_shared/fetch-retry.ts` for Edge Functions.
+
+**Required for every external API call:**
+- **Timeout:** Always set a timeout (5-15s depending on the API). Never let a fetch hang indefinitely.
+- **Error handling:** Always wrap in try-catch. Log errors with context (which API, what failed).
+- **Retry:** Retry on 5xx and network errors (2 retries with exponential backoff). Never retry on 4xx (permanent errors).
+- **Graceful degradation:** If a non-critical call fails (e.g. push notification), log and continue. If a critical call fails (e.g. lead creation), return an error to the user.
+
+**Pattern for Edge Functions:**
+```typescript
+import { fetchWithRetry } from "../_shared/fetch-retry.ts";
+
+// 10s timeout, 2 retries with backoff
+const response = await fetchWithRetry(url, { method: "POST", ... }, { timeoutMs: 10000 });
+```
+
+**Pattern for Next.js API routes (Stripe SDK):**
+```typescript
+try {
+  const session = await stripe.checkout.sessions.create({ ... });
+} catch (err) {
+  console.error("Stripe error:", err);
+  return NextResponse.json({ error: "Payment service temporarily unavailable" }, { status: 502 });
+}
+```
+
+**Pattern for client-side (mobile/web):**
+```typescript
+try {
+  const res = await fetch(url, { ... });
+  if (!res.ok) { /* show error to user */ return; }
+} catch {
+  Alert.alert("Error", "Could not connect to server");
+}
+```
+
+**Current timeouts by API:**
+| API | Timeout | Retries | Location |
+|-----|---------|---------|----------|
+| Claude API (email parsing) | 10s | 2 | `email-intake` |
+| Expo Push API | 5s | 2 | `nag-engine`, `weekly-summary`, `email-intake` |
+| Stripe API | 10s | 2 | `stripe-sync` |
+| Supabase Edge Function | 15s | 3 | `cloudflare/email-worker` |
+| Stripe SDK (checkout/portal) | SDK default | 0 (try-catch) | Next.js API routes |
+| Upstash Redis | SDK default | 0 (try-catch, fail-open) | `rate-limit.ts` |
+
 ### Migrations
 
 - All migrations must be **idempotent** — use `IF NOT EXISTS`, `CREATE OR REPLACE`, `DO $$ ... $$` blocks.
