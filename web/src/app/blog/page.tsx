@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "auto-add-leads-from-email",
+    title: "Never Miss a Lead Again: Auto-Add Leads from Email",
+    description:
+      "Forward your Yelp, Thumbtack, and website form emails to NagLead and leads create themselves. AI extracts the name, phone, and what they need.",
+    date: "2026-04-14",
+    readTime: "5 min read",
+  },
+  {
     slug: "naglead-pro-features",
     title: "What You Get with NagLead Pro ($10/month)",
     description:
