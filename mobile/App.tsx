@@ -96,15 +96,15 @@ function AppNavigator() {
             <TouchableOpacity
               onPress={() => navigation.navigate("Settings")}
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: 18,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 8,
                 backgroundColor: colors.zinc[900],
-                alignItems: "center",
-                justifyContent: "center",
+                borderWidth: 1,
+                borderColor: colors.zinc[800],
               }}
             >
-              <RNText style={{ fontSize: 18 }}>⚙</RNText>
+              <RNText style={{ fontSize: 13, color: colors.zinc[400], fontFamily: "WorkSans-SemiBold" }}>Settings</RNText>
             </TouchableOpacity>
           ),
         })}
