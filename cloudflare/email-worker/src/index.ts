@@ -36,28 +36,52 @@ export default {
       return;
     }
 
-    // Forward to Supabase edge function as JSON
-    const response = await fetch(env.SUPABASE_EDGE_FUNCTION_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.SUPABASE_ANON_KEY}`,
-        "apikey": env.SUPABASE_ANON_KEY,
-        "X-Email-Intake-Secret": env.EMAIL_INTAKE_SECRET,
-      },
-      body: JSON.stringify({
-        recipient,
-        sender,
-        from: parsed.from?.address || sender,
-        from_name: parsed.from?.name || "",
-        subject,
-        body,
-      }),
+    // Forward to Supabase edge function as JSON (with timeout + retry)
+    const payload = JSON.stringify({
+      recipient,
+      sender,
+      from: parsed.from?.address || sender,
+      from_name: parsed.from?.name || "",
+      subject,
+      body,
     });
 
-    if (!response.ok) {
-      const err = await response.text();
-      console.error(`Edge function error (${response.status}):`, err);
+    let lastError: string | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(env.SUPABASE_EDGE_FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${env.SUPABASE_ANON_KEY}`,
+            "apikey": env.SUPABASE_ANON_KEY,
+            "X-Email-Intake-Secret": env.EMAIL_INTAKE_SECRET,
+          },
+          body: payload,
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeout);
+
+        if (response.ok || (response.status >= 400 && response.status < 500)) {
+          if (!response.ok) {
+            console.error(`Edge function error (${response.status}):`, await response.text());
+          }
+          return; // Success or permanent error — don't retry
+        }
+
+        lastError = `HTTP ${response.status}`;
+      } catch (err) {
+        lastError = String(err);
+      }
+
+      // Wait before retry (1s, 2s)
+      if (attempt < 2) await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
     }
+
+    console.error(`Edge function failed after 3 attempts: ${lastError}`);
   },
 };

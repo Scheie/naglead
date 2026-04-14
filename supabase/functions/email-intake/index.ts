@@ -4,6 +4,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { resolveRecipient } from "../_shared/resolve-user.ts";
+import { fetchWithRetry } from "../_shared/fetch-retry.ts";
 
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-haiku-4-5-20251001";
@@ -48,7 +49,7 @@ async function parseEmailWithClaude(
     .filter(Boolean)
     .join("\n");
 
-  const response = await fetch(CLAUDE_API_URL, {
+  const response = await fetchWithRetry(CLAUDE_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -283,7 +284,7 @@ Deno.serve(async (req) => {
     .single();
 
   if (userFull?.push_token) {
-    await fetch("https://exp.host/--/api/v2/push/send", {
+    await fetchWithRetry("https://exp.host/--/api/v2/push/send", {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({

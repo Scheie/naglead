@@ -3,13 +3,14 @@
 // Runs every 6 hours via pg_cron. Stripe is the source of truth.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { fetchWithRetry } from "../_shared/fetch-retry.ts";
 
 const STRIPE_API = "https://api.stripe.com/v1";
 
 async function stripeGet(path: string, apiKey: string): Promise<Response> {
-  return fetch(`${STRIPE_API}${path}`, {
+  return fetchWithRetry(`${STRIPE_API}${path}`, {
     headers: { Authorization: `Bearer ${apiKey}` },
-  });
+  }, { timeoutMs: 10000 });
 }
 
 Deno.serve(async () => {

@@ -9,6 +9,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { isQuietHours, getNagMessage } from "../_shared/nag-schedule.ts";
 import { sendWebPush } from "../_shared/web-push.ts";
+import { fetchWithRetry } from "../_shared/fetch-retry.ts";
 
 const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
 
@@ -16,24 +17,28 @@ async function sendExpoPush(
   pushToken: string,
   notification: { title: string; body: string; data?: Record<string, unknown> }
 ) {
-  const response = await fetch(EXPO_PUSH_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      to: pushToken,
-      sound: "default",
-      title: notification.title,
-      body: notification.body,
-      data: notification.data ?? {},
-      priority: "high",
-    }),
-  });
+  try {
+    const response = await fetchWithRetry(EXPO_PUSH_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        to: pushToken,
+        sound: "default",
+        title: notification.title,
+        body: notification.body,
+        data: notification.data ?? {},
+        priority: "high",
+      }),
+    }, { timeoutMs: 5000 });
 
-  if (!response.ok) {
-    console.error("Push failed:", await response.text());
+    if (!response.ok) {
+      console.error("Push failed:", await response.text());
+    }
+  } catch (err) {
+    console.error("Push send error:", err);
   }
 }
 
