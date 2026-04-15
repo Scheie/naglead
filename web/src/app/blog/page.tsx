@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "stop-tracking-leads-in-spreadsheets",
+    title: "Stop Tracking Leads in a Spreadsheet (It's Costing You Jobs)",
+    description:
+      "A spreadsheet doesn't remind you to call back. It just sits there while your leads go cold. Here's why service businesses lose jobs to their own tracking system.",
+    date: "2026-04-15",
+    readTime: "5 min read",
+  },
+  {
     slug: "auto-add-leads-from-email",
     title: "Never Miss a Lead Again: Auto-Add Leads from Email",
     description:
