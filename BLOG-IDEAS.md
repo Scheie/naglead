@@ -5,7 +5,7 @@ Planned posts, roughly prioritized. Check SEO-STRATEGY.md for keyword targets.
 ## Ready to write
 
 - [ ] "Never miss a lead again: how auto-add from email works" — feature deep-dive, setup guides, AI parsing explained
-- [ ] "Coming soon: dedicated business phone number for lead capture" — teaser for Twilio feature, captures "missed call lead capture" searches
+- [x] "Coming soon: dedicated business phone number for lead capture" — teaser for Twilio feature, captures "missed call lead capture" searches
 - [ ] "The 5-minute rule: how fast you respond decides who gets the job" — MIT study deep-dive, actionable tips
 - [ ] "Stop using spreadsheets to track your leads" — targets people searching for alternatives to their current system
 

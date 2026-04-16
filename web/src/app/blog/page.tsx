@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "missed-call-lead-capture",
+    title: "Missed Call Lead Capture for Service Businesses — Coming Soon",
+    description:
+      "62% of calls to service businesses go unanswered. NagLead is building a dedicated business phone number that turns every missed call and text into a lead automatically.",
+    date: "2026-04-16",
+    readTime: "6 min read",
+  },
+  {
     slug: "stop-tracking-leads-in-spreadsheets",
     title: "Stop Tracking Leads in a Spreadsheet (It's Costing You Jobs)",
     description:
