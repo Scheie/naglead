@@ -325,17 +325,13 @@ export default function MissedCallLeadCapturePost() {
               <span className="text-right">Price</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
-              <span className="text-zinc-300">NagLead Pro (unlimited leads, email intake, scorecards)</span>
-              <span className="text-white font-semibold text-right">$10/month</span>
-            </div>
-            <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-700 text-sm bg-zinc-800/50">
-              <span className="text-nag-orange font-semibold">+ Dedicated phone number (missed call + SMS capture)</span>
-              <span className="text-nag-orange font-semibold text-right">+$5/month</span>
+              <span className="text-nag-orange font-semibold">NagLead Pro — unlimited leads, email intake, dedicated phone number, missed call + SMS capture, scorecards</span>
+              <span className="text-nag-orange font-semibold text-right">$10/month</span>
             </div>
           </div>
 
           <p>
-            $15/month total for unlimited lead tracking with email intake,
+            $10/month for unlimited lead tracking with email intake,
             missed call capture, SMS capture, and escalating reminders. One
             returned call that converts to a $200 job pays for an entire
             year.
