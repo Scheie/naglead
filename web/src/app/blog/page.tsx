@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "lead-tracking-plumbers-hate-crms",
+    title: "Lead Tracking for Plumbers Who Hate CRMs",
+    description:
+      "You became a plumber to fix pipes, not fill out CRM fields. Here's how to track leads and follow up without software that feels like homework.",
+    date: "2026-04-17",
+    readTime: "6 min read",
+  },
+  {
     slug: "missed-call-lead-capture",
     title: "Missed Call Lead Capture for Service Businesses — Coming Soon",
     description:
