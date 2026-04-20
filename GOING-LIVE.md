@@ -331,7 +331,7 @@ Do these in order:
 | PostHog | Free tier (1M events/mo) | **done** |
 | Upstash Redis | Free tier (10k commands/day) | Not yet |
 | Norwegian business (ENK or AS) | 0–2,000+ NOK | Not yet |
-| Apple Developer | $99/yr | Not yet |
+| Apple Developer | $99/yr | **done** |
 | Google Play Developer | $25 one-time | Not yet |
 
 ---

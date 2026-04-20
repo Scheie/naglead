@@ -23,8 +23,12 @@ import { UpgradeSuccessScreen } from "./src/screens/UpgradeSuccessScreen";
 import * as Notifications from "expo-notifications";
 import {
   registerForPushNotifications,
+  registerNotificationCategories,
   savePushToken,
   addNotificationResponseListener,
+  snoozeLeadFromNotification,
+  ACTION_CALL,
+  ACTION_SNOOZE,
 } from "./src/lib/notifications";
 import { colors } from "./src/lib/theme";
 import type { AuthStackParamList, AppStackParamList } from "./src/navigation";
@@ -154,21 +158,33 @@ function App() {
     "WorkSans-Bold": WorkSans_700Bold,
   });
 
+  // Register notification categories on mount (before any notifications arrive)
+  useEffect(() => {
+    registerNotificationCategories();
+  }, []);
+
   // Register for push notifications when logged in
   useEffect(() => {
     if (!session) return;
 
     async function setupPush() {
-      // Check if we already have permission
-      const { status } = await Notifications.getPermissionsAsync();
-      if (status === "granted") {
-        const token = await registerForPushNotifications();
-        if (token) await savePushToken(token);
-        return;
-      }
+      try {
+        const { status } = await Notifications.getPermissionsAsync();
+        console.log("[push] current permission status:", status);
 
-      // First time — show a friendly prompt before the system dialog
-      if (status !== "denied") {
+        if (status === "granted") {
+          const token = await registerForPushNotifications();
+          console.log("[push] token:", token);
+          if (token) await savePushToken(token);
+          return;
+        }
+
+        if (status === "denied") {
+          console.log("[push] permission previously denied, skipping prompt");
+          return;
+        }
+
+        // First time: show a friendly prompt before the system dialog
         Alert.alert(
           "Enable nag reminders?",
           "NagLead needs notifications to nag you about unanswered leads. That's the whole point.",
@@ -178,18 +194,35 @@ function App() {
               text: "Enable",
               onPress: async () => {
                 const token = await registerForPushNotifications();
+                console.log("[push] token after prompt:", token);
                 if (token) await savePushToken(token);
               },
             },
           ]
         );
+      } catch (err) {
+        console.error("[push] setup failed:", err);
       }
     }
 
     setupPush();
 
-    const sub = addNotificationResponseListener(() => {
-      // Navigate to inbox so it refetches leads on focus
+    const sub = addNotificationResponseListener(({ leadId, phone, actionId }) => {
+      // "Call Back" action: open phone dialer directly
+      if (actionId === ACTION_CALL && phone) {
+        Linking.openURL(`tel:${phone}`).catch(() => {
+          console.warn("[push] could not open dialer for", phone);
+        });
+        return;
+      }
+
+      // "Snooze 1hr" action: snooze in background, no need to open app
+      if (actionId === ACTION_SNOOZE && leadId) {
+        snoozeLeadFromNotification(leadId);
+        return;
+      }
+
+      // Default tap: navigate to inbox
       if (navigationRef.current?.isReady()) {
         navigationRef.current.navigate("Inbox");
       }

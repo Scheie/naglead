@@ -82,8 +82,8 @@
 - [x] Deep linking (naglead:// scheme for payment redirect)
 - [x] Fonts via @expo-google-fonts packages
 - [ ] Set EAS project ID in app.json
-- [ ] Snooze action on leads
-- [ ] Actionable notifications (Call directly from notification)
+- [x] Snooze action on leads
+- [x] Actionable notifications (Call directly from notification)
 - [ ] App Store / Play Store submission
 
 ## To Do — Post-MVP

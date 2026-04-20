@@ -15,7 +15,7 @@ const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
 
 async function sendExpoPush(
   pushToken: string,
-  notification: { title: string; body: string; data?: Record<string, unknown> }
+  notification: { title: string; body: string; data?: Record<string, unknown>; categoryId?: string }
 ) {
   try {
     const response = await fetchWithRetry(EXPO_PUSH_URL, {
@@ -31,6 +31,7 @@ async function sendExpoPush(
         body: notification.body,
         data: notification.data ?? {},
         priority: "high",
+        categoryId: notification.categoryId,
       }),
     }, { timeoutMs: 5000 });
 
@@ -159,7 +160,8 @@ Deno.serve(async (req) => {
     const notification = {
       title: message.title,
       body: message.body,
-      data: { leadId: lead.id },
+      data: { leadId: lead.id, phone: lead.phone ?? undefined },
+      categoryId: "nag_reminder",
     };
 
     // Send Expo push notification (mobile)
