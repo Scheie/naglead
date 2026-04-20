@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LegalHeader } from "@/components/landing/LegalHeader";
 
 export const metadata = {
-  title: "Privacy Policy — NagLead",
+  title: "Privacy Policy | NagLead",
 };
 
 export default function PrivacyPage() {
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
             </h2>
             <p>
               The leads you add to NagLead are your business contacts. We are a
-              tool that helps you manage them — we are not the owner of that
+              tool that helps you manage them. We are not the owner of that
               data. You can export all your leads as a CSV file at any time, and
               you can delete your account and all associated data whenever you
               want.
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
             </h2>
             <p>
               Your data is stored securely in Supabase (PostgreSQL) with
-              row-level security enabled — meaning each user can only access
+              row-level security enabled, meaning each user can only access
               their own data at the database level. We use encrypted connections
               (HTTPS/TLS) for all data in transit.
             </p>
@@ -141,7 +141,7 @@ export default function PrivacyPage() {
               COOKIES
             </h2>
             <p>
-              We use essential cookies only — for authentication session
+              We use essential cookies only, for authentication session
               management. No tracking cookies, no advertising cookies, no
               third-party cookies.
             </p>

@@ -209,7 +209,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               <p className="text-sm text-zinc-500">
                 {nagEnabled
                   ? "We'll nag you about unanswered leads"
-                  : "Nagging is paused — leads may go cold"}
+                  : "Nagging is paused. Leads may go cold"}
               </p>
             </div>
             <button
@@ -312,7 +312,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             >
               {countryCodes.map((c) => (
                 <option key={c.code} value={c.code}>
-                  {c.flag} {c.code} — {c.currencySymbol} ({c.currency})
+                  {c.flag} {c.code} - {c.currencySymbol} ({c.currency})
                 </option>
               ))}
             </select>
@@ -348,8 +348,8 @@ export function SettingsForm({ profile }: SettingsFormProps) {
           {profile.subscription_status === "free" && (
             <p className="text-sm text-nag-orange mt-2 font-semibold">
               {process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true"
-                ? "Upgrade to Pro for unlimited leads — $10/mo"
-                : "Pro plan coming soon — unlimited leads"}
+                ? "Upgrade to Pro for unlimited leads: $10/mo"
+                : "Pro plan coming soon. Unlimited leads"}
             </p>
           )}
           {profile.subscription_status !== "free" && (
@@ -430,7 +430,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                   "Go to the \"Forwarding and POP/IMAP\" tab",
                   "Click \"Add a forwarding address\"",
                   `Paste: ${intakeEmail}`,
-                  "Gmail will send a confirmation — check your NagLead inbox for the verification code",
+                  "Gmail will send a confirmation. Check your NagLead inbox for the verification code",
                   "Once verified, create a filter: From contains your lead sources (e.g. your website form, Yelp, etc.)",
                   "Set the filter action to \"Forward it to\" your NagLead address",
                 ],
@@ -517,7 +517,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         </section>
         )}
 
-        {/* Phone & SMS — Pro, coming soon */}
+        {/* Phone & SMS - Pro, coming soon */}
         <section className="space-y-4 opacity-60">
           <div className="flex items-center gap-2 text-zinc-400 mb-4">
             <Phone weight="bold" />
@@ -525,7 +525,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               Phone & SMS Intake
             </h2>
             <span className="text-xs bg-zinc-700 text-zinc-300 font-bold px-2 py-0.5 rounded ml-2">
-              {profile.subscription_status === "free" ? "PRO — COMING SOON" : "COMING SOON"}
+              {profile.subscription_status === "free" ? "PRO - COMING SOON" : "COMING SOON"}
             </span>
           </div>
           <p className="text-sm text-zinc-500">

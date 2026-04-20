@@ -2,12 +2,20 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "NagLead Blog — Lead Tracking Tips for Service Businesses",
+  title: "NagLead Blog: Lead Tracking Tips for Service Businesses",
   description:
     "Practical advice on lead follow-up, customer management, and growing your service business. No fluff, no CRM jargon.",
 };
 
 const posts = [
+  {
+    slug: "handyman-lead-management",
+    title: "Handyman Lead Management Without the Headache",
+    description:
+      "Handymen juggle 10 different job types a week. Here's how to track leads and follow up without a CRM that takes longer to use than the actual job.",
+    date: "2026-04-20",
+    readTime: "6 min read",
+  },
   {
     slug: "lead-tracking-plumbers-hate-crms",
     title: "Lead Tracking for Plumbers Who Hate CRMs",
@@ -18,7 +26,7 @@ const posts = [
   },
   {
     slug: "missed-call-lead-capture",
-    title: "Missed Call Lead Capture for Service Businesses — Coming Soon",
+    title: "Missed Call Lead Capture for Service Businesses (Coming Soon)",
     description:
       "62% of calls to service businesses go unanswered. NagLead is building a dedicated business phone number that turns every missed call and text into a lead automatically.",
     date: "2026-04-16",
@@ -52,7 +60,7 @@ const posts = [
     slug: "best-lead-tracker-cleaning-business-2026",
     title: "Best Lead Tracker for Cleaning Businesses in 2026",
     description:
-      "An honest look at 6 tools for tracking cleaning leads — from free options to full CRMs. Which one actually fits a solo cleaner's workflow?",
+      "An honest look at 6 tools for tracking cleaning leads, from free options to full CRMs. Which one actually fits a solo cleaner's workflow?",
     date: "2026-04-12",
     readTime: "7 min read",
   },
@@ -68,7 +76,7 @@ const posts = [
     slug: "missed-leads-cost-service-business",
     title: "What a Missed Lead Actually Costs Your Service Business",
     description:
-      "The average service business misses 28% of incoming leads. Here's exactly how much that costs you per month — and the embarrassingly simple fix.",
+      "The average service business misses 28% of incoming leads. Here's exactly how much that costs you per month, and the embarrassingly simple fix.",
     date: "2026-04-10",
     readTime: "5 min read",
   },

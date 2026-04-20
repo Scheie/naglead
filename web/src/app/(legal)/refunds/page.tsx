@@ -1,7 +1,7 @@
 import { LegalHeader } from "@/components/landing/LegalHeader";
 
 export const metadata = {
-  title: "Refund & Cancellation Policy — NagLead",
+  title: "Refund & Cancellation Policy | NagLead",
 };
 
 export default function RefundsPage() {

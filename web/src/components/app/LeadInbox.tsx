@@ -200,7 +200,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       .single();
 
     if (error) {
-      toast(error.message?.includes("Free tier") ? "Free tier limit reached — upgrade to Pro!" : "Failed to add lead", "error");
+      toast(error.message?.includes("Free tier") ? "Free tier limit reached. Upgrade to Pro!" : "Failed to add lead", "error");
       return;
     }
     if (data) {
@@ -208,7 +208,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       setLeads((prev) => [data, ...prev]);
       setShowAddLead(false);
       setDuplicateWarning(null);
-      toast(`${lead.name} added — now follow up!`);
+      toast(`${lead.name} added. Now follow up!`);
     }
   }
 
@@ -311,7 +311,7 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
       )
     );
     setSnoozeTarget(null);
-    toast(`Snoozed — we'll remind you later`);
+    toast(`Snoozed. We'll remind you later`);
   }
 
   async function unsnoozeLead(leadId: string) {
@@ -387,8 +387,8 @@ export function LeadInbox({ initialLeads, userId, userName, subscriptionStatus, 
             </p>
             <p className="text-xs mt-1 opacity-70">
               {process.env.NEXT_PUBLIC_PAYMENTS_LIVE === "true"
-                ? "$10/month — one saved job pays for 5 years of NagLead"
-                : "Pro plans coming soon — mark leads as won/lost to free up slots"}
+                ? "$10/month. One saved job pays for 5 years of NagLead"
+                : "Pro plans coming soon. Mark leads as won/lost to free up slots"}
             </p>
           </button>
         )}

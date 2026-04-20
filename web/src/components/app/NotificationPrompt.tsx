@@ -25,7 +25,7 @@ export function NotificationPrompt() {
       </div>
       <div className="flex-1">
         <p className="text-white font-bold text-sm">
-          Enable notifications — this is how NagLead works
+          Enable notifications. This is how NagLead works
         </p>
         <p className="text-zinc-400 text-xs mt-1">
           We need permission to nag you. That&apos;s literally our entire job.

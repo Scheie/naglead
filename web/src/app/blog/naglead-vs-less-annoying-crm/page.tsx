@@ -44,7 +44,7 @@ export default function NagLeadVsLACRMPost() {
         <div className="prose prose-invert prose-zinc max-w-none space-y-6 text-zinc-300 leading-relaxed">
           <p className="text-lg text-zinc-400 font-medium">
             Less Annoying CRM is the rare CRM that actually lives up to its
-            name — simple, $15/month, no contracts, no tiers. It&apos;s been
+            name. Simple, $15/month, no contracts, no tiers. It&apos;s been
             around for 17 years and has a 4.9/5 rating on G2. So why would
             anyone choose NagLead instead?
           </p>
@@ -90,17 +90,17 @@ export default function NagLeadVsLACRMPost() {
                 <tr className="border-b border-zinc-800">
                   <td className="py-3 pr-4 text-zinc-400 font-semibold">Contact management</td>
                   <td className="py-3 px-4 text-zinc-500">No</td>
-                  <td className="py-3 pl-4">Yes — full contact database</td>
+                  <td className="py-3 pl-4">Yes, full contact database</td>
                 </tr>
                 <tr className="border-b border-zinc-800">
                   <td className="py-3 pr-4 text-zinc-400 font-semibold">Calendar</td>
                   <td className="py-3 px-4 text-zinc-500">No</td>
-                  <td className="py-3 pl-4">Yes — with Google/Outlook sync</td>
+                  <td className="py-3 pl-4">Yes, with Google/Outlook sync</td>
                 </tr>
                 <tr className="border-b border-zinc-800">
                   <td className="py-3 pr-4 text-zinc-400 font-semibold">Pipeline</td>
                   <td className="py-3 px-4 text-zinc-500">No (by design)</td>
-                  <td className="py-3 pl-4">Yes — customizable stages</td>
+                  <td className="py-3 pl-4">Yes, customizable stages</td>
                 </tr>
                 <tr className="border-b border-zinc-800">
                   <td className="py-3 pr-4 text-zinc-400 font-semibold">Auto-add leads from email</td>
@@ -136,8 +136,8 @@ export default function NagLeadVsLACRMPost() {
               genuinely good software
             </a>
             . It&apos;s simple, affordable, and the support is excellent. If you
-            need a traditional CRM — contact database, calendar, pipeline,
-            task management — and you want something that won&apos;t overwhelm
+            need a traditional CRM (contact database, calendar, pipeline,
+            task management) and you want something that won&apos;t overwhelm
             you, it&apos;s one of the best options at any price.
           </p>
 
@@ -176,7 +176,7 @@ export default function NagLeadVsLACRMPost() {
 
           <p>
             The other gap: no proactive reminders. LACRM sends a daily email
-            agenda — a summary of your tasks for the day. That&apos;s useful
+            agenda, a summary of your tasks for the day. That&apos;s useful
             if you read it over coffee at 7am. But if a lead came in at 2pm
             while you were on a job, you won&apos;t see it until tomorrow
             morning. By then,{" "}
@@ -195,7 +195,7 @@ export default function NagLeadVsLACRMPost() {
 
           <p>
             Less Annoying CRM helps you <strong className="text-white">organize</strong>{" "}
-            your business. Contacts, notes, tasks, calendar — everything in
+            your business. Contacts, notes, tasks, calendar, everything in
             one place, neatly arranged.
           </p>
 
@@ -209,7 +209,7 @@ export default function NagLeadVsLACRMPost() {
             >
               reminders escalate
             </Link>{" "}
-            — from a gentle nudge at 2 hours to &quot;YOU ARE BURNING
+            from a gentle nudge at 2 hours to &quot;YOU ARE BURNING
             CASH&quot; at 48 hours. It&apos;s aggressive by design.
           </p>
 
@@ -238,7 +238,7 @@ export default function NagLeadVsLACRMPost() {
           <ul className="list-disc list-inside space-y-2">
             <li>You work in the field and live on your phone</li>
             <li>Your #1 problem is forgetting to call people back</li>
-            <li>You don&apos;t need a contact database — you need a reminder system</li>
+            <li>You don&apos;t need a contact database, you need a reminder system</li>
             <li>You want something you can set up in 30 seconds, not 30 minutes</li>
           </ul>
 
@@ -250,7 +250,7 @@ export default function NagLeadVsLACRMPost() {
             NagLead Pro: <strong className="text-white">$89/year</strong>{" "}
             (annual plan). Less Annoying CRM:{" "}
             <strong className="text-white">$180/year</strong>. That&apos;s $91
-            saved — or about the cost of one{" "}
+            saved, roughly the cost of one{" "}
             <Link
               href="/blog/missed-leads-cost-service-business"
               className="text-nag-orange hover:underline"
@@ -308,7 +308,7 @@ export default function NagLeadVsLACRMPost() {
               STOP BEING POLITE ABOUT FOLLOW-UP
             </p>
             <p className="text-zinc-400 mb-6">
-              Try NagLead free — 5 active leads, no credit card, 30-second setup.
+              Try NagLead free. 5 active leads, no credit card, 30-second setup.
             </p>
             <Link
               href="/signup"

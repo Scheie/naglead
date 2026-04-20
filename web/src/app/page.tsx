@@ -63,7 +63,7 @@ const faqJsonLd = {
       name: "What is NagLead?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "NagLead is a dead-simple lead tracker for solo service businesses. Add a lead in 5 seconds, and it sends escalating reminders until you call them back. It's not a CRM — it's a nag engine.",
+        text: "NagLead is a dead-simple lead tracker for solo service businesses. Add a lead in 5 seconds, and it sends escalating reminders until you call them back. It's not a CRM. It's a nag engine.",
       },
     },
     {
@@ -79,7 +79,7 @@ const faqJsonLd = {
       name: "How is NagLead different from a CRM?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "CRMs like Jobber ($39/month) and HubSpot are built for teams with pipelines, scheduling, and invoicing. NagLead does one thing: it won't let you forget to call someone back. No pipeline, no automations — just escalating reminders.",
+        text: "CRMs like Jobber ($39/month) and HubSpot are built for teams with pipelines, scheduling, and invoicing. NagLead does one thing: it won't let you forget to call someone back. No pipeline, no automations, just escalating reminders.",
       },
     },
     {
@@ -87,7 +87,7 @@ const faqJsonLd = {
       name: "What types of businesses use NagLead?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Solo service businesses — cleaners, plumbers, electricians, landscapers, painters, handymen, and photographers. Anyone who gets leads on their phone and sometimes forgets to follow up.",
+        text: "Solo service businesses: cleaners, plumbers, electricians, landscapers, painters, handymen, and photographers. Anyone who gets leads on their phone and sometimes forgets to follow up.",
       },
     },
     {
@@ -103,7 +103,7 @@ const faqJsonLd = {
       name: "Can NagLead automatically add leads from email?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes — Pro users get a dedicated email address. Forward lead emails from Yelp, Thumbtack, website forms, or any source. NagLead automatically extracts the customer's name, phone, email, and what they need using AI.",
+        text: "Yes! Pro users get a dedicated email address. Forward lead emails from Yelp, Thumbtack, website forms, or any source. NagLead automatically extracts the customer's name, phone, email, and what they need using AI.",
       },
     },
   ],

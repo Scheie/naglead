@@ -51,7 +51,7 @@ export default function SpreadsheetPost() {
 
           <p>
             This is how 80% of solo service business owners track leads. And
-            it&apos;s quietly killing their close rate — not because
+            it&apos;s quietly killing their close rate. Not because
             spreadsheets are bad tools, but because a spreadsheet only works
             when you remember to check it. And when you&apos;re on a job, in
             the truck, or just exhausted at 7pm, you don&apos;t.
@@ -76,7 +76,7 @@ export default function SpreadsheetPost() {
           </p>
 
           <p>
-            The spreadsheet didn&apos;t fail you. You failed the spreadsheet —
+            The spreadsheet didn&apos;t fail you. You failed the spreadsheet,
             because the spreadsheet required you to be disciplined, consistent,
             and proactive every single day. That&apos;s a lot to ask when
             you&apos;re running a business solo.
@@ -89,7 +89,7 @@ export default function SpreadsheetPost() {
           <p>
             Let&apos;s put a number on it. Say you get 20 leads a month. The
             average service job is worth $200. If you&apos;re losing even 3-4
-            leads per month to poor follow-up — which is conservative — that&apos;s{" "}
+            leads per month to poor follow-up (which is conservative), that&apos;s{" "}
             <strong className="text-white">$600-800 a month</strong> walking
             out the door.
           </p>
@@ -109,7 +109,7 @@ export default function SpreadsheetPost() {
                 "You plan to add it to the sheet later",
                 "\"Later\" becomes the next morning",
                 "You add it, but forget to follow up that day",
-                "Three days pass — lead is now cold",
+                "Three days pass. Lead is now cold",
                 "You see it in the sheet, feel guilty, skip it",
                 "Lead booked with competitor",
               ].map((step, i) => (
@@ -143,15 +143,15 @@ export default function SpreadsheetPost() {
 
           <ul className="list-disc list-inside space-y-3">
             <li>
-              <strong className="text-white">Push notifications</strong> —
-              reminds you a lead is waiting, even when you&apos;re on a job
+              <strong className="text-white">Push notifications</strong> that
+              remind you a lead is waiting, even when you&apos;re on a job
             </li>
             <li>
-              <strong className="text-white">Escalating reminders</strong> —
-              gets louder the longer you wait, not quieter
+              <strong className="text-white">Escalating reminders</strong> that
+              get louder the longer you wait, not quieter
             </li>
             <li>
-              <strong className="text-white">Automatic status</strong> —
+              <strong className="text-white">Automatic status</strong> that
               knows which leads need a call right now without you manually
               reviewing every row
             </li>
@@ -175,7 +175,7 @@ export default function SpreadsheetPost() {
 
           <p>
             NagLead is deliberately the opposite of complex. Adding a lead
-            takes 20 seconds — name, phone, what they need. That&apos;s it.
+            takes 20 seconds: name, phone, what they need. That&apos;s it.
             No pipelines, no custom fields, no onboarding call required.
           </p>
 
@@ -204,7 +204,7 @@ export default function SpreadsheetPost() {
           <p>
             You don&apos;t have to burn the spreadsheet. If you want a
             historical export of all your leads, NagLead has{" "}
-            <strong className="text-white">CSV export</strong> — you can
+            <strong className="text-white">CSV export</strong>, so you can
             download your full lead list anytime and open it in Excel or
             Google Sheets. Use the spreadsheet for records. Use NagLead to
             actually follow up.
@@ -221,7 +221,7 @@ export default function SpreadsheetPost() {
 
           <p>
             NagLead is free for up to 5 active leads. If you get more leads
-            than that, Pro is $10/month — which is less than{" "}
+            than that, Pro is $10/month, which is less than{" "}
             <strong className="text-white">one missed callback</strong>.
           </p>
 
@@ -288,7 +288,7 @@ export default function SpreadsheetPost() {
             </p>
             <p className="text-zinc-400 mb-6">
               Start free. 5 leads, no card required. Takes 2 minutes to set up
-              — less time than updating a spreadsheet row.
+              and less time than updating a spreadsheet row.
             </p>
             <Link
               href="/signup"

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Best Lead Tracker for Cleaning Businesses in 2026",
   description:
-    "An honest look at 6 tools for tracking cleaning leads — from free options to full CRMs. Which one actually fits a solo cleaner's workflow?",
+    "An honest look at 6 tools for tracking cleaning leads, from free options to full CRMs. Which one actually fits a solo cleaner's workflow?",
   keywords: [
     "best lead tracker cleaning business",
     "best CRM cleaning business 2026",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Best Lead Tracker for Cleaning Businesses in 2026",
     description:
-      "An honest look at 6 tools for tracking cleaning leads — from free options to full CRMs.",
+      "An honest look at 6 tools for tracking cleaning leads, from free options to full CRMs.",
     url: "https://naglead.com/blog/best-lead-tracker-cleaning-business-2026",
     type: "article",
     publishedTime: "2026-04-12",
@@ -49,7 +49,7 @@ export default function BestLeadTrackerPost() {
           </p>
 
           <p>
-            Here&apos;s an honest breakdown of 6 options — ranked by how well
+            Here&apos;s an honest breakdown of 6 options, ranked by how well
             they fit a solo cleaner or small crew, not by how many features
             they cram in.
           </p>
@@ -119,7 +119,7 @@ export default function BestLeadTrackerPost() {
 
           <p>
             Texts, missed calls, notes app, memory. This is what 80% of solo
-            cleaners use. It works until it doesn&apos;t — and you never know
+            cleaners use. It works until it doesn&apos;t, and you never know
             when it stops working because you can&apos;t count the leads you
             forgot about.
           </p>
@@ -149,7 +149,7 @@ export default function BestLeadTrackerPost() {
 
           <p>
             Google Sheets or Excel with columns for name, phone, status, notes.
-            Better than nothing — at least you can see who you need to call.
+            Better than nothing. At least you can see who you need to call.
             The problem is it doesn&apos;t remind you of anything. It just
             sits there, silently judging you for not opening it.
           </p>
@@ -171,7 +171,7 @@ export default function BestLeadTrackerPost() {
           </h2>
 
           <p>
-            Full disclosure — this is ours. But here&apos;s the honest take:
+            Full disclosure: this is ours. But here&apos;s the honest take:
           </p>
 
           <p>
@@ -184,18 +184,18 @@ export default function BestLeadTrackerPost() {
             >
               escalating reminders
             </Link>{" "}
-            until you deal with it. 2 hours, 6 hours, 24 hours, 48 hours —
+            until you deal with it. 2 hours, 6 hours, 24 hours, 48 hours,
             each one louder than the last.
           </p>
 
           <p>
             It doesn&apos;t do scheduling, invoicing, or contact management.
             By design. Those features are why solo cleaners stop opening their
-            CRM — too many tabs, too many fields, not enough time between jobs.
+            CRM: too many tabs, too many fields, not enough time between jobs.
           </p>
 
           <p>
-            Pro plan ($10/mo) adds auto-lead creation from email — Yelp
+            Pro plan ($10/mo) adds auto-lead creation from email: Yelp
             notifications, Thumbtack requests, and website forms automatically
             appear in your inbox without manual entry.
           </p>
@@ -226,7 +226,7 @@ export default function BestLeadTrackerPost() {
               LACRM
             </a>{" "}
             has a 4.9/5 rating on G2 and has been around for 17 years.
-            Contacts, calendar, pipeline, tasks — all simple, all in one
+            Contacts, calendar, pipeline, tasks, all simple, all in one
             place. $15/user/month, no tiers, no upsells.
           </p>
 
@@ -268,7 +268,7 @@ export default function BestLeadTrackerPost() {
               Jobber
             </a>{" "}
             does scheduling, dispatching, quoting, invoicing, payments, and
-            CRM — all in one. It&apos;s excellent software if you have a team
+            CRM, all in one. It&apos;s excellent software if you have a team
             to manage.
           </p>
 

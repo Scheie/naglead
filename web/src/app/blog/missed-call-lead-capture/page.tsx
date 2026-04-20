@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Missed Call Lead Capture for Service Businesses — Coming Soon to NagLead",
+  title: "Missed Call Lead Capture for Service Businesses: Coming Soon to NagLead",
   description:
-    "62% of calls to service businesses go unanswered. NagLead is building a dedicated business phone number that turns every missed call into a lead automatically — so no job slips through the cracks.",
+    "62% of calls to service businesses go unanswered. NagLead is building a dedicated business phone number that turns every missed call into a lead automatically, so no job slips through the cracks.",
   keywords: [
     "missed call lead capture",
     "missed call lead capture service business",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "service business phone number tracking",
   ],
   openGraph: {
-    title: "Missed Call Lead Capture for Service Businesses — Coming Soon",
+    title: "Missed Call Lead Capture for Service Businesses: Coming Soon",
     description:
       "62% of calls to service businesses go unanswered. NagLead is building a phone number that turns missed calls into leads automatically.",
     url: "https://naglead.com/blog/missed-call-lead-capture",
@@ -42,14 +42,14 @@ export default function MissedCallLeadCapturePost() {
           April 16, 2026 · 6 min read
         </p>
         <h1 className="font-loud text-4xl sm:text-5xl headline text-white mb-6 leading-tight">
-          MISSED CALL LEAD CAPTURE FOR SERVICE BUSINESSES — COMING SOON
+          MISSED CALL LEAD CAPTURE FOR SERVICE BUSINESSES: COMING SOON
         </h1>
 
         <div className="prose prose-invert prose-zinc max-w-none space-y-6 text-zinc-300 leading-relaxed">
           <p className="text-lg text-zinc-400 font-medium">
             You&apos;re elbow-deep in a job. Phone rings. You can&apos;t
             answer. By the time you check the missed call log, you&apos;ve
-            forgotten who it was — or assumed they already called someone
+            forgotten who it was, or assumed they already called someone
             else. They probably did.
           </p>
 
@@ -64,7 +64,7 @@ export default function MissedCallLeadCapturePost() {
               industry research
             </a>
             , service businesses miss up to 62% of incoming phone calls.
-            That&apos;s not a lead generation problem — it&apos;s a lead{" "}
+            That&apos;s not a lead generation problem. It&apos;s a lead{" "}
             <em>capture</em> problem. The customers are calling. You&apos;re
             just not catching them.
           </p>
@@ -108,16 +108,16 @@ export default function MissedCallLeadCapturePost() {
 
           <ul className="list-disc list-inside space-y-3">
             <li>
-              <strong className="text-white">Call back hours later</strong> —
-              the customer already booked someone who answered
+              <strong className="text-white">Call back hours later</strong>,
+              and the customer already booked someone who answered
             </li>
             <li>
               <strong className="text-white">Scroll through the call
-              log</strong> — can&apos;t tell which numbers were leads vs.
+              log</strong>, but you can&apos;t tell which numbers were leads vs.
               spam vs. robocalls
             </li>
             <li>
-              <strong className="text-white">Forget entirely</strong> — the
+              <strong className="text-white">Forget entirely</strong>, the
               most common and most expensive option
             </li>
           </ul>
@@ -141,8 +141,8 @@ export default function MissedCallLeadCapturePost() {
           </h2>
 
           <p>
-            You get a dedicated local phone number — your own business
-            number — that plugs directly into NagLead. When a call comes in
+            You get a dedicated local phone number, your own business
+            number, that plugs directly into NagLead. When a call comes in
             and you can&apos;t answer, here&apos;s what happens:
           </p>
 
@@ -159,11 +159,11 @@ export default function MissedCallLeadCapturePost() {
                 },
                 {
                   label: "You get a push notification",
-                  desc: "\"Missed call from (305) 555-4821 — tap to call back.\" One tap and you're returning the call.",
+                  desc: "\"Missed call from (305) 555-4821. Tap to call back.\" One tap and you're returning the call.",
                 },
                 {
                   label: "The nag engine kicks in",
-                  desc: "If you don't call back right away, NagLead starts escalating — 2 hours, 6 hours, 24 hours — just like every other lead. It won't let you forget.",
+                  desc: "If you don't call back right away, NagLead starts escalating: 2 hours, 6 hours, 24 hours, just like every other lead. It won't let you forget.",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-4">
@@ -197,8 +197,8 @@ export default function MissedCallLeadCapturePost() {
           </p>
 
           <p>
-            When someone texts your NagLead number — &quot;Hi, I need a
-            quote for a deep clean, 3-bed apartment in Coral Gables&quot; —
+            When someone texts your NagLead number (&quot;Hi, I need a
+            quote for a deep clean, 3-bed apartment in Coral Gables&quot;),
             their message becomes the lead description. NagLead&apos;s AI
             reads the text and pulls out what matters: who they are, what
             they need, and where they are.
@@ -229,7 +229,7 @@ export default function MissedCallLeadCapturePost() {
                 Put your NagLead number on flyers, truck wraps, Google
                 Business Profile, Craigslist ads, and your website. Every
                 call and text to that number gets tracked automatically.
-                Your personal number stays private — no more customers
+                Your personal number stays private. No more customers
                 calling you at 10pm on a Saturday.
               </p>
             </div>
@@ -242,7 +242,7 @@ export default function MissedCallLeadCapturePost() {
                 Keep your existing business number. Forward calls to your
                 NagLead number so they ring both phones. If you miss the
                 call, NagLead catches it. You don&apos;t have to change the
-                number your customers already have — just add a safety net.
+                number your customers already have. Just add a safety net.
               </p>
             </div>
           </div>
@@ -299,7 +299,7 @@ export default function MissedCallLeadCapturePost() {
           <p>
             The key difference: other tools capture the call but leave
             follow-up to you. NagLead captures the call <em>and</em> makes
-            sure you actually call back — because a captured lead you
+            sure you actually call back, because a captured lead you
             never follow up on is no better than a missed call you forgot
             about.
           </p>
@@ -325,7 +325,7 @@ export default function MissedCallLeadCapturePost() {
               <span className="text-right">Price</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
-              <span className="text-nag-orange font-semibold">NagLead Pro — unlimited leads, email intake, dedicated phone number, missed call + SMS capture, scorecards</span>
+              <span className="text-nag-orange font-semibold">NagLead Pro: unlimited leads, email intake, dedicated phone number, missed call + SMS capture, scorecards</span>
               <span className="text-nag-orange font-semibold text-right">$10/month</span>
             </div>
           </div>
@@ -358,7 +358,7 @@ export default function MissedCallLeadCapturePost() {
             , manual entry, and{" "}
             <strong className="text-white">webhooks from any form on your
             website</strong>. The dedicated phone number will close the last
-            big gap — the calls and texts that slip through while you&apos;re
+            big gap: the calls and texts that slip through while you&apos;re
             working.
           </p>
 

@@ -18,7 +18,7 @@ const REPLY_NOW_SCHEDULE: NagScheduleEntry[] = [
   {
     minAgeMs: 2 * 60 * 60 * 1000, // 2 hours
     title: "New lead waiting",
-    body: (name, desc) => `📱 ${name} needs ${desc} — send a quick reply`,
+    body: (name, desc) => `📱 ${name} needs ${desc}. Send a quick reply`,
   },
   {
     minAgeMs: 6 * 60 * 60 * 1000, // 6 hours
@@ -28,7 +28,7 @@ const REPLY_NOW_SCHEDULE: NagScheduleEntry[] = [
   {
     minAgeMs: 24 * 60 * 60 * 1000, // 24 hours
     title: "1 day with no reply",
-    body: (name) => `⚠️ ${name} — 1 day with no reply. This lead is going cold`,
+    body: (name) => `⚠️ ${name}: 1 day with no reply. This lead is going cold`,
   },
   {
     minAgeMs: 48 * 60 * 60 * 1000, // 48 hours
@@ -38,7 +38,7 @@ const REPLY_NOW_SCHEDULE: NagScheduleEntry[] = [
   {
     minAgeMs: 72 * 60 * 60 * 1000, // 72 hours
     title: "Last chance",
-    body: (name) => `❌ ${name} — 3 days, no reply. Mark as lost or call right now`,
+    body: (name) => `❌ ${name}, 3 days, no reply. Mark as lost or call right now`,
   },
 ];
 
@@ -61,12 +61,12 @@ const WAITING_SCHEDULE: NagScheduleEntry[] = [
   {
     minAgeMs: 14 * 24 * 60 * 60 * 1000,
     title: "2 weeks silent",
-    body: (name) => `🔴 ${name} — 2 weeks silent. Follow up or mark as lost?`,
+    body: (name) => `🔴 ${name}, 2 weeks silent. Follow up or mark as lost?`,
   },
   {
     minAgeMs: 21 * 24 * 60 * 60 * 1000,
     title: "Time to close this out",
-    body: (name) => `❌ ${name} — 3 weeks with no reply. Mark as won or lost?`,
+    body: (name) => `❌ ${name}, 3 weeks with no reply. Mark as won or lost?`,
   },
 ];
 

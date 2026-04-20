@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL("https://naglead.com"),
   openGraph: {
-    title: "NagLead — Stop Losing Leads",
+    title: "NagLead | Stop Losing Leads",
     description:
       "Dead-simple lead tracker for solo service businesses. Add a lead in 5 seconds, get nagged until you call them back.",
     url: "https://naglead.com",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NagLead — Stop Losing Leads",
+    title: "NagLead | Stop Losing Leads",
     description:
       "Dead-simple lead tracker for solo service businesses. Get nagged until you call them back.",
   },

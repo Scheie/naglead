@@ -78,7 +78,7 @@ export function Pricing() {
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         if (res.status === 400 && data?.error?.includes("already")) {
-          // Already subscribed — go to app
+          // Already subscribed - go to app
           window.location.href = "/app";
         }
         setLoading(null);

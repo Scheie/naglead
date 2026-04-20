@@ -42,11 +42,11 @@ export function AppStoreButtons({ className = "" }: { className?: string }) {
     <div className={`flex gap-3 ${className}`}>
       <div className="flex items-center gap-2 bg-zinc-800 text-zinc-500 font-semibold text-sm px-5 py-3 rounded-lg border-2 border-zinc-700">
         <AppleLogo weight="fill" className="text-xl" />
-        iOS — Soon
+        iOS: Soon
       </div>
       <div className="flex items-center gap-2 bg-zinc-800 text-zinc-500 font-semibold text-sm px-5 py-3 rounded-lg border-2 border-zinc-700">
         <GooglePlayLogo weight="fill" className="text-xl" />
-        Android — Soon
+        Android: Soon
       </div>
     </div>
   );

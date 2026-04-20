@@ -51,8 +51,8 @@ export default function PlumbersHateCRMsPost() {
           </p>
 
           <p>
-            But here you are, losing jobs. Not because your work is bad —
-            because you forgot to call Sam back about that water heater, and
+            But here you are, losing jobs. Not because your work is bad.
+            Because you forgot to call Sam back about that water heater, and
             they found someone who answered on the first ring.
           </p>
 
@@ -140,25 +140,25 @@ export default function PlumbersHateCRMsPost() {
           <ol className="list-decimal list-inside space-y-3">
             <li>
               <strong className="text-white">A place to dump leads fast</strong>{" "}
-              — name, what they need, done. Not 12 required fields.
+              (name, what they need, done). Not 12 required fields.
             </li>
             <li>
               <strong className="text-white">Something that nags you to
               call back</strong>{" "}
-              — because between a slab leak and a toilet install, you will
+              because between a slab leak and a toilet install, you will
               forget. That&apos;s not a character flaw. That&apos;s Tuesday.
             </li>
             <li>
               <strong className="text-white">A way to know who&apos;s still
               waiting</strong>{" "}
-              — open your phone, see the list, make the call. No clicking
+              so you can open your phone, see the list, make the call. No clicking
               through tabs, pipelines, or dashboards.
             </li>
           </ol>
 
           <p>
-            Everything else — invoicing, scheduling, route optimization,
-            customer portals — is either handled by other tools you already
+            Everything else (invoicing, scheduling, route optimization,
+            customer portals) is either handled by other tools you already
             use or is a problem for future you with employees.
           </p>
 
@@ -191,8 +191,8 @@ export default function PlumbersHateCRMsPost() {
 
           <p>
             That&apos;s $12,000-$21,000 per year walking out the door because
-            nobody reminded you to call back. And that&apos;s conservative —
-            a{" "}
+            nobody reminded you to call back. And that&apos;s conservative.
+            A{" "}
             <a
               href="https://suzeeai.com/home-services-why-plumbers-lose-50k-year-to-missed-calls/"
               target="_blank"
@@ -217,14 +217,14 @@ export default function PlumbersHateCRMsPost() {
           </p>
 
           <p>
-            <strong className="text-white">1. Lead comes in</strong> — a
+            <strong className="text-white">1. Lead comes in</strong>: a
             voicemail, a text, a Yelp message, a &quot;my toilet is
             flooding&quot; email from your website. You open your phone and
-            add it in 5 seconds: &quot;Pat — kitchen faucet replacement.&quot;
+            add it in 5 seconds: &quot;Pat, kitchen faucet replacement.&quot;
           </p>
 
           <p>
-            <strong className="text-white">2. You get nagged</strong> — 2
+            <strong className="text-white">2. You get nagged</strong>. 2
             hours later, your phone buzzes: &quot;Pat is still waiting.&quot;
             You&apos;re under a house. You ignore it. 6 hours later, another
             one. 24 hours later, another one. They{" "}
@@ -238,12 +238,12 @@ export default function PlumbersHateCRMsPost() {
           </p>
 
           <p>
-            <strong className="text-white">3. You call back</strong> — tap the
+            <strong className="text-white">3. You call back</strong>. Tap the
             lead, tap call. Mark it won or lost. It&apos;s off your plate.
           </p>
 
           <p>
-            <strong className="text-white">4. Repeat</strong> — no weekly
+            <strong className="text-white">4. Repeat</strong>. No weekly
             reviews, no pipeline management, no &quot;CRM hygiene.&quot;
             Just: who&apos;s waiting? Call them.
           </p>
@@ -266,24 +266,24 @@ export default function PlumbersHateCRMsPost() {
             <li>
               <strong className="text-white">&quot;I write it on my
               hand&quot;</strong>{" "}
-              — works until you wash your hands. Which, as a plumber, you do
+              Works until you wash your hands. Which, as a plumber, you do
               constantly.
             </li>
             <li>
               <strong className="text-white">&quot;I keep a notebook in the
               van&quot;</strong>{" "}
-              — great until you&apos;re at Home Depot and the notebook is in
+              Great until you&apos;re at Home Depot and the notebook is in
               the van and the van is at the last job site.
             </li>
             <li>
               <strong className="text-white">&quot;My partner handles
               it&quot;</strong>{" "}
-              — solid if they&apos;re available 24/7. Less solid when
+              Solid if they&apos;re available 24/7. Less solid when
               they&apos;re at their own job and a lead calls at 2pm.
             </li>
             <li>
               <strong className="text-white">&quot;I just remember&quot;</strong>{" "}
-              — you remember the big jobs. You forget the $200 faucet repair
+              You remember the big jobs. You forget the $200 faucet repair
               that would have taken 30 minutes. Multiply that by 15 per year.
             </li>
           </ul>
@@ -299,7 +299,7 @@ export default function PlumbersHateCRMsPost() {
           </h2>
 
           <p>
-            These are solid tools — for plumbing companies with employees,
+            These are solid tools for plumbing companies with employees,
             dispatch needs, and invoice volume. If you have 3+ trucks on the
             road and need scheduling, quoting, and payment processing,{" "}
             <a
@@ -325,33 +325,33 @@ export default function PlumbersHateCRMsPost() {
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
               <span className="text-zinc-300">Dispatching</span>
-              <span className="text-zinc-500 text-right">No — it&apos;s just you</span>
+              <span className="text-zinc-500 text-right">No, it&apos;s just you</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
               <span className="text-zinc-300">Route optimization</span>
-              <span className="text-zinc-500 text-right">No — you know your area</span>
+              <span className="text-zinc-500 text-right">No, you know your area</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
               <span className="text-zinc-300">Team scheduling</span>
-              <span className="text-zinc-500 text-right">No — there&apos;s no team</span>
+              <span className="text-zinc-500 text-right">No, there&apos;s no team</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
               <span className="text-zinc-300">Custom quoting</span>
-              <span className="text-zinc-500 text-right">No — you quote on the spot</span>
+              <span className="text-zinc-500 text-right">No, you quote on the spot</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-800 text-sm">
               <span className="text-zinc-300">Online booking portal</span>
-              <span className="text-zinc-500 text-right">No — people call or text</span>
+              <span className="text-zinc-500 text-right">No, people call or text</span>
             </div>
             <div className="grid grid-cols-2 px-4 py-3 border-t border-zinc-700 text-sm bg-zinc-800/50">
               <span className="text-nag-orange font-semibold">Lead follow-up reminders</span>
-              <span className="text-nag-orange font-semibold text-right">Yes — this is all you need</span>
+              <span className="text-nag-orange font-semibold text-right">Yes, this is all you need</span>
             </div>
           </div>
 
           <p>
             You&apos;re paying $40-200/month and using 10% of the features.
-            That&apos;s not smart spending — that&apos;s paying for someone
+            That&apos;s not smart spending. That&apos;s paying for someone
             else&apos;s complexity.
           </p>
 
@@ -374,12 +374,12 @@ export default function PlumbersHateCRMsPost() {
               NagLead intake address
             </Link>{" "}
             and leads create themselves. AI reads the email, extracts the
-            name, phone number, and what they need — and starts the nag
+            name, phone number, and what they need, then starts the nag
             clock automatically. You don&apos;t type anything.
           </p>
 
           <p>
-            &quot;Jordan — water heater replacement, needs it before
+            &quot;Jordan, water heater replacement, needs it before
             Friday&quot; just appears in your inbox, and the reminders start.
             All you have to do is call.
           </p>
@@ -400,7 +400,7 @@ export default function PlumbersHateCRMsPost() {
             <li>
               <strong className="text-white">5-30 leads/month, solo:</strong>{" "}
               You need reminders, not a CRM. Something that nags you to
-              call back — that&apos;s the whole job.
+              call back. That&apos;s the whole job.
             </li>
             <li>
               <strong className="text-white">Growing with employees:</strong>{" "}

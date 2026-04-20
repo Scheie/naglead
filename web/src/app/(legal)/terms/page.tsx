@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LegalHeader } from "@/components/landing/LegalHeader";
 
 export const metadata = {
-  title: "Terms of Service — NagLead",
+  title: "Terms of Service | NagLead",
 };
 
 export default function TermsPage() {
@@ -42,7 +42,7 @@ export default function TermsPage() {
             </p>
             <p className="mt-3">
               By creating an account, you agree to these terms. If you
-              don&apos;t agree, don&apos;t use the service — no hard feelings.
+              don&apos;t agree, don&apos;t use the service. No hard feelings.
             </p>
           </section>
 
@@ -128,7 +128,7 @@ export default function TermsPage() {
               Things break sometimes. We&apos;ll fix them as fast as we can.
             </p>
             <p className="mt-3">
-              NagLead is a reminder tool — we are not responsible for lost
+              NagLead is a reminder tool. We are not responsible for lost
               business, missed leads, or any damages resulting from
               notifications not being delivered. Push notifications depend on
               third-party services (Apple, Google) that are outside our control.

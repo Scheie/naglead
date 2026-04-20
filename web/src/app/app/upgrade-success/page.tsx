@@ -20,7 +20,7 @@ export default function UpgradeSuccessPage() {
         </p>
 
         <div className="space-y-3">
-          {/* Deep link for mobile app — Expo handles naglead:// scheme */}
+          {/* Deep link for mobile app - Expo handles naglead:// scheme */}
           <a
             href="naglead://upgrade-success"
             className="w-full bg-nag-orange text-black font-loud text-2xl headline py-4 rounded-sm shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center justify-center gap-2"

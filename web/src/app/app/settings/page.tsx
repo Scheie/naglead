@@ -30,7 +30,7 @@ export default async function SettingsPage() {
         profile.intake_alias = alias;
         break;
       }
-      // Collision — try another
+      // Collision - try another
       alias = generateIntakeAlias();
       retries++;
     }

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "What a Missed Lead Actually Costs Your Service Business",
   description:
-    "The average service business misses 28% of incoming leads. Here's exactly how much that costs you per month — and the embarrassingly simple fix.",
+    "The average service business misses 28% of incoming leads. Here's exactly how much that costs you per month, and the embarrassingly simple fix.",
   keywords: [
     "missed leads cost",
     "losing leads service business",
@@ -65,7 +65,7 @@ export default function MissedLeadsCostPost() {
             >
               average service business misses 28% of incoming leads
             </a>
-            . Not because they don&apos;t care — because they&apos;re working.
+            . Not because they don&apos;t care, but because they&apos;re working.
             You&apos;re under a sink, on a roof, or halfway through a deep clean
             when your phone buzzes. By the time you check it, three hours have
             passed and that customer has already booked someone else.
@@ -100,7 +100,7 @@ export default function MissedLeadsCostPost() {
 
           <p>
             That&apos;s <strong className="text-white">$5,760 per year</strong>{" "}
-            walking out the door. Not because you&apos;re bad at your job — because
+            walking out the door. Not because you&apos;re bad at your job, but because
             you forgot to call six people back.
           </p>
 
@@ -110,7 +110,7 @@ export default function MissedLeadsCostPost() {
 
           <p>
             It&apos;s not laziness. It&apos;s the nature of the work. When you run
-            a service business, your hands are full — literally. Leads come in
+            a service business, your hands are full. Literally. Leads come in
             through a dozen channels:
           </p>
 
@@ -176,15 +176,15 @@ export default function MissedLeadsCostPost() {
           <ol className="list-decimal list-inside space-y-2">
             <li>
               <strong className="text-white">Captures every lead in one place</strong>{" "}
-              — no matter where it came from
+              regardless of where it came from
             </li>
             <li>
               <strong className="text-white">Won&apos;t let you forget</strong>{" "}
-              — sends escalating reminders until you do something about it
+              by sending escalating reminders until you do something about it
             </li>
             <li>
               <strong className="text-white">Takes 5 seconds to use</strong>{" "}
-              — because you&apos;re not going to use something complicated
+              because you&apos;re not going to use something complicated
               between jobs
             </li>
           </ol>
@@ -222,7 +222,7 @@ export default function MissedLeadsCostPost() {
               STOP LEAVING MONEY ON THE TABLE
             </p>
             <p className="text-zinc-400 mb-6">
-              Try NagLead free — 5 active leads, no credit card, 30-second setup.
+              Try NagLead free. 5 active leads, no credit card, 30-second setup.
             </p>
             <Link
               href="/signup"

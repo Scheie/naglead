@@ -80,7 +80,7 @@ export default function NagLeadVsJobberPost() {
                 </tr>
                 <tr className="border-b border-zinc-800">
                   <td className="py-3 pr-4 text-zinc-400 font-semibold">Lead tracking</td>
-                  <td className="py-3 px-4">Yes — it&apos;s all it does</td>
+                  <td className="py-3 px-4">Yes (it&apos;s all it does)</td>
                   <td className="py-3 pl-4">Yes + scheduling, invoicing, payments...</td>
                 </tr>
                 <tr className="border-b border-zinc-800">
@@ -149,7 +149,7 @@ export default function NagLeadVsJobberPost() {
           <ul className="list-disc list-inside space-y-2">
             <li>Work alone or with one helper</li>
             <li>Track leads on your phone, sticky notes, or memory</li>
-            <li>Don&apos;t need scheduling software — you know your own calendar</li>
+            <li>Don&apos;t need scheduling software (you know your own calendar)</li>
             <li>Already have a way to invoice (Venmo, Zelle, cash, QuickBooks)</li>
             <li>Just need to stop forgetting to call people back</li>
           </ul>
@@ -247,7 +247,7 @@ export default function NagLeadVsJobberPost() {
           </h2>
 
           <p>
-            Here&apos;s the thing — NagLead and Jobber aren&apos;t really
+            Here&apos;s the thing: NagLead and Jobber aren&apos;t really
             competitors. They&apos;re different tools for different stages:
           </p>
 
@@ -268,7 +268,7 @@ export default function NagLeadVsJobberPost() {
 
           <p>
             Start with NagLead. When you&apos;re busy enough to need scheduling
-            and invoicing software, you&apos;ll know — because NagLead will show
+            and invoicing software, you&apos;ll know, because NagLead will show
             you a win rate and revenue number that proves it&apos;s time to level up.
           </p>
 
@@ -284,7 +284,7 @@ export default function NagLeadVsJobberPost() {
 
           <p>
             If you open Jobber and think &quot;this is a lot,&quot; that&apos;s
-            not a failing on your part — it&apos;s a tool built for a bigger
+            not a failing on your part. It&apos;s a tool built for a bigger
             operation than yours. There&apos;s no shame in using the simpler
             tool. There is shame in losing a $250 cleaning job because you
             forgot to call someone back.
@@ -295,7 +295,7 @@ export default function NagLeadVsJobberPost() {
               STOP OVERCOMPLICATING IT
             </p>
             <p className="text-zinc-400 mb-6">
-              Try NagLead free — 5 active leads, no credit card, 30-second setup.
+              Try NagLead free. 5 active leads, no credit card, 30-second setup.
             </p>
             <Link
               href="/signup"

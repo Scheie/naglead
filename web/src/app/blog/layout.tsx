@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     template: "%s | NagLead Blog",
-    default: "NagLead Blog — Lead Tracking for Service Businesses",
+    default: "NagLead Blog: Lead Tracking for Service Businesses",
   },
 };
 

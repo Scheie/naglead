@@ -6,15 +6,15 @@ import { CaretDown } from "@phosphor-icons/react";
 const faqs = [
   {
     q: "What is NagLead?",
-    a: "A dead-simple lead tracker for solo service businesses. Add a lead in 5 seconds, and it sends escalating reminders until you call them back. It's not a CRM — it's a nag engine.",
+    a: "A dead-simple lead tracker for solo service businesses. Add a lead in 5 seconds, and it sends escalating reminders until you call them back. It's not a CRM. It's a nag engine.",
   },
   {
     q: "How is this different from a CRM?",
-    a: "CRMs like Jobber ($39/month) and HubSpot are built for teams with pipelines, scheduling, and invoicing. NagLead does one thing: it won't let you forget to call someone back. No pipeline, no automations — just escalating reminders.",
+    a: "CRMs like Jobber ($39/month) and HubSpot are built for teams with pipelines, scheduling, and invoicing. NagLead does one thing: it won't let you forget to call someone back. No pipeline, no automations, just escalating reminders.",
   },
   {
     q: "What types of businesses use NagLead?",
-    a: "Solo service businesses — cleaners, plumbers, electricians, landscapers, painters, handymen, and photographers. Anyone who gets leads on their phone and sometimes forgets to follow up.",
+    a: "Solo service businesses: cleaners, plumbers, electricians, landscapers, painters, handymen, and photographers. Anyone who gets leads on their phone and sometimes forgets to follow up.",
   },
   {
     q: "How do the nag reminders work?",
@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "Can it automatically add leads from email?",
-    a: "Yes — Pro users get a dedicated email address. Forward lead emails from Yelp, Thumbtack, website forms, or any source. NagLead automatically extracts the customer's name, phone, email, and what they need using AI.",
+    a: "Yes! Pro users get a dedicated email address. Forward lead emails from Yelp, Thumbtack, website forms, or any source. NagLead automatically extracts the customer's name, phone, email, and what they need using AI.",
   },
   {
     q: "How much does it cost?",

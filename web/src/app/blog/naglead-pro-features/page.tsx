@@ -112,7 +112,7 @@ export default function NagLeadProFeaturesPost() {
           <p>
             The free plan caps you at 5 active leads. That sounds like plenty
             until a busy week hits and you&apos;ve got 3 in &quot;Reply Now&quot;
-            and 4 in &quot;Waiting&quot; — and a new quote request comes in
+            and 4 in &quot;Waiting&quot;, and a new quote request comes in
             that you literally can&apos;t add.
           </p>
 
@@ -120,7 +120,7 @@ export default function NagLeadProFeaturesPost() {
             Pro removes the cap. Add as many leads as you want. Most solo
             cleaners have 10-25 active leads at any given time. Plumbers and
             electricians with higher job values might have fewer but they&apos;re
-            worth more — one lost lead at $500 is a month of NagLead.
+            worth more. One lost lead at $500 is a month of NagLead.
           </p>
 
           <h2 className="font-loud text-3xl headline text-white pt-4">
@@ -148,7 +148,7 @@ export default function NagLeadProFeaturesPost() {
 
           <p>
             Each one automatically appears in your NagLead inbox with the
-            customer&apos;s name, phone, email, and what they need —
+            customer&apos;s name, phone, email, and what they need,
             extracted by AI. No manual entry. The lead starts getting nagged
             immediately, even if you&apos;re on a job and don&apos;t see it
             for hours.
@@ -175,18 +175,18 @@ export default function NagLeadProFeaturesPost() {
           </p>
 
           <ul className="list-disc list-inside space-y-2">
-            <li><strong className="text-white">New leads</strong> — how many inquiries came in</li>
-            <li><strong className="text-white">Won</strong> — how many turned into jobs (and the revenue)</li>
-            <li><strong className="text-white">Lost</strong> — how many didn&apos;t work out</li>
-            <li><strong className="text-white">Win rate</strong> — your close percentage</li>
-            <li><strong className="text-white">Avg reply time</strong> — how fast you respond</li>
-            <li><strong className="text-white">Follow-up rate</strong> — % of leads you actually responded to</li>
+            <li><strong className="text-white">New leads</strong>: how many inquiries came in</li>
+            <li><strong className="text-white">Won</strong>: how many turned into jobs (and the revenue)</li>
+            <li><strong className="text-white">Lost</strong>: how many didn&apos;t work out</li>
+            <li><strong className="text-white">Win rate</strong>: your close percentage</li>
+            <li><strong className="text-white">Avg reply time</strong>: how fast you respond</li>
+            <li><strong className="text-white">Follow-up rate</strong>: % of leads you actually responded to</li>
           </ul>
 
           <p>
             Most solo service businesses have never seen these numbers before.
             The first time you see a 60% win rate and realize 40% of your
-            leads aren&apos;t converting, you start asking why — and that&apos;s{" "}
+            leads aren&apos;t converting, you start asking why, and that&apos;s{" "}
             <Link
               href="/blog/missed-leads-cost-service-business"
               className="text-nag-orange hover:underline"
@@ -204,8 +204,8 @@ export default function NagLeadProFeaturesPost() {
             We&apos;re building a feature where Pro users get a local phone
             number. When a customer calls and you can&apos;t answer, the call
             forwards to your NagLead number, which captures the caller&apos;s
-            number and automatically creates a lead. No voicemail needed —
-            the customer hears a brief message and you get a notification
+            number and automatically creates a lead. No voicemail needed.
+            The customer hears a brief message and you get a notification
             to call them back.
           </p>
 
@@ -231,8 +231,8 @@ export default function NagLeadProFeaturesPost() {
 
           <p>
             The average cleaning job is $150-250. The average plumbing call is
-            $275. One recovered lead — one job you would have lost because you
-            forgot to call back — pays for an entire year of NagLead Pro.
+            $275. One recovered lead, one job you would have lost because you
+            forgot to call back, pays for an entire year of NagLead Pro.
           </p>
 
           <p>

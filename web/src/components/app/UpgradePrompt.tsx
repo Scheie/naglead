@@ -75,14 +75,14 @@ export function UpgradePrompt({ activeCount, limit, onClose }: UpgradePromptProp
               disabled={loading !== null}
               className="w-full bg-nag-orange text-black font-loud text-2xl headline py-4 rounded-sm shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50"
             >
-              {loading === "pro" ? "REDIRECTING..." : "UPGRADE TO PRO — $10/MO"}
+              {loading === "pro" ? "REDIRECTING..." : "UPGRADE TO PRO: $10/MO"}
             </button>
             <button
               onClick={() => handleUpgrade("pro_annual")}
               disabled={loading !== null}
               className="w-full bg-zinc-800 text-zinc-300 font-semibold py-3 rounded-lg hover:bg-zinc-700 transition-colors text-sm disabled:opacity-50"
             >
-              {loading === "pro_annual" ? "Redirecting..." : "Go Annual — $89/yr (save $31)"}
+              {loading === "pro_annual" ? "Redirecting..." : "Go Annual: $89/yr (save $31)"}
             </button>
           </div>
         ) : (

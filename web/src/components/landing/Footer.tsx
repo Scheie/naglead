@@ -36,7 +36,7 @@ export function Footer() {
                   hello@naglead.com
                 </a>
               </p>
-              <p>NagLead Systems — Norway</p>
+              <p>NagLead Systems, Norway</p>
             </div>
             <AppStoreButtons className="mt-4" />
           </div>

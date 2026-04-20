@@ -49,7 +49,7 @@ export default function CleaningLeadFollowUpPost() {
 
           <p>
             Sound familiar? If you run a cleaning business, you already know this
-            is where you lose money. Not on supplies, not on pricing — on simply
+            is where you lose money. Not on supplies, not on pricing, but on simply
             not calling people back fast enough.
           </p>
 
@@ -109,22 +109,22 @@ export default function CleaningLeadFollowUpPost() {
 
           <ol className="list-decimal list-inside space-y-3">
             <li>
-              <strong className="text-white">Lead comes in</strong> — text, call,
+              <strong className="text-white">Lead comes in</strong>: text, call,
               email, Facebook message, Yelp request. Doesn&apos;t matter where.
             </li>
             <li>
-              <strong className="text-white">Add it in 5 seconds</strong> — name
+              <strong className="text-white">Add it in 5 seconds</strong>: name
               and what they need. That&apos;s it. Not a full CRM entry with 20
-              fields. Just &quot;Sarah — deep clean, 3-bed house.&quot;
+              fields. Just &quot;Sarah, deep clean, 3-bed house.&quot;
             </li>
             <li>
-              <strong className="text-white">Get nagged</strong> — if you
+              <strong className="text-white">Get nagged</strong>: if you
               haven&apos;t replied in 2 hours, you get a reminder. 6 hours? Another
               one. 24 hours? A loud one. The reminders escalate until you do
               something about it.
             </li>
             <li>
-              <strong className="text-white">Mark it done</strong> — called them
+              <strong className="text-white">Mark it done</strong>: called them
               back? Tap &quot;replied.&quot; Won the job? Tap &quot;won.&quot; They
               went with someone else? Tap &quot;lost.&quot; Move on.
             </li>
@@ -146,12 +146,12 @@ export default function CleaningLeadFollowUpPost() {
 
           <ul className="list-disc list-inside space-y-2">
             <li>
-              <strong className="text-red-400">Reply Now (3)</strong> — these
+              <strong className="text-red-400">Reply Now (3)</strong>: these
               people are waiting for you. The oldest one is pulsing red because
               it&apos;s been 26 hours.
             </li>
             <li>
-              <strong className="text-yellow-400">Waiting (5)</strong> — you
+              <strong className="text-yellow-400">Waiting (5)</strong>: you
               called them back, waiting to hear if they want to book.
             </li>
           </ul>
@@ -192,7 +192,7 @@ export default function CleaningLeadFollowUpPost() {
             <Link href="/" className="text-nag-orange font-semibold hover:underline">
               NagLead
             </Link>{" "}
-            specifically for this problem. It&apos;s not a CRM — it&apos;s a nag
+            specifically for this problem. It&apos;s not a CRM. It&apos;s a nag
             engine. It won&apos;t stop bothering you until you call that customer
             back.
           </p>
@@ -201,7 +201,7 @@ export default function CleaningLeadFollowUpPost() {
             <li>Add a lead in 5 seconds (name + what they need)</li>
             <li>Get escalating reminders (2h → 6h → 24h → 48h → &quot;you&apos;re losing this job&quot;)</li>
             <li>See your win rate and revenue at a glance</li>
-            <li>Works on your phone — because that&apos;s where leads come in</li>
+            <li>Works on your phone, because that&apos;s where leads come in</li>
             <li>$10/month. Free for up to 5 active leads.</li>
           </ul>
 
@@ -211,7 +211,7 @@ export default function CleaningLeadFollowUpPost() {
 
           <p>
             Here&apos;s where it gets interesting. Most cleaning leads come
-            through email — Yelp notifications, Thumbtack requests, website
+            through email: Yelp notifications, Thumbtack requests, website
             contact forms, even forwarded texts. With NagLead Pro, you get a
             dedicated email address. Forward your lead emails there, and they
             automatically appear in your inbox as a new lead.
@@ -227,7 +227,7 @@ export default function CleaningLeadFollowUpPost() {
           <p>
             That means leads start getting nagged the moment they come in, even
             if you&apos;re elbow-deep in a kitchen clean. No more
-            &quot;I&apos;ll add it later&quot; — because later never comes.
+            &quot;I&apos;ll add it later,&quot; because later never comes.
           </p>
 
           <p>
@@ -240,7 +240,7 @@ export default function CleaningLeadFollowUpPost() {
               STOP LOSING CLEANING JOBS
             </p>
             <p className="text-zinc-400 mb-6">
-              Try NagLead free — up to 5 active leads, no credit card.
+              Try NagLead free. Up to 5 active leads, no credit card.
             </p>
             <Link
               href="/signup"
