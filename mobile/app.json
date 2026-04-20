@@ -16,6 +16,12 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.naglead.app",
+      "entitlements": {
+        "aps-environment": "production",
+        "keychain-access-groups": [
+          "$(AppIdentifierPrefix)com.naglead.app"
+        ]
+      },
       "infoPlist": {
         "UIBackgroundModes": [
           "remote-notification"
