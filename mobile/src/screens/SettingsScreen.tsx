@@ -567,22 +567,6 @@ export function SettingsScreen() {
         </>
       )}
 
-      {/* Phone — coming soon */}
-      <Text style={styles.sectionTitle}>PHONE & SMS</Text>
-      <View style={[styles.card, { opacity: profile?.subscription_status === "free" ? 0.5 : 0.7 }]}>
-        <Text style={styles.value}>Dedicated Business Number</Text>
-        <Text style={[styles.valueSubtle, { marginTop: 4 }]}>
-          {profile?.subscription_status === "free"
-            ? "Missed calls and texts auto-create leads. Upgrade to Pro to unlock when available."
-            : "Missed calls and texts auto-create leads. We'll notify you when this is ready."}
-        </Text>
-        <View style={styles.comingSoonBadge}>
-          <Text style={styles.comingSoonText}>
-            {profile?.subscription_status === "free" ? "PRO — COMING SOON" : "COMING SOON"}
-          </Text>
-        </View>
-      </View>
-
       {/* Legal */}
       <Text style={styles.sectionTitle}>LEGAL</Text>
       <View style={styles.card}>
