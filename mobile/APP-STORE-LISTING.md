@@ -77,9 +77,13 @@ The app requires account creation because leads are synced across devices via ou
 ### Demo Account
 
 - **Email:** review@naglead.com
-- **Password:** [CREATE THIS BEFORE SUBMITTING]
+- **Password:** NagLead-Review-2026!
 
-Pre-populate this account with 2-3 test leads so reviewers can see the inbox, lead cards, and notification flow immediately.
+Created via `supabase/seed-review-account.sql`. Run that script in the
+Supabase SQL Editor to create/reset the account with test leads.
+
+The account has Pro status and 5 test leads: 2 in Reply Now (one fresh,
+one urgent with nag history), 1 in Waiting, 1 Won with value, 1 Lost.
 
 ### Contact Information
 
