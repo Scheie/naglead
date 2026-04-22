@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "5-minute-rule-lead-response-time",
+    title: "The 5-Minute Rule: How Fast You Respond Decides Who Gets the Job",
+    description:
+      "Responding to a lead within 5 minutes makes you 21x more likely to win the job. Here's the research, the math, and a dead-simple system to never be slow again.",
+    date: "2026-04-22",
+    readTime: "7 min read",
+  },
+  {
     slug: "handyman-lead-management",
     title: "Handyman Lead Management Without the Headache",
     description:
