@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "electrician-lead-follow-up",
+    title: "Electrician Lead Follow-Up: The Simple System That Wins More Jobs",
+    description:
+      "Most electricians lose jobs because they call back too late, not because they bid too high. Here's a dead-simple follow-up system that works between jobs.",
+    date: "2026-04-24",
+    readTime: "6 min read",
+  },
+  {
     slug: "5-minute-rule-lead-response-time",
     title: "The 5-Minute Rule: How Fast You Respond Decides Who Gets the Job",
     description:

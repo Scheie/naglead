@@ -12,7 +12,7 @@ Planned posts, roughly prioritized. Check SEO-STRATEGY.md for keyword targets.
 ## Trade-specific (write after cleaning is proven)
 
 - [x] "Lead tracking for plumbers who hate CRMs"
-- [ ] "Electrician lead follow-up: the simple system"
+- [x] "Electrician lead follow-up: the simple system"
 - [ ] "Landscaping leads: stop losing jobs to faster competitors"
 - [ ] "HVAC leads: why your response time matters more than your price"
 - [x] "Handyman lead management without the headache"
