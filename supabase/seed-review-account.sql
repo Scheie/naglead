@@ -64,7 +64,8 @@ DECLARE
 BEGIN
   SELECT id INTO review_uid FROM auth.users WHERE email = 'review@naglead.com';
 
-  -- 3. Create public.users profile
+  -- 3. Create or update public.users profile
+  -- (auth trigger may auto-create the row, so use upsert)
   INSERT INTO public.users (id, email, name, trade, business_name, timezone, nag_enabled, country, subscription_status)
   VALUES (
     review_uid,
@@ -76,7 +77,15 @@ BEGIN
     true,
     'US',
     'pro'
-  );
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    name = 'App Review',
+    trade = 'Plumbing',
+    business_name = 'Review Plumbing Co.',
+    timezone = 'America/Los_Angeles',
+    nag_enabled = true,
+    country = 'US',
+    subscription_status = 'pro';
 
   -- 4. Create test leads in various states
 
