@@ -4,14 +4,33 @@ import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-export async function POST() {
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+function getAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
-  if (!user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+export async function POST(request: Request) {
+  // Support both cookie auth (web) and Bearer token auth (mobile)
+  const authHeader = request.headers.get("authorization");
+  let user;
+
+  if (authHeader?.startsWith("Bearer ")) {
+    const accessToken = authHeader.slice(7);
+    const admin = getAdminClient();
+    const { data, error } = await admin.auth.getUser(accessToken);
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
+    }
+    user = data.user;
+  } else {
+    const supabase = await createServerClient();
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+    user = data.user;
   }
 
   const { allowed } = await checkRateLimit("delete", user.id);
@@ -22,10 +41,7 @@ export async function POST() {
     );
   }
 
-  const adminClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const adminClient = getAdminClient();
 
   // Cancel Stripe subscription if active
   const { data: profile } = await adminClient
@@ -43,19 +59,12 @@ export async function POST() {
     }
   }
 
-  // Delete leads and events (cascade handles lead_events)
-  await adminClient.from("leads").delete().eq("user_id", user.id);
-
-  // Delete web push subscriptions
-  await adminClient.from("web_push_subscriptions").delete().eq("user_id", user.id);
-
-  // Delete user profile
-  await adminClient.from("users").delete().eq("id", user.id);
-
-  // Delete auth user
+  // Deleting the auth user cascades to public.users, leads, lead_events,
+  // and web_push_subscriptions via FK ON DELETE CASCADE
   const { error } = await adminClient.auth.admin.deleteUser(user.id);
 
   if (error) {
+    console.error("Failed to delete auth user:", error);
     return NextResponse.json(
       { error: "Failed to delete account" },
       { status: 500 }
