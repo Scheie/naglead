@@ -306,8 +306,8 @@ export function InboxScreen({ navigation }: Props) {
             activeCount >= FREE_LIMIT && styles.freeTierTextFull,
           ]}>
             {activeCount >= FREE_LIMIT
-              ? `You've hit the ${FREE_LIMIT}-lead limit. Upgrade to Pro for unlimited leads.`
-              : `${activeCount}/${FREE_LIMIT} active leads used. Upgrade to Pro for unlimited.`}
+              ? `You've hit the ${FREE_LIMIT}-lead limit. Mark some as won or lost to free up slots.`
+              : `${activeCount}/${FREE_LIMIT} active leads used.`}
           </Text>
         </TouchableOpacity>
       )}

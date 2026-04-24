@@ -520,6 +520,8 @@ export function SettingsScreen() {
               : "Free (5 active leads)"}
         </Text>
 
+        {/* IAP upgrade buttons hidden for App Store compliance (Guideline 3.1.1).
+            Upgrade via naglead.com on web. Re-enable when IAP is implemented.
         {profile?.subscription_status === "free" && (
           <View style={{ marginTop: 12, gap: 8 }}>
             <TouchableOpacity
@@ -547,12 +549,15 @@ export function SettingsScreen() {
             </Text>
           </TouchableOpacity>
         )}
+        */}
       </View>
 
-      {/* Intake Email */}
-      {profile?.intake_alias ? (
+      {/* Intake Email — only shown for Pro users who have an alias */}
+      {profile?.intake_alias && (
         <EmailIntakeSection alias={profile.intake_alias} />
-      ) : (
+      )}
+      {/* Hidden for App Store compliance (Guideline 3.1.1). Re-enable when IAP is implemented.
+      {!profile?.intake_alias && (
         <>
           <Text style={styles.sectionTitle}>EMAIL INTAKE</Text>
           <View style={[styles.card, { opacity: 0.5 }]}>
@@ -566,6 +571,7 @@ export function SettingsScreen() {
           </View>
         </>
       )}
+      */}
 
       {/* Legal */}
       <Text style={styles.sectionTitle}>LEGAL</Text>
