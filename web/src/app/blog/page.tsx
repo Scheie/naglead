@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "hvac-lead-follow-up",
+    title: "HVAC Lead Follow-Up: Win More Jobs During the Rush",
+    description:
+      "HVAC techs lose the most leads when they're busiest. Here's a dead-simple follow-up system that works when you're running 6 calls a day.",
+    date: "2026-04-25",
+    readTime: "6 min read",
+  },
+  {
     slug: "electrician-lead-follow-up",
     title: "Electrician Lead Follow-Up: The Simple System That Wins More Jobs",
     description:
