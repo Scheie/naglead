@@ -17,6 +17,7 @@ BEGIN
     DELETE FROM public.lead_events WHERE user_id = review_uid;
     DELETE FROM public.leads WHERE user_id = review_uid;
     DELETE FROM public.users WHERE id = review_uid;
+    DELETE FROM auth.identities WHERE user_id = review_uid;
     DELETE FROM auth.users WHERE id = review_uid;
   END IF;
 END $$;
@@ -52,6 +53,29 @@ INSERT INTO auth.users (
   ''
 );
 
+-- 2b. Create identity record (required for email/password login)
+INSERT INTO auth.identities (
+  id,
+  user_id,
+  provider_id,
+  identity_data,
+  provider,
+  last_sign_in_at,
+  created_at,
+  updated_at
+)
+SELECT
+  id,
+  id,
+  email,
+  jsonb_build_object('sub', id::text, 'email', email, 'email_verified', true),
+  'email',
+  now(),
+  now(),
+  now()
+FROM auth.users
+WHERE email = 'review@naglead.com';
+
 -- Grab the new user's ID
 DO $$
 DECLARE
@@ -66,7 +90,7 @@ BEGIN
 
   -- 3. Create or update public.users profile
   -- (auth trigger may auto-create the row, so use upsert)
-  INSERT INTO public.users (id, email, name, trade, business_name, timezone, nag_enabled, country, subscription_status)
+  INSERT INTO public.users (id, email, name, trade, business_name, timezone, nag_enabled, country, subscription_status, intake_alias)
   VALUES (
     review_uid,
     'review@naglead.com',
@@ -76,7 +100,8 @@ BEGIN
     'America/Los_Angeles',
     true,
     'US',
-    'pro'
+    'pro',
+    'brave-falcon'
   )
   ON CONFLICT (id) DO UPDATE SET
     name = 'App Review',
@@ -85,7 +110,8 @@ BEGIN
     timezone = 'America/Los_Angeles',
     nag_enabled = true,
     country = 'US',
-    subscription_status = 'pro';
+    subscription_status = 'pro',
+    intake_alias = 'brave-falcon';
 
   -- 4. Create test leads in various states
 

@@ -552,9 +552,9 @@ export function SettingsScreen() {
         */}
       </View>
 
-      {/* Intake Email — only shown for Pro users who have an alias */}
-      {profile?.intake_alias && (
-        <EmailIntakeSection alias={profile.intake_alias} />
+      {/* Intake Email — shown for Pro users */}
+      {profile && profile.subscription_status !== "free" && (
+        <EmailIntakeSection alias={profile.intake_alias || profile.id} />
       )}
       {/* Hidden for App Store compliance (Guideline 3.1.1). Re-enable when IAP is implemented.
       {!profile?.intake_alias && (
