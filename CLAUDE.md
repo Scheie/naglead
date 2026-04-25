@@ -201,6 +201,35 @@ try {
 - Always run `npm run build` and `npm test` before pushing.
 - The git repo is at the project root (`naglead/`), not `web/`.
 
+### Mobile Release Checklist
+
+When shipping a new mobile version:
+
+1. **Bump version** in `mobile/app.json` (`"version": "X.Y.Z"`)
+2. **Type-check:** `cd mobile && npx tsc --noEmit`
+3. **Commit and push** the version bump and all changes
+4. **Preview build** (test on device first):
+   ```bash
+   cd mobile
+   eas build --platform ios --profile preview
+   ```
+5. **Test on device** — install via TestFlight / internal distribution
+6. **Production build:**
+   ```bash
+   eas build --platform ios --profile production
+   ```
+7. **Submit to App Store:**
+   ```bash
+   eas submit --platform ios
+   ```
+8. **Re-seed review account** — run `supabase/seed-review-account.sql` in Supabase SQL Editor (create auth user via Dashboard > Authentication > Add User first, then run the seed script from line 79 onward)
+9. **Submit for review** in App Store Connect
+
+**Important:**
+- Apple requires a new version number for each submission
+- The review account (`review@naglead.com` / `NagLead-Review-2026!`) must be functional before submitting
+- Payment UI is currently hidden for App Store compliance (Guideline 3.1.1) — do not re-enable without IAP implementation
+
 ### Inclusivity
 
 - Use gender-neutral language in all user-facing copy.
