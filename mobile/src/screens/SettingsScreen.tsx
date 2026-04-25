@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { supabase } from "../lib/supabase";
+import { generateIntakeAlias } from "../lib/intake-alias";
 import { colors } from "../lib/theme";
 import { PickerModal } from "../components/PickerModal";
 import type { UserProfile } from "../lib/types";
@@ -208,6 +209,25 @@ export function SettingsScreen() {
         setQuietHoursEnabled(qs !== qe);
         setTimezone(data.timezone ?? "America/New_York");
         setCountry(data.country ?? "US");
+
+        // Generate intake alias for Pro users who don't have one yet
+        if (!data.intake_alias && data.subscription_status !== "free") {
+          let alias = generateIntakeAlias();
+          let retries = 0;
+          while (retries < 5) {
+            const { error } = await supabase
+              .from("users")
+              .update({ intake_alias: alias })
+              .eq("id", user.id);
+            if (!error) {
+              data.intake_alias = alias;
+              setProfile({ ...data, intake_alias: alias });
+              break;
+            }
+            alias = generateIntakeAlias();
+            retries++;
+          }
+        }
       }
       setLoading(false);
     }
