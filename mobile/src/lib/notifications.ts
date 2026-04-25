@@ -5,6 +5,7 @@ import { supabase } from "./supabase";
 
 // Notification action identifiers
 export const NAG_CATEGORY = "nag_reminder";
+export const NAG_CATEGORY_NO_PHONE = "nag_reminder_no_phone";
 export const ACTION_CALL = "call_back";
 export const ACTION_SNOOZE = "snooze_1hr";
 
@@ -22,12 +23,22 @@ Notifications.setNotificationHandler({
 // Register notification categories with action buttons.
 // Must be called before notifications arrive so the OS knows the actions.
 export async function registerNotificationCategories(): Promise<void> {
+  // Full actions for leads with phone numbers
   await Notifications.setNotificationCategoryAsync(NAG_CATEGORY, [
     {
       identifier: ACTION_CALL,
       buttonTitle: "Call Back",
       options: { opensAppToForeground: true },
     },
+    {
+      identifier: ACTION_SNOOZE,
+      buttonTitle: "Snooze 1hr",
+      options: { opensAppToForeground: false },
+    },
+  ]);
+
+  // Snooze-only for leads without phone numbers
+  await Notifications.setNotificationCategoryAsync(NAG_CATEGORY_NO_PHONE, [
     {
       identifier: ACTION_SNOOZE,
       buttonTitle: "Snooze 1hr",

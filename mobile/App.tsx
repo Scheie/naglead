@@ -202,7 +202,12 @@ function App() {
 
     const sub = addNotificationResponseListener(({ leadId, phone, actionId }) => {
       // "Call Back" action: open phone dialer directly
-      if (actionId === ACTION_CALL && phone) {
+      if (actionId === ACTION_CALL) {
+        if (!phone) {
+          Alert.alert("No Phone Number", "This lead doesn't have a phone number on file.");
+          if (navigationRef.current?.isReady()) navigationRef.current.navigate("Inbox");
+          return;
+        }
         Linking.openURL(`tel:${phone}`).catch(() => {
           console.warn("[push] could not open dialer for", phone);
         });

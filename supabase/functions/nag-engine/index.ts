@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
       title: message.title,
       body: message.body,
       data: { leadId: lead.id, phone: lead.phone ?? undefined },
-      categoryId: "nag_reminder",
+      categoryId: lead.phone ? "nag_reminder" : "nag_reminder_no_phone",
     };
 
     // Send Expo push notification (mobile)
