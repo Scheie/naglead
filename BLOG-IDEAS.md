@@ -13,8 +13,8 @@ Planned posts, roughly prioritized. Check SEO-STRATEGY.md for keyword targets.
 
 - [x] "Lead tracking for plumbers who hate CRMs"
 - [x] "Electrician lead follow-up: the simple system"
-- [ ] "Landscaping leads: stop losing jobs to faster competitors"
-- [ ] "HVAC leads: why your response time matters more than your price"
+- [x] "Landscaping leads: stop losing jobs to faster competitors"
+- [x] "HVAC leads: why your response time matters more than your price"
 - [x] "Handyman lead management without the headache"
 
 ## Comparison posts (write as competitors come up in searches)

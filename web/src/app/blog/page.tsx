@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "landscaping-lead-follow-up",
+    title: "Landscaping Leads: Stop Losing Jobs to Faster Competitors",
+    description:
+      "Landscapers don't lose bids to cheaper crews. They lose them to whoever calls back first. Here's how to stop bleeding leads during your busiest months.",
+    date: "2026-04-26",
+    readTime: "6 min read",
+  },
+  {
     slug: "hvac-lead-follow-up",
     title: "HVAC Lead Follow-Up: Win More Jobs During the Rush",
     description:
