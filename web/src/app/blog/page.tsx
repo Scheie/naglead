@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-vs-hubspot",
+    title: "NagLead vs HubSpot: Why Less Is More for Solo Service Businesses",
+    description:
+      "HubSpot is built for marketing teams. NagLead is built for one person with a phone and a list of people to call back. Here's an honest comparison.",
+    date: "2026-04-27",
+    readTime: "5 min read",
+  },
+  {
     slug: "landscaping-lead-follow-up",
     title: "Landscaping Leads: Stop Losing Jobs to Faster Competitors",
     description:
