@@ -91,15 +91,15 @@ Deno.serve(async () => {
       continue;
     }
 
-    // Check if we already sent a summary this week
-    const mondayStart = new Date(now);
-    mondayStart.setHours(0, 0, 0, 0);
+    // Check if we already sent a summary in the last 6 days
+    // (prevents duplicates regardless of timezone edge cases)
+    const sixDaysAgo = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
     const { count: alreadySent } = await supabase
       .from("lead_events")
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id)
       .eq("event_type", "weekly_summary")
-      .gte("created_at", mondayStart.toISOString());
+      .gte("created_at", sixDaysAgo.toISOString());
 
     if (alreadySent && alreadySent > 0) continue;
 

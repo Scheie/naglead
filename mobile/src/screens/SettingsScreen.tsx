@@ -336,6 +336,13 @@ export function SettingsScreen() {
         text: "Sign Out",
         style: "destructive",
         onPress: async () => {
+          // Clear push token so notifications stop after sign out
+          if (profile?.id) {
+            await supabase
+              .from("users")
+              .update({ push_token: null })
+              .eq("id", profile.id);
+          }
           await supabase.auth.signOut();
         },
       },
