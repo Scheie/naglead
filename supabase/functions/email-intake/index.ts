@@ -5,6 +5,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { resolveRecipient } from "../_shared/resolve-user.ts";
 import { fetchWithRetry } from "../_shared/fetch-retry.ts";
+import { sendExpoPush } from "../_shared/expo-push.ts";
 
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-haiku-4-5-20251001";
@@ -284,20 +285,16 @@ Deno.serve(async (req) => {
     .single();
 
   if (userFull?.push_token) {
-    await fetchWithRetry("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        to: userFull.push_token,
-        sound: "default",
-        title: possibleDuplicate ? "Possible duplicate lead" : "New lead from email",
-        body: possibleDuplicate
-          ? `📧 ${leadName} — may be a duplicate of "${existing[0].name}"`
-          : `📧 ${leadName} — ${leadDescription}`,
-        data: { leadId: lead.id },
-        priority: "high",
-      }),
+    const pushResult = await sendExpoPush(userFull.push_token, {
+      title: possibleDuplicate ? "Possible duplicate lead" : "New lead from email",
+      body: possibleDuplicate
+        ? `📧 ${leadName} — may be a duplicate of "${existing[0].name}"`
+        : `📧 ${leadName} — ${leadDescription}`,
+      data: { leadId: lead.id },
     });
+    if (pushResult.deviceNotRegistered) {
+      await supabase.from("users").update({ push_token: null }).eq("id", user.id);
+    }
   }
 
   return new Response(

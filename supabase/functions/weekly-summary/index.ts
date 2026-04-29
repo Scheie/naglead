@@ -9,38 +9,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { buildSummaryMessage } from "../_shared/weekly-message.ts";
 import type { WeeklyStats } from "../_shared/weekly-message.ts";
-import { fetchWithRetry } from "../_shared/fetch-retry.ts";
-
-const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
-
-async function sendExpoPush(
-  pushToken: string,
-  notification: { title: string; body: string; data?: Record<string, unknown> }
-) {
-  try {
-    const response = await fetchWithRetry(EXPO_PUSH_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        to: pushToken,
-        sound: "default",
-        title: notification.title,
-        body: notification.body,
-        data: notification.data ?? {},
-        priority: "default",
-      }),
-    }, { timeoutMs: 5000 });
-
-    if (!response.ok) {
-      console.error("Push failed:", await response.text());
-    }
-  } catch (err) {
-    console.error("Push send error:", err);
-  }
-}
+import { sendExpoPush } from "../_shared/expo-push.ts";
 
 Deno.serve(async () => {
   const supabase = createClient(
@@ -153,11 +122,15 @@ Deno.serve(async () => {
 
     const message = buildSummaryMessage(stats);
 
-    await sendExpoPush(user.push_token, {
+    const pushResult = await sendExpoPush(user.push_token, {
       title: message.title,
       body: message.body,
       data: { type: "weekly_summary" },
+      priority: "default",
     });
+    if (pushResult.deviceNotRegistered) {
+      await supabase.from("users").update({ push_token: null }).eq("id", user.id);
+    }
 
     // Mark as sent so we don't send again this Monday
     await supabase.from("lead_events").insert({

@@ -9,39 +9,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { isQuietHours, getNagMessage } from "../_shared/nag-schedule.ts";
 import { sendWebPush } from "../_shared/web-push.ts";
-import { fetchWithRetry } from "../_shared/fetch-retry.ts";
-
-const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
-
-async function sendExpoPush(
-  pushToken: string,
-  notification: { title: string; body: string; data?: Record<string, unknown>; categoryId?: string }
-) {
-  try {
-    const response = await fetchWithRetry(EXPO_PUSH_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        to: pushToken,
-        sound: "default",
-        title: notification.title,
-        body: notification.body,
-        data: notification.data ?? {},
-        priority: "high",
-        categoryId: notification.categoryId,
-      }),
-    }, { timeoutMs: 5000 });
-
-    if (!response.ok) {
-      console.error("Push failed:", await response.text());
-    }
-  } catch (err) {
-    console.error("Push send error:", err);
-  }
-}
+import { sendExpoPush } from "../_shared/expo-push.ts";
 
 Deno.serve(async (req) => {
   const supabase = createClient(
@@ -166,7 +134,10 @@ Deno.serve(async (req) => {
 
     // Send Expo push notification (mobile)
     if (hasExpoPush) {
-      await sendExpoPush(user.push_token!, notification);
+      const result = await sendExpoPush(user.push_token!, notification);
+      if (result.deviceNotRegistered) {
+        await supabase.from("users").update({ push_token: null }).eq("id", user.id);
+      }
     }
 
     // Send Web Push notifications (all browser subscriptions)
