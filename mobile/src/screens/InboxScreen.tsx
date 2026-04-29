@@ -40,7 +40,6 @@ export function InboxScreen({ navigation }: Props) {
   const [showScorecard, setShowScorecard] = useState(false);
   const [showSnoozed, setShowSnoozed] = useState(false);
   const [currencySymbol, setCurrencySymbol] = useState("$");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<string>("free");
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
   const fetchLeads = useCallback(async () => {
@@ -52,14 +51,13 @@ export function InboxScreen({ navigation }: Props) {
     if (data) setLeads(data);
   }, []);
 
-  // Fetch user's currency and subscription status
+  // Fetch user's currency
   useEffect(() => {
     async function loadUserSettings() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const { data } = await supabase.from("users").select("country, subscription_status").eq("id", user.id).single();
+      const { data } = await supabase.from("users").select("country").eq("id", user.id).single();
       if (data?.country) setCurrencySymbol(getCurrencySymbol(data.country));
-      if (data?.subscription_status) setSubscriptionStatus(data.subscription_status);
     }
     loadUserSettings();
   }, []);
@@ -286,31 +284,8 @@ export function InboxScreen({ navigation }: Props) {
     </TouchableOpacity>
   );
 
-  const activeCount = replyNow.length + snoozed.length + waiting.length;
-  const isFree = subscriptionStatus === "free";
-  const FREE_LIMIT = 5;
-
   const renderHeader = () => (
     <View>
-      {/* Free tier warning */}
-      {isFree && activeCount >= FREE_LIMIT - 1 && (
-        <TouchableOpacity
-          style={[
-            styles.freeTierBanner,
-            activeCount >= FREE_LIMIT && styles.freeTierBannerFull,
-          ]}
-          onPress={() => navigation.navigate("Settings")}
-        >
-          <Text style={[
-            styles.freeTierText,
-            activeCount >= FREE_LIMIT && styles.freeTierTextFull,
-          ]}>
-            {activeCount >= FREE_LIMIT
-              ? `You've hit the ${FREE_LIMIT}-lead limit. Mark some as won or lost to free up slots.`
-              : `${activeCount}/${FREE_LIMIT} active leads used.`}
-          </Text>
-        </TouchableOpacity>
-      )}
 
       {/* Reply Now */}
       <View style={styles.sectionHeader}>
@@ -558,26 +533,6 @@ const styles = StyleSheet.create({
   statValue: {
     fontFamily: "Teko-Bold",
     fontSize: 32,
-  },
-  freeTierBanner: {
-    backgroundColor: colors.zinc[900],
-    borderWidth: 1,
-    borderColor: colors.zinc[800],
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-  },
-  freeTierBannerFull: {
-    backgroundColor: "rgba(255, 69, 0, 0.1)",
-    borderColor: colors.orange,
-  },
-  freeTierText: {
-    fontFamily: "WorkSans-SemiBold",
-    fontSize: 13,
-    color: colors.zinc[400],
-  },
-  freeTierTextFull: {
-    color: colors.orange,
   },
   snoozedToggle: {
     flexDirection: "row",

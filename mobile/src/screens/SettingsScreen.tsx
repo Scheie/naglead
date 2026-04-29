@@ -210,8 +210,8 @@ export function SettingsScreen() {
         setTimezone(data.timezone ?? "America/New_York");
         setCountry(data.country ?? "US");
 
-        // Generate intake alias for Pro users who don't have one yet
-        if (!data.intake_alias && data.subscription_status !== "free") {
+        // Generate intake alias if user doesn't have one yet
+        if (!data.intake_alias) {
           let alias = generateIntakeAlias();
           let retries = 0;
           while (retries < 5) {
@@ -260,72 +260,6 @@ export function SettingsScreen() {
     } else {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    }
-  }
-
-  async function handleUpgrade(plan: "pro" | "pro_annual") {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      Alert.alert("Error", "Not logged in");
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        `https://naglead.com/api/mobile/checkout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ plan }),
-        }
-      );
-      if (!res.ok) {
-        Alert.alert("Error", "Failed to start checkout");
-        return;
-      }
-      const data = await res.json();
-      if (data.url) {
-        Linking.openURL(data.url);
-      } else {
-        Alert.alert("Error", data.error ?? "Failed to start checkout");
-      }
-    } catch {
-      Alert.alert("Error", "Could not connect to server");
-    }
-  }
-
-  async function handleManageSubscription() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      Alert.alert("Error", "Not logged in");
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        `https://naglead.com/api/stripe/portal`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-        }
-      );
-      if (!res.ok) {
-        Alert.alert("Error", "Could not load subscription portal");
-        return;
-      }
-      const data = await res.json();
-      if (data.url) {
-        Linking.openURL(data.url);
-      } else {
-        Alert.alert("Error", "Could not load subscription portal");
-      }
-    } catch {
-      Alert.alert("Error", "Could not connect to server");
     }
   }
 
@@ -536,69 +470,10 @@ export function SettingsScreen() {
         </Text>
       </TouchableOpacity>
 
-      {/* Plan */}
-      <Text style={styles.sectionTitle}>PLAN</Text>
-      <View style={styles.card}>
-        <Text style={styles.value}>
-          {profile?.subscription_status === "pro_annual"
-            ? "Pro Annual"
-            : profile?.subscription_status === "pro"
-              ? "Pro"
-              : "Free (5 active leads)"}
-        </Text>
-
-        {/* IAP upgrade buttons hidden for App Store compliance (Guideline 3.1.1).
-            Upgrade via naglead.com on web. Re-enable when IAP is implemented.
-        {profile?.subscription_status === "free" && (
-          <View style={{ marginTop: 12, gap: 8 }}>
-            <TouchableOpacity
-              style={styles.upgradeBtn}
-              onPress={() => handleUpgrade("pro")}
-            >
-              <Text style={styles.upgradeBtnText}>UPGRADE TO PRO — $10/MO</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.upgradeAnnualBtn}
-              onPress={() => handleUpgrade("pro_annual")}
-            >
-              <Text style={styles.upgradeAnnualText}>Go Annual — $89/yr (save $31)</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {profile?.subscription_status !== "free" && (
-          <TouchableOpacity
-            style={{ marginTop: 12 }}
-            onPress={handleManageSubscription}
-          >
-            <Text style={styles.proHint}>
-              Manage subscription, billing, or cancel
-            </Text>
-          </TouchableOpacity>
-        )}
-        */}
-      </View>
-
-      {/* Intake Email — shown for Pro users */}
-      {profile && profile.subscription_status !== "free" && (
-        <EmailIntakeSection alias={profile.intake_alias || profile.id} />
+      {/* Intake Email — shown for users with an alias */}
+      {profile?.intake_alias && (
+        <EmailIntakeSection alias={profile.intake_alias} />
       )}
-      {/* Hidden for App Store compliance (Guideline 3.1.1). Re-enable when IAP is implemented.
-      {!profile?.intake_alias && (
-        <>
-          <Text style={styles.sectionTitle}>EMAIL INTAKE</Text>
-          <View style={[styles.card, { opacity: 0.5 }]}>
-            <Text style={styles.value}>Auto-Add Leads via Email</Text>
-            <Text style={[styles.valueSubtle, { marginTop: 4 }]}>
-              Forward lead emails from Gmail, Outlook, or any inbox and we'll auto-create leads. Upgrade to Pro to unlock.
-            </Text>
-            <View style={styles.comingSoonBadge}>
-              <Text style={styles.comingSoonText}>PRO</Text>
-            </View>
-          </View>
-        </>
-      )}
-      */}
 
       {/* Legal */}
       <Text style={styles.sectionTitle}>LEGAL</Text>
@@ -772,39 +647,6 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: "center",
   },
-  proHint: {
-    fontFamily: "WorkSans-SemiBold",
-    fontSize: 13,
-    color: colors.orange,
-    marginTop: 8,
-  },
-  upgradeBtn: {
-    backgroundColor: colors.orange,
-    paddingVertical: 14,
-    borderRadius: 4,
-    shadowColor: colors.black,
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
-  },
-  upgradeBtnText: {
-    fontFamily: "Teko-Bold",
-    fontSize: 22,
-    color: colors.black,
-    textAlign: "center",
-  },
-  upgradeAnnualBtn: {
-    backgroundColor: colors.zinc[800],
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  upgradeAnnualText: {
-    fontFamily: "WorkSans-SemiBold",
-    fontSize: 14,
-    color: colors.zinc[300],
-    textAlign: "center",
-  },
   signOutBtn: {
     backgroundColor: colors.zinc[900],
     borderWidth: 1,
@@ -885,22 +727,6 @@ const styles = StyleSheet.create({
     color: colors.zinc[400],
     flex: 1,
     lineHeight: 18,
-  },
-  comingSoonBadge: {
-    alignSelf: "flex-start",
-    backgroundColor: colors.zinc[800],
-    borderWidth: 1,
-    borderColor: colors.zinc[700],
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginTop: 10,
-  },
-  comingSoonText: {
-    fontFamily: "WorkSans-Bold",
-    fontSize: 10,
-    color: colors.zinc[500],
-    letterSpacing: 1,
   },
   legalRow: {
     paddingVertical: 12,

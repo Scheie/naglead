@@ -19,7 +19,6 @@ import { SignupScreen } from "./src/screens/SignupScreen";
 import { InboxScreen } from "./src/screens/InboxScreen";
 import { AddLeadScreen } from "./src/screens/AddLeadScreen";
 import { SettingsScreen } from "./src/screens/SettingsScreen";
-import { UpgradeSuccessScreen } from "./src/screens/UpgradeSuccessScreen";
 import * as Notifications from "expo-notifications";
 import {
   registerForPushNotifications,
@@ -48,7 +47,6 @@ const linking = {
     screens: {
       Inbox: "",
       AddLead: "add",
-      UpgradeSuccess: "upgrade-success",
     },
   },
 };
@@ -129,11 +127,6 @@ function AppNavigator() {
           },
           headerBackTitle: "Back",
         }}
-      />
-      <AppStack.Screen
-        name="UpgradeSuccess"
-        component={UpgradeSuccessScreen}
-        options={{ headerShown: false }}
       />
     </AppStack.Navigator>
   );
