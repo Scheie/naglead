@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-vs-housecall-pro",
+    title: "NagLead vs Housecall Pro: Do You Need Scheduling or Follow-Up?",
+    description:
+      "Housecall Pro does scheduling, invoicing, and dispatching. NagLead just makes sure you call your leads back. Here's how to pick the right tool.",
+    date: "2026-04-30",
+    readTime: "6 min read",
+  },
+  {
     slug: "naglead-vs-hubspot",
     title: "NagLead vs HubSpot: Why Less Is More for Solo Service Businesses",
     description:

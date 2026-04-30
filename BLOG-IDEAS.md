@@ -20,7 +20,7 @@ Planned posts, roughly prioritized. Check SEO-STRATEGY.md for keyword targets.
 ## Comparison posts (write as competitors come up in searches)
 
 - [x] "NagLead vs HubSpot: why less is more for solo operators"
-- [ ] "NagLead vs Housecall Pro: do you need scheduling or follow-up?"
+- [x] "NagLead vs Housecall Pro: do you need scheduling or follow-up?"
 - [ ] "NagLead vs GoHighLevel: $10/month vs $97/month"
 - [ ] "NagLead vs pen and paper: when to upgrade"
 
