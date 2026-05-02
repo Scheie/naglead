@@ -21,7 +21,7 @@ Planned posts, roughly prioritized. Check SEO-STRATEGY.md for keyword targets.
 
 - [x] "NagLead vs HubSpot: why less is more for solo operators"
 - [x] "NagLead vs Housecall Pro: do you need scheduling or follow-up?"
-- [ ] "NagLead vs GoHighLevel: $10/month vs $97/month"
+- [x] "NagLead vs GoHighLevel: $10/month vs $97/month"
 - [ ] "NagLead vs pen and paper: when to upgrade"
 
 ## Thought leadership (write after 50+ users for credibility)

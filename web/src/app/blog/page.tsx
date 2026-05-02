@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-vs-gohighlevel",
+    title: "NagLead vs GoHighLevel: $10/Month vs $97/Month",
+    description:
+      "GoHighLevel is a marketing platform for agencies. NagLead is a $10 nag engine for one person who forgets to call leads back. Here's an honest comparison.",
+    date: "2026-05-02",
+    readTime: "6 min read",
+  },
+  {
     slug: "naglead-vs-housecall-pro",
     title: "NagLead vs Housecall Pro: Do You Need Scheduling or Follow-Up?",
     description:
