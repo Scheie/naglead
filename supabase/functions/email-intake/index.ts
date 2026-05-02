@@ -101,16 +101,21 @@ Deno.serve(async (req) => {
 
   const claudeApiKey = Deno.env.get("ANTHROPIC_API_KEY");
 
-  // Verify shared secret from Cloudflare Email Worker
+  // Verify shared secret from Cloudflare Email Worker (fail-closed)
   const intakeSecret = Deno.env.get("EMAIL_INTAKE_SECRET");
-  if (intakeSecret) {
-    const provided = req.headers.get("X-Email-Intake-Secret");
-    if (provided !== intakeSecret) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+  if (!intakeSecret) {
+    console.error("EMAIL_INTAKE_SECRET not configured");
+    return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const provided = req.headers.get("X-Email-Intake-Secret");
+  if (provided !== intakeSecret) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   // Parse JSON payload from Cloudflare Email Worker

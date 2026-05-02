@@ -45,7 +45,7 @@ export function AddLeadScreen({ navigation }: Props) {
       .in("state", ["reply_now", "waiting"]);
 
     if (trimmedEmail) {
-      dupeQuery = dupeQuery.or(`name.ilike."${trimmedName}",email.ilike."${trimmedEmail}"`);
+      dupeQuery = dupeQuery.or(`name.ilike.${trimmedName.replace(/[",\\]/g, "")},email.ilike.${trimmedEmail.replace(/[",\\]/g, "")}`);
     } else {
       dupeQuery = dupeQuery.ilike("name", trimmedName);
     }
@@ -70,10 +70,10 @@ export function AddLeadScreen({ navigation }: Props) {
 
     const { error } = await supabase.from("leads").insert({
       user_id: user.id,
-      name: trimmedName,
-      description: description.trim(),
-      phone: phone.trim() || null,
-      email: trimmedEmail || null,
+      name: trimmedName.slice(0, 255),
+      description: description.trim().slice(0, 1000),
+      phone: phone.trim().slice(0, 30) || null,
+      email: trimmedEmail?.slice(0, 255) || null,
       state: "reply_now",
       source: "manual",
     });
