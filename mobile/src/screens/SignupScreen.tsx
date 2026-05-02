@@ -29,6 +29,10 @@ export function SignupScreen({ navigation }: Props) {
 
   async function handleSignup() {
     if (!name.trim() || !email.trim() || !password) return;
+    if (password.length < 8) {
+      Alert.alert("Weak password", "Password must be at least 8 characters.");
+      return;
+    }
     setLoading(true);
 
     const trimmedEmail = email.trim();

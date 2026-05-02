@@ -50,16 +50,16 @@ export async function registerNotificationCategories(): Promise<void> {
 export async function registerForPushNotifications(): Promise<string | null> {
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
-  console.log("[push] existing permission:", existingStatus);
+  if (__DEV__) console.log("[push] existing permission:", existingStatus);
 
   if (existingStatus !== "granted") {
     const { status } = await Notifications.requestPermissionsAsync();
     finalStatus = status;
-    console.log("[push] requested permission, got:", status);
+    if (__DEV__) console.log("[push] requested permission, got:", status);
   }
 
   if (finalStatus !== "granted") {
-    console.warn("[push] permission not granted:", finalStatus);
+    if (__DEV__) console.warn("[push] permission not granted:", finalStatus);
     return null;
   }
 
@@ -70,7 +70,7 @@ export async function registerForPushNotifications(): Promise<string | null> {
       vibrationPattern: [0, 250, 250, 250],
       sound: "default",
     });
-    console.log("[push] android notification channel created");
+    if (__DEV__) console.log("[push] android notification channel created");
   }
 
   const projectId = Constants.expoConfig?.extra?.eas?.projectId;
@@ -81,7 +81,7 @@ export async function registerForPushNotifications(): Promise<string | null> {
 
   try {
     const tokenData = await Notifications.getExpoPushTokenAsync({ projectId });
-    console.log("[push] got token:", tokenData.data);
+    if (__DEV__) console.log("[push] got token:", tokenData.data);
     return tokenData.data;
   } catch (err) {
     console.error("[push] failed to get push token:", err);
@@ -123,23 +123,24 @@ export function addNotificationResponseListener(
 
 // Handle the "snooze 1hr" action directly from the notification
 export async function snoozeLeadFromNotification(leadId: string): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
   const until = new Date(Date.now() + 3600000).toISOString();
   const now = new Date().toISOString();
   const { error } = await supabase
     .from("leads")
     .update({ snoozed_until: until, updated_at: now })
-    .eq("id", leadId);
+    .eq("id", leadId)
+    .eq("user_id", user.id);
   if (error) {
-    console.warn("[push] failed to snooze from notification:", error);
+    if (__DEV__) console.warn("[push] failed to snooze from notification:", error);
     return;
   }
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    await supabase.from("lead_events").insert({
-      lead_id: leadId,
-      user_id: user.id,
-      event_type: "snoozed",
-      metadata: { until, source: "notification_action" },
-    });
-  }
+  await supabase.from("lead_events").insert({
+    lead_id: leadId,
+    user_id: user.id,
+    event_type: "snoozed",
+    metadata: { until, source: "notification_action" },
+  });
 }

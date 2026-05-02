@@ -296,20 +296,28 @@ export function SettingsScreen() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return;
 
-            const res = await fetch(
-              `https://naglead.com/api/account/delete`,
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${session.access_token}`,
-                },
-              }
-            );
+            try {
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), 15000);
+              const res = await fetch(
+                `https://naglead.com/api/account/delete`,
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                  },
+                  signal: controller.signal,
+                }
+              );
+              clearTimeout(timeout);
 
-            if (res.ok) {
-              await supabase.auth.signOut();
-            } else {
-              Alert.alert("Error", "Failed to delete account. Try from the web app.");
+              if (res.ok) {
+                await supabase.auth.signOut();
+              } else {
+                Alert.alert("Error", "Failed to delete account. Try from the web app.");
+              }
+            } catch {
+              Alert.alert("Error", "Could not connect to server. Check your connection.");
             }
           },
         },

@@ -45,9 +45,9 @@ export function AddLeadScreen({ navigation }: Props) {
       .in("state", ["reply_now", "waiting"]);
 
     if (trimmedEmail) {
-      dupeQuery = dupeQuery.or(`name.ilike.${trimmedName.replace(/[",\\]/g, "")},email.ilike.${trimmedEmail.replace(/[",\\]/g, "")}`);
+      dupeQuery = dupeQuery.or(`name.ilike.%${trimmedName.replace(/[%_"',\\.]/g, "")}%,email.ilike.%${trimmedEmail.replace(/[%_"',\\.]/g, "")}%`);
     } else {
-      dupeQuery = dupeQuery.ilike("name", trimmedName);
+      dupeQuery = dupeQuery.ilike("name", `%${trimmedName}%`);
     }
 
     const { data: dupes } = await dupeQuery;

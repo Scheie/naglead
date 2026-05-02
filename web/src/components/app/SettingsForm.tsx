@@ -19,12 +19,14 @@ import {
   Phone,
 } from "@phosphor-icons/react";
 import Link from "next/link";
-import type { User as UserProfile } from "@/lib/database.types";
+import type { User as UserType } from "@/lib/database.types";
 import { leadsToCSV, downloadCSV } from "@/lib/export-csv";
 import { countryCodes } from "@/lib/country-codes";
 
+type SettingsProfile = Omit<UserType, "webhook_token" | "stripe_customer_id" | "stripe_subscription_id">;
+
 interface SettingsFormProps {
-  profile: UserProfile;
+  profile: SettingsProfile;
 }
 
 const timezones = [

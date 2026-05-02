@@ -156,17 +156,17 @@ function App() {
     async function setupPush() {
       try {
         const { status } = await Notifications.getPermissionsAsync();
-        console.log("[push] current permission status:", status);
+        if (__DEV__) console.log("[push] current permission status:", status);
 
         if (status === "granted") {
           const token = await registerForPushNotifications();
-          console.log("[push] token:", token);
+          if (__DEV__) console.log("[push] token:", token);
           if (token) await savePushToken(token);
           return;
         }
 
         if (status === "denied") {
-          console.log("[push] permission previously denied, skipping prompt");
+          if (__DEV__) console.log("[push] permission previously denied, skipping prompt");
           return;
         }
 
@@ -180,14 +180,14 @@ function App() {
               text: "Enable",
               onPress: async () => {
                 const token = await registerForPushNotifications();
-                console.log("[push] token after prompt:", token);
+                if (__DEV__) console.log("[push] token after prompt:", token);
                 if (token) await savePushToken(token);
               },
             },
           ]
         );
       } catch (err) {
-        console.error("[push] setup failed:", err);
+        if (__DEV__) console.error("[push] setup failed:", err);
       }
     }
 
@@ -201,9 +201,11 @@ function App() {
           if (navigationRef.current?.isReady()) navigationRef.current.navigate("Inbox");
           return;
         }
-        Linking.openURL(`tel:${phone}`).catch(() => {
-          console.warn("[push] could not open dialer for", phone);
-        });
+        if (/^[\d\s\-+().]+$/.test(phone)) {
+          Linking.openURL(`tel:${phone}`).catch(() => {
+            if (__DEV__) console.warn("[push] could not open dialer");
+          });
+        }
         return;
       }
 

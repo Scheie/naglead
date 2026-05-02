@@ -13,7 +13,7 @@ export default async function SettingsPage() {
 
   const { data: profile } = await supabase
     .from("users")
-    .select("*")
+    .select("id, email, name, trade, business_name, timezone, nag_enabled, nag_quiet_start, nag_quiet_end, intake_alias, country, subscription_status, created_at, push_token")
     .eq("id", user.id)
     .single();
 
