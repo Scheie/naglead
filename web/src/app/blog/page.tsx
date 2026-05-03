@@ -9,6 +9,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "naglead-vs-pen-and-paper",
+    title: "NagLead vs Pen and Paper: When to Upgrade Your Lead Tracking",
+    description:
+      "Pen and paper works until it doesn't. Here's how to know when your sticky notes are costing you jobs, and what the simplest upgrade looks like.",
+    date: "2026-05-03",
+    readTime: "5 min read",
+  },
+  {
     slug: "naglead-vs-gohighlevel",
     title: "NagLead vs GoHighLevel: $10/Month vs $97/Month",
     description:
